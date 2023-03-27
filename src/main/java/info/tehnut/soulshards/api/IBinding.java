@@ -1,6 +1,7 @@
 package info.tehnut.soulshards.api;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
@@ -8,7 +9,7 @@ public interface IBinding {
 
     UUID getOwner();
 
-    Identifier getBoundEntity();
+    ResourceLocation getBoundEntity();
 
     int getKills();
 

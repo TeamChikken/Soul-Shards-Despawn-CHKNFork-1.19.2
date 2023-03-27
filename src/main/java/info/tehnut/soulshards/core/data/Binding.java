@@ -3,25 +3,26 @@ package info.tehnut.soulshards.core.data;
 import info.tehnut.soulshards.api.IBinding;
 import info.tehnut.soulshards.api.IShardTier;
 import info.tehnut.soulshards.core.util.INBTSerializable;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
 public class Binding implements IBinding, INBTSerializable<CompoundTag> {
 
-    private Identifier boundEntity;
+    private ResourceLocation boundEntity;
     private UUID owner;
     private int kills;
 
-    public Binding(Identifier boundEntity, UUID owner, int kills) {
+    public Binding(ResourceLocation boundEntity, UUID owner, int kills) {
         this.boundEntity = boundEntity;
         this.owner = owner;
         this.kills = kills;
     }
 
-    public Binding(Identifier boundEntity, int kills) {
+    public Binding(ResourceLocation boundEntity, int kills) {
         this(boundEntity, null, kills);
     }
 
@@ -30,11 +31,11 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public Identifier getBoundEntity() {
+    public ResourceLocation getBoundEntity() {
         return boundEntity;
     }
 
-    public Binding setBoundEntity(Identifier boundEntity) {
+    public Binding setBoundEntity(ResourceLocation boundEntity) {
         this.boundEntity = boundEntity;
         return this;
     }
@@ -85,7 +86,7 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains("bound"))
-            this.boundEntity = new Identifier(nbt.getString("bound"));
+            this.boundEntity = new ResourceLocation(nbt.getString("bound"));
         if (nbt.contains("owner"))
             this.owner = UUID.fromString(nbt.getString("owner"));
         this.kills = nbt.getInt("kills");

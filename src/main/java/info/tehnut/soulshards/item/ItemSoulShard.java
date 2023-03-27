@@ -7,7 +7,6 @@ import info.tehnut.soulshards.block.TileEntitySoulCage;
 import info.tehnut.soulshards.core.RegistrarSoulShards;
 import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.core.data.Tier;
-import info.tehnut.soulshards.core.mixin.MobSpawnerLogicEntityId;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -15,7 +14,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +26,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.item.Item;
@@ -45,7 +43,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
         super(new Properties().stacksTo(1).tab(QuiltItemGroup.TAB_MISC));
          (new ResourceLocation(SoulShards.MODID, "bound"),
                 (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
-        addPropertyGetter(new Identifier(SoulShards.MODID, "tier"), (stack, world, entity) -> {
+        addPropertyGetter(new ResourceLocation(SoulShards.MODID, "tier"), (stack, world, entity) -> {
             Binding binding = getBinding(stack);
             if (binding == null)
                 return 0F;

@@ -2,10 +2,10 @@ package info.tehnut.soulshards.api;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 
 public class BindingEvent {
 
@@ -19,7 +19,7 @@ public class BindingEvent {
                     }
                 }
 
-                return new InteractionResultHolder<>(ActionResult.PASS, binding);
+                return new InteractionResultHolder<>(InteractionResult.PASS, binding);
             }
     );
 
@@ -40,8 +40,8 @@ public class BindingEvent {
             (listeners) -> (entity, currentName) -> {
 
                 for (GetEntityName getEntityName : listeners) {
-                    Identifier identifier = getEntityName.getEntityName(entity, currentName);
-                    if (identifier != null) return identifier;
+                    ResourceLocation ResourceLocation = getEntityName.getEntityName(entity, currentName);
+                    if (ResourceLocation != null) return ResourceLocation;
                 }
 
                 return currentName;
@@ -57,6 +57,6 @@ public class BindingEvent {
     }
 
     public interface GetEntityName {
-        Identifier getEntityName(LivingEntity entity, Identifier currentName);
+        ResourceLocation getEntityName(LivingEntity entity, ResourceLocation currentName);
     }
 }

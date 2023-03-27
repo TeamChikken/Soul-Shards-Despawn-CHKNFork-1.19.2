@@ -3,9 +3,9 @@ package info.tehnut.soulshards.core;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import info.tehnut.soulshards.core.data.MultiblockPattern;
-import net.minecraft.entity.EntityCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.MobCategory;
 
 import java.util.Map;
 import java.util.Set;
@@ -148,9 +148,9 @@ public class ConfigSoulShards {
                 "minecraft:player"
         );
 
-        private Map<String, Boolean> entities;
+        private Map<ResourceLocation, Boolean> entities;
 
-        public ConfigEntityList(Map<String, Boolean> entities) {
+        public ConfigEntityList(Map<ResourceLocation, Boolean> entities) {
             this.entities = entities;
         }
 
@@ -158,16 +158,16 @@ public class ConfigSoulShards {
             this(getDefaults());
         }
 
-        public boolean isEnabled(Identifier entityId) {
-            return entities.getOrDefault(entityId.toString(), false);
+        public boolean isEnabled(ResourceLocation entityId) {
+            return entities.getOrDefault(entityId, false);
         }
 
-        private static Map<String, Boolean> getDefaults() {
-            Map<String, Boolean> defaults = Maps.newHashMap();
+        private static Map<ResourceLocation, Boolean> getDefaults() {
+            Map<ResourceLocation, Boolean> defaults = Maps.newHashMap();
             Registry.ENTITY_TYPE.stream()
-                    .filter(e -> e.getCategory() != EntityCategory.MISC)
+                    .filter(e -> e.getCategory() != MobCategory.MISC)
                     .forEach(e -> {
-                        String entityId = Registry.ENTITY_TYPE.getId(e).toString();
+                        var entityId = Registry.ENTITY_TYPE.getKey(e);
                         defaults.put(entityId, !DEFAULT_DISABLES.contains(entityId));
                     });
             return defaults;

@@ -8,21 +8,18 @@ import info.tehnut.soulshards.core.data.MultiblockPattern;
 import info.tehnut.soulshards.core.data.Tier;
 import info.tehnut.soulshards.item.ItemSoulShard;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.Hand;
-import net.minecraft.util.registry.Registry;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
@@ -45,27 +42,26 @@ public class EventHandler {
             if (match.getResult() == InteractionResult.FAIL)
                 return match.getResult();
 
-            match.getValue().forEach(matchedPos -> world.breakBlock(matchedPos, false));
-            held.decrement(1);
+            match.getObject().forEach(matchedPos -> world.destroyBlock(matchedPos, false));
+            held.shrink(1);
             ItemStack shardStack = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
-            if (!player.inventory.insertStack(shardStack))
-                ItemScatterer.spawn(world, player.getX(), player.getY(), player.getZ(), shardStack);
+            if (!player.getInventory().add(shardStack)) {
+                Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), shardStack);
+            }
             return InteractionResult.SUCCESS;
         });
     }
 
     public static void onEntityDeath(LivingEntity killed, DamageSource source) {
-        // Using canUsePortals because it appears to be MCP's isNonBoss().
-        // Only returns false for Wither and Ender Dragon
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !killed.canUsePortals())
+        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !SoulShards.isBoss(killed))
             return;
 
-        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && killed.getDataTracker().get(SoulShards.cageBornTag))
+        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && killed.getEntityData().get(SoulShards.cageBornTag))
             return;
 
-        if (source.getAttacker() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) source.getAttacker();
-            Identifier entityId = getEntityId(killed);
+        if (source.getEntity() instanceof Player) {
+            var player = (Player) source.getEntity();
+            var entityId = getEntityId(killed);
 
             if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId))
                 return;
@@ -82,8 +78,8 @@ public class EventHandler {
             if (binding == null)
                 return;
 
-            ItemStack mainHand = player.getStackInHand(Hand.MAIN_HAND);
-            int soulsGained = 1 + EnchantmentHelper.getLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
+            var mainHand = player.getMainHandItem();
+            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
             if (mainHand.getItem() instanceof ISoulWeapon)
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, killed);
 
@@ -99,13 +95,13 @@ public class EventHandler {
         }
     }
 
-    private static ItemStack getFirstShard(PlayerEntity player, Identifier entityId) {
+    private static ItemStack getFirstShard(Player player, ResourceLocation entityId) {
         // Checks the offhand first
-        ItemStack shardItem = player.getStackInHand(Hand.OFF_HAND);
+        ItemStack shardItem = player.getOffhandItem();
         // If offhand isn't a shard, loop through the hotbar
         if (shardItem.isEmpty() || !(shardItem.getItem() instanceof ItemSoulShard)) {
             for (int i = 0; i < 9; i++) {
-                shardItem = player.inventory.getInvStack(i);
+                shardItem = player.getInventory().getItem(i);
                 if (!shardItem.isEmpty() && shardItem.getItem() instanceof ItemSoulShard) {
                     if (checkBinding(entityId, shardItem)) return shardItem;
                 }
@@ -118,7 +114,7 @@ public class EventHandler {
         return ItemStack.EMPTY; // No shard found
     }
 
-    private static boolean checkBinding(Identifier entityId, ItemStack shardItem) {
+    private static boolean checkBinding(ResourceLocation entityId, ItemStack shardItem) {
         Binding binding = ((ItemSoulShard) shardItem.getItem()).getBinding(shardItem);
 
         // If there's no binding or no bound entity, this is a valid shard
@@ -130,13 +126,13 @@ public class EventHandler {
 
     }
 
-    private static Identifier getEntityId(LivingEntity entity) {
-        Identifier id = Registry.ENTITY_TYPE.getId(entity.getType());
+    private static ResourceLocation getEntityId(LivingEntity entity) {
+        ResourceLocation id = Registry.ENTITY_TYPE.getKey(entity.getType());
         return BindingEvent.GET_ENTITY_ID.invoker().getEntityName(entity, id);
     }
 
     private static Binding getNewBinding(LivingEntity entity) {
         Binding binding = new Binding(null, 0);
-        return (Binding) BindingEvent.NEW_BINDINGS.invoker().onNewBinding(entity, binding).getValue();
+        return (Binding) BindingEvent.NEW_BINDINGS.invoker().onNewBinding(entity, binding).getObject();
     }
 }

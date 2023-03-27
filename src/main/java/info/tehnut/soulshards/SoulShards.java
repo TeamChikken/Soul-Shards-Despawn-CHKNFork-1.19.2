@@ -9,10 +9,9 @@ import info.tehnut.soulshards.core.util.JsonUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
-import net.minecraft.entity.data.TrackedData;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
-import org.quiltmc.qsl.networking.mixin.accessor.EntityTrackerAccessor;
 
 import java.io.File;
 
@@ -22,6 +21,11 @@ public class SoulShards implements ModInitializer {
     public static final ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), new File(FabricLoader.getInstance().getConfigDirectory(), MODID + "/" + MODID + ".json"), new ConfigSoulShards());
     public static EntityDataAccessor<Boolean> cageBornTag;
     public static GameRules.Key<GameRules.BooleanValue> allowCageSpawns;
+    public static final String BOSS_TAG = "c:bosses";
+
+    public static boolean isBoss(LivingEntity creature) {
+        return creature.getTags().contains(BOSS_TAG);
+    }
 
     @Override
     public void onInitialize() {
