@@ -2,56 +2,58 @@ package info.tehnut.soulshards.item;
 
 import info.tehnut.soulshards.api.ISoulWeapon;
 import info.tehnut.soulshards.core.RegistrarSoulShards;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Lazy;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
+import net.minecraft.util.LazyLoadedValue;
 
 public class ItemVileSword extends SwordItem implements ISoulWeapon {
 
-    public static final ToolMaterial MATERIAL_VILE = new MaterialVile();
+    public static final Tier MATERIAL_VILE = new MaterialVile();
 
     public ItemVileSword() {
-        super(MATERIAL_VILE, 3, -2.4F, new Settings().group(ItemGroup.COMBAT));
+        super(MATERIAL_VILE, 3, -2.4F, new Properties().tab(QuiltItemGroup.TAB_COMBAT));
     }
 
     @Override
-    public int getSoulBonus(ItemStack stack, PlayerEntity player, LivingEntity killedEntity) {
+    public int getSoulBonus(ItemStack stack, Player player, LivingEntity killedEntity) {
         return 1;
     }
 
-    public static class MaterialVile implements ToolMaterial {
+    public static class MaterialVile implements Tier {
 
-        private final Lazy<Ingredient> ingredient;
+        private final LazyLoadedValue<Ingredient> ingredient;
 
         public MaterialVile() {
-            this.ingredient = new Lazy<>(() -> Ingredient.ofItems(RegistrarSoulShards.CORRUPTED_INGOT));
+            this.ingredient = new LazyLoadedValue<>(() -> Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT));
         }
 
         @Override
-        public int getDurability() {
-            return ToolMaterials.IRON.getDurability();
+        public int getUses() {
+            return Tiers.IRON.getUses();
         }
 
         @Override
-        public float getMiningSpeed() {
-            return ToolMaterials.IRON.getMiningSpeed();
+        public float getSpeed() {
+            return Tiers.IRON.getSpeed();
         }
 
         @Override
-        public float getAttackDamage() {
-            return ToolMaterials.IRON.getAttackDamage();
+        public float getAttackDamageBonus() {
+            return Tiers.IRON.getAttackDamageBonus();
         }
 
         @Override
-        public int getMiningLevel() {
-            return ToolMaterials.IRON.getMiningLevel();
+        public int getLevel() {
+            return Tiers.IRON.getLevel();
         }
 
         @Override
-        public int getEnchantability() {
-            return ToolMaterials.IRON.getEnchantability();
+        public int getEnchantmentValue() {
+            return Tiers.IRON.getEnchantmentValue();
         }
 
         @Override
