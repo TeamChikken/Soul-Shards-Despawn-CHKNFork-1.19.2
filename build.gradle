@@ -1,7 +1,7 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
     //id "com.matthewprenger.cursegradle" version "1.4.0"
     id "maven-publish"
+    alias libs.plugins.quilt.loom
 }
 java {
     withSourcesJar()
@@ -36,10 +36,13 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${mc_version}"
-    mappings "net.fabricmc:yarn:${mc_version}+build.${mappings_version}"
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${api_version}"
+    minecraft libs.minecraft
+    mappings loom.layered {
+		mappings "org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2"
+		officialMojangMappings()
+	}
+    modImplementation libs.quilt.loader
+    modImplementation libs.quilted.fabric.api
     modImplementation 'maven.modrinth:wthit:NmGfP3mL'
 }
 
