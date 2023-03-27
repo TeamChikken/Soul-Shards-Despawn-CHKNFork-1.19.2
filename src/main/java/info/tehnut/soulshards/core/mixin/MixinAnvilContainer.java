@@ -4,10 +4,14 @@ import info.tehnut.soulshards.SoulShards;
 import info.tehnut.soulshards.core.RegistrarSoulShards;
 import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.item.ItemSoulShard;
-import net.minecraft.container.AnvilContainer;
-import net.minecraft.container.Property;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,26 +19,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AnvilContainer.class)
+@Mixin(AnvilMenu.class)
 public class MixinAnvilContainer {
 
     @Shadow
     @Final
-    private Inventory inventory;
+    private NonNullList<Slot> slots;
     @Shadow
     @Final
-    private Property levelCost;
-    @Shadow
-    @Final
-    private Inventory result;
+    private DataSlot cost;
 
-    @Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
-    public void soulshards$updateResult(CallbackInfo callbackInfo) {
+    @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
+    public void soulshards$createResult(CallbackInfo callbackInfo) {
         if (!SoulShards.CONFIG.getBalance().allowShardCombination())
             return;
 
-        ItemStack leftStack = inventory.getItem(0);
-        ItemStack rightStack = inventory.getItem(1);
+        ItemStack leftStack = slots.get(ItemCombinerMenu.INPUT_SLOT).getItem();
+        ItemStack rightStack = slots.get(ItemCombinerMenu.ADDITIONAL_SLOT).getItem();
 
         if (leftStack.getItem() instanceof ItemSoulShard && rightStack.getItem() instanceof ItemSoulShard) {
             Binding left = ((ItemSoulShard) leftStack.getItem()).getBinding(leftStack);
@@ -46,8 +47,8 @@ public class MixinAnvilContainer {
             if (left.getBoundEntity() != null && left.getBoundEntity().equals(right.getBoundEntity())) {
                 ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
                 ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
-                result.setInvStack(0, output);
-                levelCost.set(left.getTier().getIndex() * 6);
+                slots.get(ItemCombinerMenu.RESULT_SLOT).set(output);
+                cost.set(left.getTier().getIndex() * 6);
                 callbackInfo.cancel();
             }
         }
