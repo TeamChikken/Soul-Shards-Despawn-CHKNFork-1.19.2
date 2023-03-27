@@ -4,22 +4,22 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 
 public interface CageSpawnEvent {
 
     Event<CageSpawnEvent> CAGE_SPAWN = EventFactory.createArrayBacked(CageSpawnEvent.class,
             (listeners) -> (binding, shardStack, toSpawn) -> {
                 for (CageSpawnEvent event : listeners) {
-                    ActionResult result = event.onCageSpawn(binding, shardStack, toSpawn);
-                    if (result != ActionResult.PASS) {
+                    InteractionResult result = event.onCageSpawn(binding, shardStack, toSpawn);
+                    if (result != InteractionResult.PASS) {
                         return result;
                     }
                 }
 
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
             }
     );
 
-    ActionResult onCageSpawn(IBinding binding, ItemStack shardStack, LivingEntity toSpawn);
+    InteractionResult onCageSpawn(IBinding binding, ItemStack shardStack, LivingEntity toSpawn);
 }

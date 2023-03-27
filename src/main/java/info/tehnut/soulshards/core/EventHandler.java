@@ -12,10 +12,10 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.Hand;
 import net.minecraft.util.registry.Registry;
@@ -35,14 +35,14 @@ public class EventHandler {
 
             ItemStack held = player.getMainHandItem();
             if (!ItemStack.isSame(pattern.getCatalyst(), held))
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
 
             BlockState worldState = world.getBlockState(hitResult.getBlockPos());
             if (!pattern.isOriginBlock(worldState))
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
 
-            TypedActionResult<Set<BlockPos>> match = pattern.match(world, hitResult.getBlockPos());
-            if (match.getResult() == ActionResult.FAIL)
+            InteractionResultHolder<Set<BlockPos>> match = pattern.match(world, hitResult.getBlockPos());
+            if (match.getResult() == InteractionResult.FAIL)
                 return match.getResult();
 
             match.getValue().forEach(matchedPos -> world.breakBlock(matchedPos, false));
@@ -50,7 +50,7 @@ public class EventHandler {
             ItemStack shardStack = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
             if (!player.inventory.insertStack(shardStack))
                 ItemScatterer.spawn(world, player.getX(), player.getY(), player.getZ(), shardStack);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         });
     }
 

@@ -3,23 +3,23 @@ package info.tehnut.soulshards.api;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.InteractionResultHolder;
 
 public class BindingEvent {
 
     public static final Event<NewBinding> NEW_BINDINGS = EventFactory.createArrayBacked(NewBinding.class,
             (listeners) -> (entity, binding) -> {
                 for (NewBinding newBinding : listeners) {
-                    TypedActionResult<IBinding> currentResult = newBinding.onNewBinding(entity, binding);
+                    InteractionResultHolder<IBinding> currentResult = newBinding.onNewBinding(entity, binding);
 
-                    if (currentResult.getResult() != ActionResult.PASS) {
+                    if (currentResult.getResult() != InteractionResult.PASS) {
                         return currentResult;
                     }
                 }
 
-                return new TypedActionResult<>(ActionResult.PASS, binding);
+                return new InteractionResultHolder<>(ActionResult.PASS, binding);
             }
     );
 
@@ -49,7 +49,7 @@ public class BindingEvent {
     );
 
     public interface NewBinding {
-        TypedActionResult<IBinding> onNewBinding(LivingEntity entity, IBinding binding);
+        InteractionResultHolder<IBinding> onNewBinding(LivingEntity entity, IBinding binding);
     }
 
     public interface GainSouls {

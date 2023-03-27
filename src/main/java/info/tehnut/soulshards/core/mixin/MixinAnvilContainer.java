@@ -6,9 +6,8 @@ import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.item.ItemSoulShard;
 import net.minecraft.container.AnvilContainer;
 import net.minecraft.container.Property;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,8 +33,8 @@ public class MixinAnvilContainer {
         if (!SoulShards.CONFIG.getBalance().allowShardCombination())
             return;
 
-        ItemStack leftStack = inventory.getInvStack(0);
-        ItemStack rightStack = inventory.getInvStack(1);
+        ItemStack leftStack = inventory.getItem(0);
+        ItemStack rightStack = inventory.getItem(1);
 
         if (leftStack.getItem() instanceof ItemSoulShard && rightStack.getItem() instanceof ItemSoulShard) {
             Binding left = ((ItemSoulShard) leftStack.getItem()).getBinding(leftStack);

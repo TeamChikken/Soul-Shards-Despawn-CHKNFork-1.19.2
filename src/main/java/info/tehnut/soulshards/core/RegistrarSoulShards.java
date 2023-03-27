@@ -6,14 +6,14 @@ import info.tehnut.soulshards.block.TileEntitySoulCage;
 import info.tehnut.soulshards.core.util.EnchantmentSoulStealer;
 import info.tehnut.soulshards.item.ItemSoulShard;
 import info.tehnut.soulshards.item.ItemVileSword;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
 
 public class RegistrarSoulShards {
 

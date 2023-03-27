@@ -3,7 +3,7 @@ package info.tehnut.soulshards.core.data;
 import info.tehnut.soulshards.api.IBinding;
 import info.tehnut.soulshards.api.IShardTier;
 import info.tehnut.soulshards.core.util.INBTSerializable;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 

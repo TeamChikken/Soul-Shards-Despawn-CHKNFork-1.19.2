@@ -13,20 +13,20 @@ import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
 
 import java.util.List;
 
@@ -46,47 +46,47 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
+    public InteractionResult useOnBlock(ItemUsageContext context) {
         BlockState state = context.getWorld().getBlockState(context.getBlockPos());
         Binding binding = getBinding(context.getStack());
         if (binding == null)
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
 
         if (state.getBlock() instanceof SpawnerBlock) {
             if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption()) {
                 if (context.getPlayer() != null)
                     context.getPlayer().addChatMessage(new TranslatableText("chat.soulshards.absorb_disabled"), true);
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
             }
 
             if (binding.getKills() > Tier.maxKills)
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
 
             MobSpawnerBlockEntity spawner = (MobSpawnerBlockEntity) context.getWorld().getBlockEntity(context.getBlockPos());
             if (spawner == null)
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
 
             try {
                 Identifier entityId = ((MobSpawnerLogicEntityId) spawner.getLogic()).getEntityIdentifier();
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId))
-                    return ActionResult.PASS;
+                    return InteractionResult.PASS;
 
                 if (binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
-                    return ActionResult.FAIL;
+                    return InteractionResult.FAIL;
 
                 updateBinding(context.getStack(), binding.addKills(SoulShards.CONFIG.getBalance().getAbsorptionBonus()));
                 context.getWorld().breakBlock(context.getBlockPos(), false);
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             } catch (Throwable e) {
                 e.printStackTrace();
             }
         } else if (state.getBlock() == RegistrarSoulShards.SOUL_CAGE) {
             if (binding.getBoundEntity() == null)
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
 
             TileEntitySoulCage cage = (TileEntitySoulCage) context.getWorld().getBlockEntity(context.getBlockPos());
             if (cage == null)
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
 
             ItemStack cageStack = cage.getInventory().getInvStack(0);
             if (cageStack.isEmpty() && cage.getInventory().isValidInvStack(0, context.getStack())) {
@@ -94,7 +94,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
                 context.getStack().decrement(1);
                 cage.markDirty();
                 cage.setState(true);
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 

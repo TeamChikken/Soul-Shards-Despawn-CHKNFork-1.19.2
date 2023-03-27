@@ -6,7 +6,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -82,7 +82,7 @@ public class MultiblockPattern {
         return catalyst;
     }
 
-    public TypedActionResult<Set<BlockPos>> match(World world, BlockPos originBlock) {
+    public InteractionResultHolder<Set<BlockPos>> match(World world, BlockPos originBlock) {
         Set<BlockPos> matched = Sets.newHashSet();
         for (int y = 0; y < shape.length; y++) {
             String line = shape[y];
@@ -90,13 +90,13 @@ public class MultiblockPattern {
                 BlockPos offset = originBlock.add(x - origin.x, 0, y - origin.y);
                 BlockState state = world.getBlockState(offset);
                 if (!definition.get(line.charAt(x)).test(state))
-                    return new TypedActionResult<>(ActionResult.FAIL, Collections.emptySet());
+                    return new InteractionResultHolder<>(ActionResult.FAIL, Collections.emptySet());
 
                 matched.add(offset);
             }
         }
 
-        return new TypedActionResult<>(ActionResult.SUCCESS, matched);
+        return new InteractionResultHolder<>(ActionResult.SUCCESS, matched);
     }
 
     public boolean isOriginBlock(BlockState state) {

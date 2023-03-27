@@ -2,55 +2,55 @@ package info.tehnut.soulshards.block;
 
 import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.core.data.Tier;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.ServerWorld;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import java.util.Random;
 
 public class BlockSoulCage extends Block implements BlockEntityProvider {
 
-    public static final Property<Boolean> ACTIVE = BooleanProperty.of("active");
-    public static final Property<Boolean> POWERED = BooleanProperty.of("powered");
+    public static final Property<Boolean> ACTIVE = BooleanProperty.create("active");
+    public static final Property<Boolean> POWERED = BooleanProperty.create("powered");
 
     public BlockSoulCage() {
-        super(Settings.copy(Blocks.SPAWNER));
+        super(Properties.copy(Blocks.SPAWNER));
 
-        setDefaultState(getStateManager().getDefaultState().with(ACTIVE, false).with(POWERED, false));
+        registerDefaultState(defaultBlockState().setValue(ACTIVE, false).setValue(POWERED, false));
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult result) {
+    public InteractionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult result) {
         if (!player.isSneaking())
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
 
         TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
         if (cage == null)
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
 
         ItemStack stack = cage.getInventory().getInvStack(0);
         if (stack.isEmpty())
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
 
         if (!player.inventory.insertStack(stack)) {
             BlockPos playerPos = new BlockPos(player);
             ItemEntity entity = new ItemEntity(world, playerPos.getX(), playerPos.getY(), playerPos.getZ(), stack);
             world.spawnEntity(entity);
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
 

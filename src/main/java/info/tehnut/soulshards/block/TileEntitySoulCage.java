@@ -18,8 +18,6 @@ import net.minecraft.world.entity.mob.MobEntity;
 import net.minecraft.world.entity.mob.Monster;
 import net.minecraft.world.inventory.BasicInventory;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.registry.Registry;
@@ -53,7 +51,7 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
             return;
 
         InteractionResultHolder<Binding> result = canSpawn();
-        if (result.getResult() != ActionResult.SUCCESS) {
+        if (result.getResult() != InteractionResult.SUCCESS) {
             if (active) {
                 setState(false);
                 getWorld().updateNeighbors(pos, getCachedState().getBlock());
@@ -119,8 +117,8 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
                     if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !entityLiving.canUsePortals()) // canUsePortals -> isNonBoss
                         continue;
 
-                    ActionResult result = CageSpawnEvent.CAGE_SPAWN.invoker().onCageSpawn(binding, inventory.getInvStack(0), entityLiving);
-                    if (result == ActionResult.FAIL)
+                    InteractionResult result = CageSpawnEvent.CAGE_SPAWN.invoker().onCageSpawn(binding, inventory.getInvStack(0), entityLiving);
+                    if (result == InteractionResult.FAIL)
                         continue spawnLoop;
 
                     getWorld().spawnEntity(entityLiving);
@@ -135,7 +133,7 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
     private InteractionResultHolder<Binding> canSpawn() {
         // TODO mojang pls
 //        if (!getWorld().getServer().getWorld(DimensionType.OVERWORLD).getGameRules().getBoolean(SoulShards.allowCageSpawns))
-//            return new TypedActionResult<>(ActionResult.FAIL, null);
+//            return new InteractionResultHolder<>(ActionResult.FAIL, null);
 
         BlockState state = getLevel().getBlockState(getBlockPos());
         if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
