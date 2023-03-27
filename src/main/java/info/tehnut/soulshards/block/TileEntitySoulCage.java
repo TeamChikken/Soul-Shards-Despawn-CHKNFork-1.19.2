@@ -7,8 +7,16 @@ import info.tehnut.soulshards.core.RegistrarSoulShards;
 import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.item.ItemSoulShard;
 import net.minecraft.client.renderer.texture.Tickable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.EntityType;
@@ -27,15 +35,15 @@ import net.minecraft.world.InteractionResultHolder;
 
 public class TileEntitySoulCage extends BlockEntity implements Tickable {
 
-    private Inventory inventory;
+    private Container inventory;
     private boolean active;
 
-    public TileEntitySoulCage() {
-        super(RegistrarSoulShards.SOUL_CAGE_TE);
+    public TileEntitySoulCage(BlockPos pos, BlockState state) {
+        super(RegistrarSoulShards.SOUL_CAGE_TE, pos, state);
 
-        this.inventory = new BasicInventory(1) {
+        this.inventory = new SimpleContainer(1) {
             @Override
-            public boolean isValidInvStack(int slot, ItemStack stack) {
+            public boolean canAddItem(ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemSoulShard))
                     return false;
 
@@ -45,9 +53,48 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
         };
     }
 
+    private InteractionResultHolder<Binding> canSpawn(Level level, BlockPos pos) {
+        // TODO mojang pls
+//        if (!getWorld().getServer().getWorld(DimensionType.OVERWORLD).getGameRules().getBoolean(SoulShards.allowCageSpawns))
+//            return new InteractionResultHolder<>(ActionResult.FAIL, null);
+
+        BlockState state = level.getBlockState(pos);
+        if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
+            return new InteractionResultHolder<>(InteractionResult.FAIL, null);
+
+        ItemStack shardStack = inventory.getItem(0);
+        if (shardStack.isEmpty() || !(shardStack.getItem() instanceof ItemSoulShard))
+            return new InteractionResultHolder<>(InteractionResult.FAIL, null);
+
+        Binding binding = ((ItemSoulShard) shardStack.getItem()).getBinding(shardStack);
+        if (binding == null || binding.getBoundEntity() == null)
+            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+
+        IShardTier tier = binding.getTier();
+        if (tier.getSpawnAmount() == 0)
+            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+
+        if (SoulShards.CONFIG.getBalance().requireOwnerOnline() && !ownerOnline())
+            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+
+        if (!SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
+            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+
+        if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal()) {
+            if (state.getValue(BlockSoulCage.POWERED) && tier.checkRedstone())
+                return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+        } else if (!state.getValue(BlockSoulCage.POWERED))
+            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+
+        if (tier.checkPlayer() && level.getNearestPlayer(pos.getX(), pos.getY(), pos.getX(), 16,
+                false) == null)
+            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, binding);
+    }
     @Override
     public void tick() {
-        if (getLevel() == null || getLevel().isClientSide)
+        if (level == null || level.isClientSide)
             return;
 
         InteractionResultHolder<Binding> result = canSpawn();
@@ -130,44 +177,6 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
         }
     }
 
-    private InteractionResultHolder<Binding> canSpawn() {
-        // TODO mojang pls
-//        if (!getWorld().getServer().getWorld(DimensionType.OVERWORLD).getGameRules().getBoolean(SoulShards.allowCageSpawns))
-//            return new InteractionResultHolder<>(ActionResult.FAIL, null);
-
-        BlockState state = getLevel().getBlockState(getBlockPos());
-        if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, null);
-
-        ItemStack shardStack = inventory.getInvStack(0);
-        if (shardStack.isEmpty() || !(shardStack.getItem() instanceof ItemSoulShard))
-            return new InteractionResultHolder<>(InteractionResult.FAIL, null);
-
-        Binding binding = ((ItemSoulShard) shardStack.getItem()).getBinding(shardStack);
-        if (binding == null || binding.getBoundEntity() == null)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-
-        IShardTier tier = binding.getTier();
-        if (tier.getSpawnAmount() == 0)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-
-        if (SoulShards.CONFIG.getBalance().requireOwnerOnline() && !ownerOnline())
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-
-        if (!SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-
-        if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal()) {
-            if (state.get(BlockSoulCage.POWERED) && tier.checkRedstone())
-                return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-        } else if (!state.get(BlockSoulCage.POWERED))
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-
-        if (tier.checkPlayer() && getWorld().getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 16, false) == null)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, binding);
-    }
 
     public Binding getBinding() {
         ItemStack stack = inventory.getInvStack(0);
