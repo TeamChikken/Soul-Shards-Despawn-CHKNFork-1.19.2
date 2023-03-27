@@ -5,12 +5,13 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -82,21 +83,21 @@ public class MultiblockPattern {
         return catalyst;
     }
 
-    public InteractionResultHolder<Set<BlockPos>> match(World world, BlockPos originBlock) {
+    public InteractionResultHolder<Set<BlockPos>> match(Level level, BlockPos originBlock) {
         Set<BlockPos> matched = Sets.newHashSet();
         for (int y = 0; y < shape.length; y++) {
             String line = shape[y];
             for (int x = 0; x < line.length(); x++) {
-                BlockPos offset = originBlock.add(x - origin.x, 0, y - origin.y);
-                BlockState state = world.getBlockState(offset);
+                BlockPos offset = originBlock.offset(x - origin.x, 0, y - origin.y);
+                BlockState state = level.getBlockState(offset);
                 if (!definition.get(line.charAt(x)).test(state))
-                    return new InteractionResultHolder<>(ActionResult.FAIL, Collections.emptySet());
+                    return new InteractionResultHolder<>(InteractionResult.FAIL, Collections.emptySet());
 
                 matched.add(offset);
             }
         }
 
-        return new InteractionResultHolder<>(ActionResult.SUCCESS, matched);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, matched);
     }
 
     public boolean isOriginBlock(BlockState state) {
@@ -114,7 +115,7 @@ public class MultiblockPattern {
         }
 
         public Slot(Block block) {
-            this(block.getStateManager().getStates().toArray(new BlockState[0]));
+            this(block.getStateDefinition().getPossibleStates().toArray(new BlockState[0]));
         }
 
         @Override
@@ -128,7 +129,8 @@ public class MultiblockPattern {
         public MultiblockPattern deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = element.getAsJsonObject();
 
-            Identifier itemId = new Identifier(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
+            var itemId =
+                    new ResourceLocation(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
             ItemStack catalyst = new ItemStack(Registry.ITEM.get(itemId), 1);
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
@@ -147,21 +149,21 @@ public class MultiblockPattern {
             for (JsonElement entry : element.getAsJsonArray()) {
                 if (entry.isJsonObject()) {
                     JsonObject json = entry.getAsJsonObject();
-                    Block block = Registry.BLOCK.get(new Identifier(json.getAsJsonPrimitive("block").getAsString()));
-                    BlockState state = block.getDefaultState();
+                    Block block = Registry.BLOCK.get(new ResourceLocation(json.getAsJsonPrimitive("block").getAsString()));
+                    BlockState state = block.defaultBlockState();
                     if (json.has("states")) {
                         JsonObject stateObject = json.getAsJsonObject("states");
                         for (Map.Entry<String, JsonElement> e : stateObject.entrySet()) {
-                            Property property = block.getStateManager().getProperty(e.getKey());
+                            var property = block.getStateDefinition().getProperty(e.getKey());
                             if (property != null) {
                                 String valueString = e.getValue().getAsString();
-                                Comparable value = (Comparable) property.parse(valueString).get();
-                                state = state.with(property, value);
+                                var value = (Comparable)property.getValue(valueString).get();
+                                state = state.setValue(property, value);
                             }
                         }
                         states.add(state);
                     } else {
-                        states.addAll(block.getStateManager().getStates());
+                        states.addAll(block.getStateDefinition().getPossibleStates());
                     }
                 }
             }
