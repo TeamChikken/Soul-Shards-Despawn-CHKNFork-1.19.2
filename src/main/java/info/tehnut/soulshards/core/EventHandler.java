@@ -8,12 +8,10 @@ import info.tehnut.soulshards.core.data.MultiblockPattern;
 import info.tehnut.soulshards.core.data.Tier;
 import info.tehnut.soulshards.item.ItemSoulShard;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
@@ -21,6 +19,11 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.Hand;
 import net.minecraft.util.registry.Registry;
+
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
 
@@ -30,8 +33,8 @@ public class EventHandler {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             MultiblockPattern pattern = ConfigSoulShards.getMultiblock();
 
-            ItemStack held = player.getStackInHand(hand);
-            if (!ItemStack.areItemsEqual(pattern.getCatalyst(), held))
+            ItemStack held = player.getMainHandItem();
+            if (!ItemStack.isSame(pattern.getCatalyst(), held))
                 return ActionResult.PASS;
 
             BlockState worldState = world.getBlockState(hitResult.getBlockPos());

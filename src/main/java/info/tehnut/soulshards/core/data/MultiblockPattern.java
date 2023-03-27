@@ -4,20 +4,19 @@ import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.SlabType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.awt.Point;
 import java.lang.reflect.Type;
@@ -41,12 +40,12 @@ public class MultiblockPattern {
             new HashMap<Character, Slot>() {{
                 put('O', new Slot(Blocks.OBSIDIAN));
                 put('Q', new Slot(
-                        Blocks.QUARTZ_BLOCK.getDefaultState(),
-                        Blocks.QUARTZ_PILLAR.getDefaultState(),
-                        Blocks.CHISELED_QUARTZ_BLOCK.getDefaultState(),
-                        Blocks.SMOOTH_QUARTZ.getDefaultState(),
-                        Blocks.QUARTZ_SLAB.getDefaultState().with(Properties.SLAB_TYPE, SlabType.DOUBLE),
-                        Blocks.SMOOTH_QUARTZ_SLAB.getDefaultState().with(Properties.SLAB_TYPE, SlabType.DOUBLE)
+                        Blocks.QUARTZ_BLOCK.defaultBlockState(),
+                        Blocks.QUARTZ_PILLAR.defaultBlockState(),
+                        Blocks.CHISELED_QUARTZ_BLOCK.defaultBlockState(),
+                        Blocks.SMOOTH_QUARTZ.defaultBlockState(),
+                        Blocks.QUARTZ_SLAB.defaultBlockState().setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE),
+                        Blocks.SMOOTH_QUARTZ_SLAB.defaultBlockState().setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE)
                 ));
                 put('G', new Slot(Blocks.GLOWSTONE));
             }}
@@ -62,10 +61,10 @@ public class MultiblockPattern {
         this.shape = shape;
         this.origin = origin;
         this.definition = definition;
-        this.definition.put(' ', new Slot(Blocks.AIR.getDefaultState()));
+        this.definition.put(' ', new Slot(Blocks.AIR.defaultBlockState()));
 
         char originChar = shape[origin.y].charAt(origin.x);
-        if (originChar == ' ' || definition.get(originChar).test(Blocks.AIR.getDefaultState()))
+        if (originChar == ' ' || definition.get(originChar).test(Blocks.AIR.defaultBlockState()))
             throw new IllegalStateException("Origin point cannot be blank space.");
 
         int lineLength = shape[0].length();
