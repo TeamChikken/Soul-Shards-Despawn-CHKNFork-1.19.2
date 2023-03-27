@@ -43,7 +43,7 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
 
         this.inventory = new SimpleContainer(1) {
             @Override
-            public boolean canAddItem(ItemStack stack) {
+            public boolean canPlaceItem(int slot, ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemSoulShard))
                     return false;
 

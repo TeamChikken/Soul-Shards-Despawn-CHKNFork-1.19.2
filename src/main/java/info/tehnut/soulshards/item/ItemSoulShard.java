@@ -7,32 +7,27 @@ import info.tehnut.soulshards.block.TileEntitySoulCage;
 import info.tehnut.soulshards.core.RegistrarSoulShards;
 import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.core.data.Tier;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SpawnerBlock;
-import net.minecraft.block.entity.MobSpawnerBlockEntity;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.EntityType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 
 import java.util.List;
@@ -41,7 +36,9 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
     public ItemSoulShard() {
         super(new Properties().stacksTo(1).tab(QuiltItemGroup.TAB_MISC));
-         (new ResourceLocation(SoulShards.MODID, "bound"),
+        // TODO: migrate me
+        /*
+         appendStacks(new ResourceLocation(SoulShards.MODID, "bound"),
                 (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
         addPropertyGetter(new ResourceLocation(SoulShards.MODID, "tier"), (stack, world, entity) -> {
             Binding binding = getBinding(stack);
@@ -49,7 +46,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
                 return 0F;
 
             return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
-        });
+        });*/
     }
 
     @Override
@@ -98,43 +95,48 @@ public class ItemSoulShard extends Item implements ISoulShard {
             if (cage == null)
                 return InteractionResult.PASS;
 
-            ItemStack cageStack = cage.getInventory().getInvStack(0);
-            if (cageStack.isEmpty() && cage.getInventory().isValidInvStack(0, context.getStack())) {
-                cage.getInventory().setInvStack(0, context.getStack().copy());
-                context.getStack().decrement(1);
-                cage.markDirty();
+            ItemStack cageStack = cage.getInventory().getItem(0);
+            if (cageStack.isEmpty() && cage.getInventory().canPlaceItem(0, context.getItemInHand())) {
+                cage.getInventory().setItem(0, context.getItemInHand().copy());
+                context.getItemInHand().shrink(1);
+                cage.setChanged();
                 cage.setState(true);
                 return InteractionResult.SUCCESS;
             }
         }
 
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext options) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip,
+                                TooltipFlag options) {
         Binding binding = getBinding(stack);
         if (binding == null)
             return;
 
-        Style greyColor = new Style().setColor(Formatting.GRAY);
+        var greyColor = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GRAY);
         if (binding.getBoundEntity() != null) {
-            EntityType entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
+            var entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
             if (entityEntry != null)
-                tooltip.add(new TranslatableText("tooltip.soulshards.bound", entityEntry.getName()).setStyle(greyColor));
+                tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
+                        entityEntry.getDescription())).withStyle(greyColor));
             else
-                tooltip.add(new TranslatableText("tooltip.soulshards.bound", binding.getBoundEntity().toString()).setStyle(new Style().setColor(Formatting.RED)));
+                tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
+                        binding.getBoundEntity().toString())).setStyle(greyColor.withColor(ChatFormatting.RED)));
         }
 
-        tooltip.add(new TranslatableText("tooltip.soulshards.tier", binding.getTier().getIndex()).setStyle(greyColor));
-        tooltip.add(new TranslatableText("tooltip.soulshards.kills", binding.getKills()).setStyle(greyColor));
+        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.tier",
+                binding.getTier().getIndex())).withStyle(greyColor));
+        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.kills", binding.getKills())).setStyle(greyColor));
         if (options.isAdvanced() && binding.getOwner() != null)
-            tooltip.add(new TranslatableText("tooltip.soulshards.owner", binding.getOwner().toString()).setStyle(greyColor));
+            tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.owner",
+                    binding.getOwner().toString())).setStyle(greyColor));
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> items) {
-        if (!isIn(group))
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        if (!allowedIn(group))
             return;
 
         items.add(new ItemStack(this));
@@ -147,13 +149,13 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
+    public String getDescriptionId(ItemStack stack) {
         Binding binding = getBinding(stack);
-        return super.getTranslationKey(stack) + (binding == null || binding.getBoundEntity() == null ? "_unbound" : "");
+        return super.getDescriptionId(stack) + (binding == null || binding.getBoundEntity() == null ? "_unbound" : "");
     }
 
     @Override
-    public boolean hasEnchantmentGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         Binding binding = getBinding(stack);
         return binding != null && binding.getKills() >= Tier.maxKills;
     }
