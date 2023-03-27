@@ -22,6 +22,10 @@ minecraft {
 }*/
 
 repositories {
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
     exclusiveContent {
         forRepository {
             maven {
@@ -40,6 +44,7 @@ dependencies {
     mappings loom.layered {
 		mappings "org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2"
 		officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.19.2:2022.11.27@zip")
 	}
     modImplementation libs.quilt.loader
     modImplementation libs.quilted.fabric.api
