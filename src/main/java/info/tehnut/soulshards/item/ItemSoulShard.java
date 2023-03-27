@@ -13,6 +13,11 @@ import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -27,15 +32,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.SpawnerBlock;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 
 import java.util.List;
 
 public class ItemSoulShard extends Item implements ISoulShard {
 
     public ItemSoulShard() {
-        super(new Settings().maxCount(1).group(ItemGroup.MISC));
-
-        addPropertyGetter(new Identifier(SoulShards.MODID, "bound"), (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
+        super(new Properties().stacksTo(1).tab(QuiltItemGroup.TAB_MISC));
+         (new ResourceLocation(SoulShards.MODID, "bound"),
+                (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
         addPropertyGetter(new Identifier(SoulShards.MODID, "tier"), (stack, world, entity) -> {
             Binding binding = getBinding(stack);
             if (binding == null)
@@ -46,36 +55,39 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
 
     @Override
-    public InteractionResult useOnBlock(ItemUsageContext context) {
-        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
-        Binding binding = getBinding(context.getStack());
+    public InteractionResult useOn(UseOnContext context) {
+        var state = context.getLevel().getBlockState(context.getClickedPos());
+        var binding = getBinding(context.getItemInHand());
         if (binding == null)
             return InteractionResult.PASS;
 
         if (state.getBlock() instanceof SpawnerBlock) {
             if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption()) {
                 if (context.getPlayer() != null)
-                    context.getPlayer().addChatMessage(new TranslatableText("chat.soulshards.absorb_disabled"), true);
+                    context.getPlayer().displayClientMessage(MutableComponent.create(new TranslatableContents("chat" +
+                                    ".soulshards" +
+                                    ".absorb_disabled")),
+                            true);
                 return InteractionResult.PASS;
             }
 
             if (binding.getKills() > Tier.maxKills)
                 return InteractionResult.PASS;
 
-            MobSpawnerBlockEntity spawner = (MobSpawnerBlockEntity) context.getWorld().getBlockEntity(context.getBlockPos());
+            var spawner = (SpawnerBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
             if (spawner == null)
                 return InteractionResult.PASS;
 
             try {
-                Identifier entityId = ((MobSpawnerLogicEntityId) spawner.getLogic()).getEntityIdentifier();
+                ResourceLocation entityId = EntityType.getKey(spawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId))
                     return InteractionResult.PASS;
 
                 if (binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
                     return InteractionResult.FAIL;
 
-                updateBinding(context.getStack(), binding.addKills(SoulShards.CONFIG.getBalance().getAbsorptionBonus()));
-                context.getWorld().breakBlock(context.getBlockPos(), false);
+                updateBinding(context.getItemInHand(), binding.addKills(SoulShards.CONFIG.getBalance().getAbsorptionBonus()));
+                context.getLevel().destroyBlock(context.getClickedPos(), false);
                 return InteractionResult.SUCCESS;
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -84,7 +96,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
             if (binding.getBoundEntity() == null)
                 return InteractionResult.FAIL;
 
-            TileEntitySoulCage cage = (TileEntitySoulCage) context.getWorld().getBlockEntity(context.getBlockPos());
+            TileEntitySoulCage cage = (TileEntitySoulCage) context.getLevel().getBlockEntity(context.getClickedPos());
             if (cage == null)
                 return InteractionResult.PASS;
 
