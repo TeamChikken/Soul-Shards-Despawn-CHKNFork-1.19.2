@@ -97,21 +97,24 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
         if (level == null || level.isClientSide)
             return;
 
-        InteractionResultHolder<Binding> result = canSpawn();
+        var pos = getBlockPos();
+        var level = getLevel();
+        assert level != null;
+        InteractionResultHolder<Binding> result = canSpawn(level, pos);
         if (result.getResult() != InteractionResult.SUCCESS) {
             if (active) {
                 setState(false);
-                getWorld().updateNeighbors(pos, getCachedState().getBlock());
+                level.updateNeighborsAt(pos, getBlockState().getBlock());
             }
             return;
         }
 
         if (!active) {
             setState(true);
-            getWorld().updateNeighbors(pos, getCachedState().getBlock());
+            level.updateNeighborsAt(pos, getBlockState().getBlock());
         }
 
-        if (getWorld().getTime() % result.getValue().getTier().getCooldown() == 0)
+        if (level.getGameTime() % result.getObject().getTier().getCooldown() == 0)
             spawnEntities();
     }
 
