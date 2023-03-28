@@ -159,16 +159,17 @@ public class ConfigSoulShards {
         }
 
         public boolean isEnabled(ResourceLocation entityId) {
-            return entities.getOrDefault(entityId, false);
+            return entities.getOrDefault(entityId, true);
         }
 
         private static Map<ResourceLocation, Boolean> getDefaults() {
             Map<ResourceLocation, Boolean> defaults = Maps.newHashMap();
-            Registry.ENTITY_TYPE.stream()
-                    .filter(e -> e.getCategory() != MobCategory.MISC)
+            Registry.ENTITY_TYPE.stream().filter(e -> e.getCategory() == MobCategory.MISC)
                     .forEach(e -> {
                         var entityId = Registry.ENTITY_TYPE.getKey(e);
-                        defaults.put(entityId, !DEFAULT_DISABLES.contains(entityId));
+                        if (DEFAULT_DISABLES.contains(entityId)) {
+                            defaults.put(entityId, false);
+                        }
                     });
             return defaults;
         }
