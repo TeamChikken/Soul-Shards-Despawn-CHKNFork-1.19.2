@@ -76,11 +76,11 @@ tasks.withType(JavaCompile).configureEach {
 
 
 processResources {
-    inputs.property "group", rootProject.maven_group
+    inputs.property 'group', project.group
     inputs.property 'version', project.version
 
     filesMatching('quilt.mod.json') {
-        expand "version": project.version
+        expand("version": project.version, "group": project.group)
     }
 }
 

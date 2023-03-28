@@ -3,9 +3,9 @@
   "id": "soulshards",
   "quilt_loader": {
     "intermediate_mappings": "net.fabricmc:intermediary",
-    "group": "n4tomic.soulshardsdespawn",
+    "group": "${group}",
     "id": "soulshards",
-    "version": "1.0.0",
+    "version": "${version}",
     "metadata": {
       "name": "Soul Shards Despawn",
       "description": "Powerful spawners for any mob!",
@@ -14,9 +14,6 @@
       },
       "license": "MIT",
       "icon": "assets/soulshards/icon.png"
-    },
-    "minecraft": {
-      "environment": "1.19.2"
     },
     "entrypoints": {
       "init": [
@@ -27,6 +24,22 @@
       ]
     },
     "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.19.2"
+      },
+      {
+        "id": "architectury",
+        "version": ">=6.2.43"
+      }
     ]
   },
   "mixin": "soulshards.mixins.json",
