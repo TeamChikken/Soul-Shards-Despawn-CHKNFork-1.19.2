@@ -98,7 +98,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
                     binding.setBoundEntity(entityId);
                 }
                 else if (!binding.getBoundEntity().equals(entityId)) {
-                    SoulShards.Log.warn("Tried to consume entity that doesn't match bound: %s vs" +
+                    SoulShards.Log.warn("Tried to consume entity that doesn't match bound: {} vs" +
                                     " {}",
                             binding.getBoundEntity().toString(), binding.getBoundEntity().toString());
                     return InteractionResult.FAIL;
@@ -110,7 +110,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-        } else if (state.getBlock() == RegistrarSoulShards.SOUL_CAGE) {
+        } else if (state.getBlock() == RegistrarSoulShards.SOUL_CAGE.get()) {
             if (binding.getBoundEntity() == null)
                 return InteractionResult.FAIL;
 

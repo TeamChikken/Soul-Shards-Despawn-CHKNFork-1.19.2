@@ -25,13 +25,6 @@ public class RegistrarSoulShards {
 
     public static RegistrySupplier<ItemSoulShard> SOUL_SHARD;
     //public static final RegistrySupplier<Item> VILE_SWORD; = new ItemVileSword();
-    /*public static final RegistrySupplier<Item> CORRUPTED_ESSENCE =
-            new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC));
-    public static final RegistrySupplier<Item> CORRUPTED_INGOT =
-            new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC));
-    public static final RegistrySupplier<Item> VILE_DUST =
-            new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC));
-    */
 
     public static RegistrySupplier<Item> CORRUPTED_INGOT;
     public static RegistrySupplier<Enchantment> SOUL_STEALER;

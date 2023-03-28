@@ -52,7 +52,7 @@ public class TileEntitySoulCage extends BlockEntity {
             return Optional.empty();
         }
         BlockState state = level.getBlockState(pos);
-        if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
+        if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE.get())
             return Optional.empty();
 
         ItemStack shardStack = inventory.getItem(0);
