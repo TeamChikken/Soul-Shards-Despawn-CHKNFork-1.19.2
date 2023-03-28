@@ -1,38 +1,39 @@
 {
-  "schema_version":  1,
-  "id":  "soulshards",
-  "version":  "1.2.0",
-
-  "name":  "Soul Shards Respawn",
-  "description":  "Powerful spawners for any mob!",
-  "authors":  [
-    "N4tomic"
-  ],
-  "contributors":  [
-  ],
-
-  "license":  "MIT",
-  "icon":  "assets/soulshards/icon.png",
-
-  "environment":  "*",
-  "entrypoints":  {
-    "main":  [
-      "info.tehnut.soulshards.SoulShards"
+  "schema_version": 1,
+  "id": "soulshards",
+  "quilt_loader": {
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "group": "quilt.soulshardsresewn",
+    "id": "soulshards",
+    "version": "1.0.0",
+    "metadata": {
+      "name": "Soul Shards Resewn",
+      "description": "Powerful spawners for any mob!",
+      "contributors": {
+        "N4tomic": "Author"
+      },
+      "license": "MIT",
+      "icon": "assets/soulshards/icon.png"
+    },
+    "minecraft": {
+      "environment": "1.19.2"
+    },
+    "entrypoints": {
+      "main": [
+        "info.n4tomic.soulshards.SoulShards"
+      ],
+      "client": [
+        "info.n4tomic.soulshards.SoulShardsClient"
+      ]
+    },
+    "mixins": [
+      "soulshards.mixins.json"
     ],
-    "client":  [
-      "info.tehnut.soulshards.SoulShardsClient"
-    ]
-  },
-  "mixins":  [
-    "soulshards.mixins.json"
-  ],
-  "depends":  {
-    "fabric":  "*"
-  },
-  "custom":  {
-    "waila:plugins":  {
-      "id":  "soulshards",
-      "initializer":  "info.tehnut.soulshards.compat.waila.SoulShardsWailaPlugin"
+    "depends": [
+    ],
+    "waila:plugins": {
+      "id": "soulshards",
+      "initializer": "info.n4tomic.soulshards.compat.waila.SoulShardsWailaPlugin"
     }
   }
 }

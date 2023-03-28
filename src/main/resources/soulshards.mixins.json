@@ -1,7 +1,7 @@
 {
   "required": true,
-  "package": "info.tehnut.soulshards.core.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "package": "info.n4tomic.soulshards.core.mixin",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "soulshards-refmap.json",
   "mixins": [
     "MixinEntityLiving",

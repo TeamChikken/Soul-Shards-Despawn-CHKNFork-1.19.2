@@ -12,14 +12,8 @@ java {
 def build_number = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'CUSTOM'
 
 group = package_group
-archivesBaseName = "${mod_name}-quilt"
-version = "${mc_version}-${mod_version}-${build_number}"
-
-/*
-minecraft {
-    version(rootProp["mc_version"])
-    refmapName = mod_name.toLowerCase() + '-refmap.json'
-}*/
+archivesBaseName = project.archivesBaseName
+version = "${project.version}-${libs.versions.minecraft.get()}"
 
 repositories {
     maven {
@@ -48,40 +42,31 @@ dependencies {
 	}
     modImplementation libs.quilt.loader
     modImplementation libs.quilted.fabric.api
-    modImplementation 'maven.modrinth:wthit:NmGfP3mL'
+    modCompileOnly 'maven.modrinth:wthit:NmGfP3mL'
 }
 
-/*
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    classifier = 'sources'
-}*/
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
+}
 
-//task apiJar(type: Jar) {
-    //from sourceSets.main.allSource
-    //from sourceSets.main.output
-    //include 'info/tehnut/soulshards/api/**/*'
-    //classifier = 'api'
-//}
 
-/*
+processResources {
+    inputs.property 'version', version
+
+    filesMatching('quilt.mod.json') {
+        expand "version": version
+    }
+}
+
 publishing {
-    tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
-            artifact remapJar
-            artifact sourcesJar
-            artifact apiJar
+            from components.java
         }
     }
-    repositories {
-        if (project.hasProperty('maven_repo')) {
-            maven { url maven_repo }
-        } else {
-            mavenLocal()
-        }
-    }
-}*/
+}
 
 def curseRelations = {
     requiredLibrary 'fabric-api'
