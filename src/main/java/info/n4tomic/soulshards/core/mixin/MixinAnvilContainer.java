@@ -18,21 +18,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AnvilMenu.class)
-public class MixinAnvilContainer extends AbstractContainerMenu {
+public class MixinAnvilContainer {
 
     @Shadow
     @Final
     private DataSlot cost;
 
-    protected MixinAnvilContainer(@Nullable MenuType<?> menuType, int containerId) {
-        super(menuType, containerId);
-    }
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
     public void soulshards$createResult(CallbackInfo callbackInfo) {
         if (!SoulShards.CONFIG.getBalance().allowShardCombination())
             return;
 
+        var slots = ((AbstractContainerMenu)(Object)this).slots;
         ItemStack leftStack = slots.get(ItemCombinerMenu.INPUT_SLOT).getItem();
         ItemStack rightStack = slots.get(ItemCombinerMenu.ADDITIONAL_SLOT).getItem();
 
@@ -51,15 +49,5 @@ public class MixinAnvilContainer extends AbstractContainerMenu {
                 callbackInfo.cancel();
             }
         }
-    }
-
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return null;
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return false;
     }
 }
