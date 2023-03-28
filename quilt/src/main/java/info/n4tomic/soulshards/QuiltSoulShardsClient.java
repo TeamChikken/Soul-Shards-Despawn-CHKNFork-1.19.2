@@ -13,6 +13,7 @@ public class QuiltSoulShardsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient(ModContainer container) {
         BlockRenderLayerMap.INSTANCE.putBlock(RegistrarSoulShards.SOUL_CAGE, RenderType.cutout());
+
         SoulShards.afterLoad();
     }
 }
