@@ -1,5 +1,6 @@
-package info.n4tomic.soulshards;
+package info.n4tomic.soulshards.quilt;
 
+import info.n4tomic.soulshards.SoulShards;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 

@@ -3,7 +3,7 @@
   "id": "soulshards",
   "quilt_loader": {
     "intermediate_mappings": "net.fabricmc:intermediary",
-    "group": "quilt.soulshardsresewn",
+    "group": "n4tomic.soulshardsresewn",
     "id": "soulshards",
     "version": "1.0.0",
     "metadata": {
@@ -20,10 +20,10 @@
     },
     "entrypoints": {
       "init": [
-        "info.n4tomic.soulshards.SoulShards"
+        "info.n4tomic.soulshards.quilt.QuiltSoulShards"
       ],
       "client_init": [
-        "info.n4tomic.soulshards.SoulShardsClient"
+        "info.n4tomic.soulshards.quilt.QuiltSoulShardsClient"
       ]
     },
     "depends": [
