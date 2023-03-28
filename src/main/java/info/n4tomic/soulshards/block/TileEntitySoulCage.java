@@ -28,7 +28,9 @@ import net.minecraft.world.phys.AABB;
 
 public class TileEntitySoulCage extends BlockEntity implements Tickable {
 
-    private Container inventory;
+public class TileEntitySoulCage extends BlockEntity {
+
+    private final Container inventory;
     private boolean active;
 
     public TileEntitySoulCage(BlockPos pos, BlockState state) {
@@ -85,7 +87,11 @@ public class TileEntitySoulCage extends BlockEntity implements Tickable {
 
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, binding);
     }
-    @Override
+    public static void ticker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        if (blockEntity instanceof TileEntitySoulCage me) {
+            me.tick();
+        }
+    }
     public void tick() {
         if (level == null || level.isClientSide)
             return;

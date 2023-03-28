@@ -7,26 +7,26 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockSoulCage extends Block implements EntityBlock {
 
     public static final Property<Boolean> ACTIVE = BooleanProperty.create("active");
     public static final Property<Boolean> POWERED = BooleanProperty.create("powered");
-    private Slot shard;
 
     public BlockSoulCage() {
         super(Properties.copy(Blocks.SPAWNER));
@@ -44,13 +44,17 @@ public class BlockSoulCage extends Block implements EntityBlock {
         if (!player.isCrouching())
             return InteractionResult.PASS;
 
-        ItemStack stack = shard.getItem();
-        if (stack.isEmpty())
+        var cage = (TileEntitySoulCage)level.getBlockEntity(pos);
+        if (cage == null) {
+            return InteractionResult.PASS;
+        }
+        var shard = cage.getInventory().getItem(0);
+        if (shard.isEmpty())
             return InteractionResult.PASS;
 
-        if (!player.getInventory().add(stack)) {
+        if (!player.getInventory().add(shard)) {
             BlockPos playerPos = new BlockPos(player.position());
-            ItemEntity entity = new ItemEntity(level, playerPos.getX(), playerPos.getY(), playerPos.getZ(), stack);
+            ItemEntity entity = new ItemEntity(level, playerPos.getX(), playerPos.getY(), playerPos.getZ(), shard);
             level.addFreshEntity(entity);
         }
         return InteractionResult.SUCCESS;
@@ -102,6 +106,13 @@ public class BlockSoulCage extends Block implements EntityBlock {
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
         if (state.getValue(POWERED) && !world.hasNeighborSignal(pos))
             world.getChunkAt(pos).setBlockState(pos, state.setValue(POWERED, false), false);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                            BlockEntityType<T> blockEntityType) {
+        return TileEntitySoulCage::ticker;
     }
 
     @Override
