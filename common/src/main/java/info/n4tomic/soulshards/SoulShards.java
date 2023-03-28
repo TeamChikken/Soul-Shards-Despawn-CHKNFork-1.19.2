@@ -35,7 +35,7 @@ public class SoulShards {
     }
 
     public static void afterLoad() {
-        Log.info("Soul Shards Resewn rises once again");
+        Log.info("Soul Shards Despawn rises once again");
     }
 
     public static void initCommon() {

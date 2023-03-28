@@ -6,10 +6,10 @@ license = "MIT"
 [[mods]]
 modId = "soulshards"
 version = "${version}"
-displayName = "Soul Shards Resewn"
+displayName = "Soul Shards Despawn"
 authors = "N4tomic"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Custom spawners for any and all mobs!
 '''
 #logoFile = ""
 

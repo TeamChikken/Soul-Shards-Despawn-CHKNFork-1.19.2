@@ -3,11 +3,11 @@
   "id": "soulshards",
   "quilt_loader": {
     "intermediate_mappings": "net.fabricmc:intermediary",
-    "group": "n4tomic.soulshardsresewn",
+    "group": "n4tomic.soulshardsdespawn",
     "id": "soulshards",
     "version": "1.0.0",
     "metadata": {
-      "name": "Soul Shards Resewn",
+      "name": "Soul Shards Despawn",
       "description": "Powerful spawners for any mob!",
       "contributors": {
         "N4tomic": "Author"
