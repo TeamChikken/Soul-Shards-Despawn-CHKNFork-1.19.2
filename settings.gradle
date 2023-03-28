@@ -15,4 +15,4 @@ include("quilt")
 include("forge")
 
 
-rootProject.name = 'SoulShardsResewn'
+rootProject.name = 'SoulShardsDespawn'
