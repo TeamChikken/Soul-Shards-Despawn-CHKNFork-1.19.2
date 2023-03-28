@@ -6,7 +6,6 @@ import info.n4tomic.soulshards.api.IShardTier;
 import info.n4tomic.soulshards.core.RegistrarSoulShards;
 import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.item.ItemSoulShard;
-import net.minecraft.client.renderer.texture.Tickable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
@@ -23,10 +22,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.phys.AABB;
+import org.quiltmc.loader.impl.util.log.Log;
+import org.quiltmc.loader.impl.util.log.LogCategory;
 
-public class TileEntitySoulCage extends BlockEntity implements Tickable {
+import java.util.Optional;
 
 public class TileEntitySoulCage extends BlockEntity {
 
@@ -48,44 +48,44 @@ public class TileEntitySoulCage extends BlockEntity {
         };
     }
 
-    private InteractionResultHolder<Binding> canSpawn(Level level, BlockPos pos) {
+    private Optional<Binding> canSpawn(Level level, BlockPos pos) {
         // TODO mojang pls
 //        if (!getWorld().getServer().getWorld(DimensionType.OVERWORLD).getGameRules().getBoolean(SoulShards.allowCageSpawns))
 //            return new InteractionResultHolder<>(ActionResult.FAIL, null);
 
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, null);
+            return Optional.empty();
 
         ItemStack shardStack = inventory.getItem(0);
         if (shardStack.isEmpty() || !(shardStack.getItem() instanceof ItemSoulShard))
-            return new InteractionResultHolder<>(InteractionResult.FAIL, null);
+            return Optional.empty();
 
         Binding binding = ((ItemSoulShard) shardStack.getItem()).getBinding(shardStack);
         if (binding == null || binding.getBoundEntity() == null)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+            return Optional.empty();
 
         IShardTier tier = binding.getTier();
         if (tier.getSpawnAmount() == 0)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+            return Optional.empty();
 
         if (SoulShards.CONFIG.getBalance().requireOwnerOnline() && !ownerOnline())
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+            return Optional.empty();
 
         if (!SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+            return Optional.empty();
 
         if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal()) {
             if (state.getValue(BlockSoulCage.POWERED) && tier.checkRedstone())
-                return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+                return Optional.empty();
         } else if (!state.getValue(BlockSoulCage.POWERED))
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+            return Optional.empty();
 
         if (tier.checkPlayer() && level.getNearestPlayer(pos.getX(), pos.getY(), pos.getX(), 16,
                 false) == null)
-            return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
+            return Optional.empty();
 
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, binding);
+        return Optional.of(binding);
     }
     public static void ticker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if (blockEntity instanceof TileEntitySoulCage me) {
@@ -97,10 +97,8 @@ public class TileEntitySoulCage extends BlockEntity {
             return;
 
         var pos = getBlockPos();
-        var level = getLevel();
-        assert level != null;
-        InteractionResultHolder<Binding> result = canSpawn(level, pos);
-        if (result.getResult() != InteractionResult.SUCCESS) {
+        var result = canSpawn(level, pos);
+        if (result.isEmpty()) {
             if (active) {
                 setState(false);
                 level.updateNeighborsAt(pos, getBlockState().getBlock());
@@ -113,7 +111,7 @@ public class TileEntitySoulCage extends BlockEntity {
             level.updateNeighborsAt(pos, getBlockState().getBlock());
         }
 
-        if (level.getGameTime() % result.getObject().getTier().getCooldown() == 0)
+        if (level.getGameTime() % result.get().getTier().getCooldown() == 0)
             spawnEntities();
     }
 
