@@ -3,6 +3,7 @@ package info.n4tomic.soulshards.core;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
+import dev.architectury.platform.Platform;
 import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.core.data.MultiblockPattern;
 import info.n4tomic.soulshards.core.util.JsonUtil;
@@ -11,7 +12,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.io.FileUtils;
-import org.quiltmc.loader.api.QuiltLoader;
 
 import java.io.File;
 import java.util.HashSet;
@@ -49,7 +49,7 @@ public class ConfigSoulShards {
     }
 
     public static void handleMultiblock() {
-        File multiblockFile = new File(QuiltLoader.getConfigDir().toFile(), SoulShards.MODID + "/multiblock.json");
+        File multiblockFile = new File(Platform.getConfigFolder().toFile(), SoulShards.MODID + "/multiblock.json");
         if (!multiblockFile.exists()) {
             try {
                 FileUtils.copyInputStreamToFile(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json"),

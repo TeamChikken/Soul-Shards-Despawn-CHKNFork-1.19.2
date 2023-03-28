@@ -13,8 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.quiltmc.loader.impl.util.log.Log;
-import org.quiltmc.loader.impl.util.log.LogCategory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,7 +41,7 @@ public class MixinEntityLiving {
                 return;
             entity.getEntityData().define(SoulShards.cageBornTag, false);
         } catch(Exception e) {
-            Log.error(LogCategory.GENERAL, "during synched data: %s", e.getMessage());
+            SoulShards.Log.error("during synched data: {}", e.getMessage());
         }
     }
 

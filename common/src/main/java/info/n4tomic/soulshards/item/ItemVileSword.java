@@ -6,7 +6,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import net.minecraft.util.LazyLoadedValue;
 
 public class ItemVileSword extends SwordItem implements ISoulWeapon {
@@ -14,7 +13,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
     public static final Tier MATERIAL_VILE = new MaterialVile();
 
     public ItemVileSword() {
-        super(MATERIAL_VILE, 3, -2.4F, new Properties().tab(QuiltItemGroup.TAB_COMBAT));
+        super(MATERIAL_VILE, 3, -2.4F, new Properties().tab(CreativeModeTab.TAB_COMBAT));
     }
 
     @Override

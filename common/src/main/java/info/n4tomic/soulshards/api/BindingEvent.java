@@ -1,7 +1,7 @@
 package info.n4tomic.soulshards.api;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
+import dev.architectury.event.Event;
+import dev.architectury.event.EventFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class BindingEvent {
 
-    public static final Event<NewBinding> NEW_BINDINGS = EventFactory.createArrayBacked(NewBinding.class,
+    public static final Event<NewBinding> NEW_BINDINGS = EventFactory.of(
             (listeners) -> (entity, binding) -> {
                 for (NewBinding newBinding : listeners) {
                     InteractionResultHolder<IBinding> currentResult = newBinding.onNewBinding(entity, binding);
@@ -23,7 +23,7 @@ public class BindingEvent {
             }
     );
 
-    public static final Event<GainSouls> GAIN_SOULS = EventFactory.createArrayBacked(GainSouls.class,
+    public static final Event<GainSouls> GAIN_SOULS = EventFactory.of(
             (listeners) -> (entity, binding, amount) -> {
                 int soulsGained = amount;
 
@@ -36,7 +36,7 @@ public class BindingEvent {
             }
     );
 
-    public static final Event<GetEntityName> GET_ENTITY_ID = EventFactory.createArrayBacked(GetEntityName.class,
+    public static final Event<GetEntityName> GET_ENTITY_ID = EventFactory.of(
             (listeners) -> (entity, currentName) -> {
 
                 for (GetEntityName getEntityName : listeners) {

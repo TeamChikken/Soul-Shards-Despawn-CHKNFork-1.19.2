@@ -28,16 +28,13 @@ import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.loader.impl.util.log.Log;
-import org.quiltmc.loader.impl.util.log.LogCategory;
-import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 
 import java.util.List;
 
 public class ItemSoulShard extends Item implements ISoulShard {
 
     public ItemSoulShard() {
-        super(new Properties().stacksTo(1).tab(QuiltItemGroup.TAB_MISC));
+        super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_MISC));
     }
     @Override
     public int getBarColor(ItemStack stack) {
@@ -65,8 +62,6 @@ public class ItemSoulShard extends Item implements ISoulShard {
     public @NotNull InteractionResult useOn(UseOnContext context) {
         var state = context.getLevel().getBlockState(context.getClickedPos());
         var binding = getBinding(context.getItemInHand());
-        Log.info(LogCategory.GENERAL, "Use on: %s %b", state.getBlock().getName(),
-                state.getBlock() instanceof SpawnerBlock);
         if (binding == null) {
             return InteractionResult.PASS;
         }
@@ -86,14 +81,15 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
             var spawner = (SpawnerBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
             if (spawner == null) {
-                Log.warn(LogCategory.GENERAL, "Failed to get spawner entity at pos %s", context.getClickedPos().toString());
+                SoulShards.Log.warn("Failed to get spawner entity at pos {}", context.getClickedPos().toString());
                 return InteractionResult.PASS;
             }
 
             try {
                 ResourceLocation entityId = EntityType.getKey(spawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
-                    Log.debug(LogCategory.GENERAL, "Tried to consume entity which is disallowed in the config: %s",
+                    SoulShards.Log.debug("Tried to consume entity which is disallowed in the " +
+                                    "config: {}",
                             entityId.toString());
                     return InteractionResult.PASS;
                 }
@@ -102,7 +98,8 @@ public class ItemSoulShard extends Item implements ISoulShard {
                     binding.setBoundEntity(entityId);
                 }
                 else if (!binding.getBoundEntity().equals(entityId)) {
-                    Log.warn(LogCategory.GENERAL, "Tried to consume entity that doesn't match bound: %s vs %s",
+                    SoulShards.Log.warn("Tried to consume entity that doesn't match bound: %s vs" +
+                                    " {}",
                             binding.getBoundEntity().toString(), binding.getBoundEntity().toString());
                     return InteractionResult.FAIL;
                 }

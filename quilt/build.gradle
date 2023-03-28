@@ -45,7 +45,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionQuilt")) { transitive false }
     modApi libs.quilt.loader
     modApi libs.quilted.fabric.api
-    modCompileOnly 'maven.modrinth:wthit:NmGfP3mL'
 }
 
 tasks.withType(JavaCompile).configureEach {

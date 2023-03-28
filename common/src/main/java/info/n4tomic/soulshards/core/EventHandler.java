@@ -1,5 +1,10 @@
 package info.n4tomic.soulshards.core;
 
+import com.sun.jna.platform.win32.Wincon;
+import dev.architectury.event.Event;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.BlockEvent;
+import dev.architectury.event.events.common.InteractionEvent;
 import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.api.BindingEvent;
 import info.n4tomic.soulshards.api.ISoulWeapon;
@@ -7,7 +12,6 @@ import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.core.data.MultiblockPattern;
 import info.n4tomic.soulshards.core.data.Tier;
 import info.n4tomic.soulshards.item.ItemSoulShard;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -21,28 +25,27 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
-import org.quiltmc.loader.impl.util.log.Log;
-import org.quiltmc.loader.impl.util.log.LogCategory;
 
 import java.util.Set;
 
 public class EventHandler {
 
     public static void init() {
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+        InteractionEvent.RIGHT_CLICK_BLOCK.register((player, hand, pos, direction) -> {
             MultiblockPattern pattern = ConfigSoulShards.getMultiblock();
 
             ItemStack held = player.getMainHandItem();
             if (!ItemStack.isSame(pattern.getCatalyst(), held))
-                return InteractionResult.PASS;
+                return EventResult.pass();
 
-            BlockState worldState = world.getBlockState(hitResult.getBlockPos());
+            var world = player.getLevel();
+            BlockState worldState = world.getBlockState(pos);
             if (!pattern.isOriginBlock(worldState))
-                return InteractionResult.PASS;
+                return EventResult.pass();
 
-            InteractionResultHolder<Set<BlockPos>> match = pattern.match(world, hitResult.getBlockPos());
+            InteractionResultHolder<Set<BlockPos>> match = pattern.match(world, pos);
             if (match.getResult() == InteractionResult.FAIL)
-                return match.getResult();
+                return EventResult.interruptFalse();
 
             match.getObject().forEach(matchedPos -> world.destroyBlock(matchedPos, false));
             held.shrink(1);
@@ -50,7 +53,7 @@ public class EventHandler {
             if (!player.getInventory().add(shardStack)) {
                 Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), shardStack);
             }
-            return InteractionResult.SUCCESS;
+            return EventResult.interruptTrue();
         });
     }
 

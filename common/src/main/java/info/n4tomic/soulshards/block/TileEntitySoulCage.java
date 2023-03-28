@@ -26,8 +26,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
-import org.quiltmc.loader.impl.util.log.Log;
-import org.quiltmc.loader.impl.util.log.LogCategory;
 
 import java.util.Optional;
 
