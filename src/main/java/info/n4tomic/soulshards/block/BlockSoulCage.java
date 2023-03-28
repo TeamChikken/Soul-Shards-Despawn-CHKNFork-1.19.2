@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -30,7 +31,11 @@ public class BlockSoulCage extends Block implements EntityBlock {
     public BlockSoulCage() {
         super(Properties.copy(Blocks.SPAWNER));
 
-        registerDefaultState(defaultBlockState().setValue(ACTIVE, false).setValue(POWERED, false));
+        registerDefaultState(getStateDefinition().any().setValue(ACTIVE, false).setValue(POWERED, false));
+    }
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> factory) {
+        factory.add(ACTIVE, POWERED);
     }
 
     @Override
