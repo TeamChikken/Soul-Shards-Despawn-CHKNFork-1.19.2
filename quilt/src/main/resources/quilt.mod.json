@@ -17,10 +17,10 @@
     },
     "entrypoints": {
       "init": [
-        "info.n4tomic.soulshards.quilt.QuiltSoulShards"
+        "info.x2a.soulshards.quilt.QuiltSoulShards"
       ],
       "client_init": [
-        "info.n4tomic.soulshards.quilt.QuiltSoulShardsClient"
+        "info.x2a.soulshards.quilt.QuiltSoulShardsClient"
       ]
     },
     "depends": [
@@ -45,6 +45,6 @@
   "mixin": "soulshards.mixins.json",
   "waila:plugins": {
     "id": "soulshards",
-    "initializer": "info.n4tomic.soulshards.compat.waila.SoulShardsWailaPlugin"
+    "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin"
   }
 }
