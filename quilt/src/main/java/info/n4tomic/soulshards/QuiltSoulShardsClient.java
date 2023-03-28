@@ -8,11 +8,11 @@ import org.quiltmc.loader.impl.util.log.Log;
 import org.quiltmc.loader.impl.util.log.LogCategory;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
-public class SoulShardsClient implements ClientModInitializer {
+public class QuiltSoulShardsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(ModContainer container) {
         BlockRenderLayerMap.INSTANCE.putBlock(RegistrarSoulShards.SOUL_CAGE, RenderType.cutout());
-        Log.info(LogCategory.GENERAL, "Soul Shards Resewn rises once again");
+        SoulShards.afterLoad();
     }
 }

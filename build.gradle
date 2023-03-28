@@ -1,127 +1,70 @@
 plugins {
-    //id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "maven-publish"
-    alias libs.plugins.quilt.loom
-}
-java {
-    withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
 }
 
-def build_number = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'CUSTOM'
+architectury {
+    minecraft = libs.versions.minecraft.get()
+}
 
-group = package_group
-archivesBaseName = project.archivesBaseName
-version = "${project.version}-${libs.versions.minecraft.get()}"
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-repositories {
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
+    loom {
+        silentMojangMappingsLicense()
     }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Modrinth'
-                url = 'https://api.modrinth.com/maven'
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${libs.versions.minecraft.get()}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+
+        mappings loom.layered {
+            officialMojangMappings()
+            parchment("org.parchmentmc.data:parchment-1.19.2:2022.11.27@zip")
+        }
+        // The following line declares the yarn mappings you may select this one as well.
+        // mappings "net.fabricmc:yarn:1.19.2+build.3:v2"
+    }
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    repositories {
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Modrinth'
+                    url = 'https://api.modrinth.com/maven'
+                }
+            }
+            filter {
+                includeGroup 'maven.modrinth'
             }
         }
-        filter {
-            includeGroup 'maven.modrinth'
-        }
-    }
-}
-
-dependencies {
-    minecraft libs.minecraft
-    mappings loom.layered {
-		mappings "org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2"
-		officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.19.2:2022.11.27@zip")
-	}
-    modImplementation libs.quilt.loader
-    modImplementation libs.quilted.fabric.api
-    modCompileOnly 'maven.modrinth:wthit:NmGfP3mL'
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = 'UTF-8'
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
-}
-
-
-processResources {
-    inputs.property 'version', version
-
-    filesMatching('quilt.mod.json') {
-        expand "version": version
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
-
-def curseRelations = {
-    requiredLibrary 'fabric-api'
-}
-
-/*
-curseforge {
-    if (project.hasProperty('curse_key_TehNut'))
-        apiKey = project.curse_key_TehNut
-
-    project {
-        id = "${curse_id}"
-        changelog = getChangelogText()
-        releaseType = 'release'
-
-        relations curseRelations
-
-        addGameVersion "1.14.3"
-        addGameVersion "Java 8"
-        addGameVersion "Fabric"
-        addArtifact sourcesJar
-        addArtifact apiJar
-        mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-
-        afterEvaluate {
-            uploadTask.dependsOn(remapJar)
-        }
     }
 
-    options {
-        forgeGradleIntegration = false
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 17
     }
-}*/
 
-String getChangelogText() {
-    def changelogFile = new File('changelog.txt')
-    String str = ''
-    String separator = '---'
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
-        }
-        if (lineCount < 3) {
-            lineCount++
-            if (it.startsWith(separator)) {
-                return
-            }
-        }
-        if (!it.startsWith(separator)) {
-            str += "$it" + (lineCount < 3 ? ':\n\n' : '\n')
-            return
-        }
-        done = true // once we go past the first version block, parse no more
+    java {
+        withSourcesJar()
     }
-    return str
 }
