@@ -7,7 +7,7 @@ license = "MIT"
 modId = "soulshards"
 version = "${version}"
 displayName = "Soul Shards Despawn"
-authors = "N4tomic"
+authors = "0x00002a"
 description = '''
 Custom spawners for any and all mobs!
 '''
