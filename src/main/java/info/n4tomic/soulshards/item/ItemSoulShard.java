@@ -51,6 +51,22 @@ public class ItemSoulShard extends Item implements ISoulShard {
             return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
         });*/
     }
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return 0x9F63ED;
+    }
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return SoulShards.CONFIG.getClient().displayDurabilityBar() && getBinding(stack).getKills() < Tier.maxKills;
+    }
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        var maxPx = 13F;
+        var current = (float) getBinding(stack).getKills();
+        var max = (float) Tier.maxKills;
+        var percentage = current / max;
+        return Math.round(maxPx * percentage);
+    }
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
