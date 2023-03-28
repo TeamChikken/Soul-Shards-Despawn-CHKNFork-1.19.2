@@ -4,13 +4,13 @@ import info.tehnut.soulshards.SoulShards;
 import info.tehnut.soulshards.block.TileEntitySoulCage;
 import info.tehnut.soulshards.core.data.Binding;
 import mcp.mobius.waila.api.*;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 
@@ -18,37 +18,40 @@ public class SoulShardsWailaPlugin implements IWailaPlugin {
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.registerComponentProvider(new IEntityComponentProvider() {
+        registrar.addComponent(new IEntityComponentProvider() {
             @Override
-            public void appendBody(List<Text> tooltip, IEntityAccessor accessor, IPluginConfig config) {
-                if (accessor.getEntity().getDataTracker().get(SoulShards.cageBornTag))
-                    tooltip.add(new TranslatableText("tooltip.soulshards.cage_born"));
+            public void appendBody(ITooltip tooltip, IEntityAccessor accessor, IPluginConfig config) {
+                if (accessor.getEntity().getEntityData().get(SoulShards.cageBornTag))
+                    tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.cage_born")));
             }
         }, TooltipPosition.BODY, LivingEntity.class);
 
-        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> {
-            Binding binding = ((TileEntitySoulCage) blockEntity).getBinding();
+        registrar.addBlockData((data, block, config) -> {
+            var binding = ((TileEntitySoulCage) block).getBinding();
             if (binding != null)
                 data.put("binding", binding.serializeNBT());
         }, TileEntitySoulCage.class);
 
-        registrar.registerComponentProvider(new IComponentProvider() {
+        registrar.addComponent(new IBlockComponentProvider() {
             @Override
-            public void appendBody(List<Text> tooltip, IDataAccessor accessor, IPluginConfig config) {
+            public void appendBody(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
                 if (!accessor.getServerData().contains("binding"))
                     return;
 
                 Binding binding = new Binding(accessor.getServerData().getCompound("binding"));
 
                 if (binding.getBoundEntity() != null) {
-                    EntityType entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
+                    var entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
                     if (entityEntry != null)
-                        tooltip.add(new TranslatableText("tooltip.soulshards.bound", entityEntry.getName()));
+                        tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
+                                entityEntry.getDescription())));
                     else
-                        tooltip.add(new TranslatableText("tooltip.soulshards.bound", binding.getBoundEntity().toString()).setStyle(new Style().setColor(Formatting.RED)));
+                        tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
+                                binding.getBoundEntity().toString())).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                 }
 
-                tooltip.add(new TranslatableText("tooltip.soulshards.tier", binding.getTier().getIndex()));
+                tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.tier",
+                        binding.getTier().getIndex())));
             }
         }, TooltipPosition.BODY, TileEntitySoulCage.class);
     }
