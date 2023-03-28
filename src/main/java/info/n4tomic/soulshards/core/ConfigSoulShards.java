@@ -7,6 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -139,16 +140,25 @@ public class ConfigSoulShards {
     }
 
     public static class ConfigEntityList {
-        private static final Set<String> DEFAULT_DISABLES = Sets.newHashSet(
-                "minecraft:armor_stand",
-                "minecraft:elder_guardian",
-                "minecraft:ender_dragon",
-                "minecraft:wither",
-                "minecraft:wither",
-                "minecraft:player"
-        );
+        private static final Set<ResourceLocation> DEFAULT_DISABLES = createDefaultDisables();
 
-        private Map<ResourceLocation, Boolean> entities;
+        private static Set<ResourceLocation> createDefaultDisables() {
+            String[] disablesVanilla = {
+                    "armor_stand",
+                    "elder_guardian",
+                    "ender_dragon",
+                    "wither",
+                    "wither",
+                    "player"};
+            var output = new HashSet<ResourceLocation>();
+            for (var el :
+                    disablesVanilla) {
+                output.add(new ResourceLocation("minecraft", el));
+            }
+            return output;
+        }
+
+        private final Map<ResourceLocation, Boolean> entities;
 
         public ConfigEntityList(Map<ResourceLocation, Boolean> entities) {
             this.entities = entities;
