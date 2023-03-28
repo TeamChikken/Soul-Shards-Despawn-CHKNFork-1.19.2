@@ -2,20 +2,38 @@ package info.n4tomic.soulshards.core.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * A simple utility for reading and writing JSON files. To handle custom (de)serialization, use
  * {@link com.google.gson.annotations.JsonAdapter} on your types.
  */
 public class JsonUtil {
+    private static class ResourceLocationAdaptor extends TypeAdapter<ResourceLocation> {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().create();
+        @Override
+        public void write(JsonWriter jsonWriter, ResourceLocation resourceLocation) throws IOException {
+            jsonWriter.value(resourceLocation.toString());
+        }
+
+        @Override
+        public ResourceLocation read(JsonReader jsonReader) throws IOException {
+            return ResourceLocation.tryParse(jsonReader.nextString());
+        }
+    }
+
+    private static final Gson GSON =
+            new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().registerTypeAdapter(ResourceLocation.class, new ResourceLocationAdaptor()).create();
 
     /**
      * Reads a {@link T} back from the given file. If the file does not exist, a new file will be generated with the
