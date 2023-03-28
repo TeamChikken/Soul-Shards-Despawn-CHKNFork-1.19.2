@@ -8,6 +8,7 @@ import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 import org.quiltmc.loader.impl.util.log.Log;
 import org.quiltmc.loader.impl.util.log.LogCategory;
@@ -49,10 +52,10 @@ public class TileEntitySoulCage extends BlockEntity {
     }
 
     private Optional<Binding> canSpawn(Level level, BlockPos pos) {
-        // TODO mojang pls
-//        if (!getWorld().getServer().getWorld(DimensionType.OVERWORLD).getGameRules().getBoolean(SoulShards.allowCageSpawns))
-//            return new InteractionResultHolder<>(ActionResult.FAIL, null);
 
+        if (!level.getGameRules().getBoolean(SoulShards.allowCageSpawns)) {
+            return Optional.empty();
+        }
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
             return Optional.empty();

@@ -38,18 +38,6 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
     public ItemSoulShard() {
         super(new Properties().stacksTo(1).tab(QuiltItemGroup.TAB_MISC));
-        // TODO: migrate me
-
-        /*
-         appendStacks(new ResourceLocation(SoulShards.MODID, "bound"),
-                (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
-        addPropertyGetter(new ResourceLocation(SoulShards.MODID, "tier"), (stack, world, entity) -> {
-            Binding binding = getBinding(stack);
-            if (binding == null)
-                return 0F;
-
-            return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
-        });*/
     }
     @Override
     public int getBarColor(ItemStack stack) {
