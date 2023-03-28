@@ -15,13 +15,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.quiltmc.loader.impl.util.log.Log;
 import org.quiltmc.loader.impl.util.log.LogCategory;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public class MixinEntityLiving {
+
+    @Shadow
+    @Final
+    private boolean dead;
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void registerDataTracker(CallbackInfo callbackInfo) {
@@ -42,11 +48,11 @@ public class MixinEntityLiving {
     }
 
     @Inject(method = "die", at = @At("HEAD"))
-    private void onDeathEvent(DamageSource source, CallbackInfo callbackInfo) {
+    private void onDeathEvent(DamageSource damageSource, CallbackInfo callbackInfo) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity instanceof Player)
+        if (entity instanceof Player || dead)
             return;
 
-        EventHandler.onEntityDeath(entity, source);
+        EventHandler.onEntityDeath(entity, damageSource);
     }
 }
