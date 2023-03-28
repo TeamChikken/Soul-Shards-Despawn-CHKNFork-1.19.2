@@ -26,14 +26,12 @@
         "info.n4tomic.soulshards.SoulShardsClient"
       ]
     },
-    "mixins": [
-      "soulshards.mixins.json"
-    ],
     "depends": [
-    ],
-    "waila:plugins": {
-      "id": "soulshards",
-      "initializer": "info.n4tomic.soulshards.compat.waila.SoulShardsWailaPlugin"
-    }
+    ]
+  },
+  "mixin": "soulshards.mixins.json",
+  "waila:plugins": {
+    "id": "soulshards",
+    "initializer": "info.n4tomic.soulshards.compat.waila.SoulShardsWailaPlugin"
   }
 }
