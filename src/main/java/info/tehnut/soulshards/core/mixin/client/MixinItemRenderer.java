@@ -6,10 +6,11 @@ import info.tehnut.soulshards.SoulShards;
 import info.tehnut.soulshards.core.data.Binding;
 import info.tehnut.soulshards.core.data.Tier;
 import info.tehnut.soulshards.item.ItemSoulShard;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.client.renderer.FaceInfo;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
-import org.apache.logging.log4j.core.pattern.TextRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,8 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
 
-    @Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("RETURN"))
-    private void renderShardFullness(TextRenderer textRenderer, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
+    @Inject(method = "renderGuiItemDecorations(Lnet/minecraft/client/font/gui/Font;" +
+            "Lnet/minecraft/world/item/ItemStack;" +
+            "IILjava/lang/String;)V", at = @At("RETURN"))
+    private void renderShardFullness(Font textRenderer, ItemStack stack, int x, int y, String text,
+                                     CallbackInfo ci) {
         if (!SoulShards.CONFIG.getClient().displayDurabilityBar())
             return;
 
