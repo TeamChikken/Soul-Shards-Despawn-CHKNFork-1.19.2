@@ -19,10 +19,10 @@
       "environment": "1.19.2"
     },
     "entrypoints": {
-      "main": [
+      "init": [
         "info.n4tomic.soulshards.SoulShards"
       ],
-      "client": [
+      "client_init": [
         "info.n4tomic.soulshards.SoulShardsClient"
       ]
     },
