@@ -1,15 +1,11 @@
 package info.n4tomic.soulshards.core.mixin;
 
 import info.n4tomic.soulshards.SoulShards;
-import info.n4tomic.soulshards.core.RegistrarSoulShards;
+import info.n4tomic.soulshards.core.registry.RegistrarSoulShards;
 import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.item.ItemSoulShard;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,7 +38,7 @@ public class MixinAnvilContainer {
                 return;
 
             if (left.getBoundEntity() != null && left.getBoundEntity().equals(right.getBoundEntity())) {
-                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
+                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
                 ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
                 slots.get(ItemCombinerMenu.RESULT_SLOT).set(output);
                 cost.set(left.getTier().getIndex() * 6);

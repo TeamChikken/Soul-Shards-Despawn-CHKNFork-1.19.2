@@ -1,9 +1,6 @@
 package info.n4tomic.soulshards.core;
 
-import com.sun.jna.platform.win32.Wincon;
-import dev.architectury.event.Event;
 import dev.architectury.event.EventResult;
-import dev.architectury.event.events.common.BlockEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.api.BindingEvent;
@@ -11,6 +8,7 @@ import info.n4tomic.soulshards.api.ISoulWeapon;
 import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.core.data.MultiblockPattern;
 import info.n4tomic.soulshards.core.data.Tier;
+import info.n4tomic.soulshards.core.registry.RegistrarSoulShards;
 import info.n4tomic.soulshards.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -49,7 +47,7 @@ public class EventHandler {
 
             match.getObject().forEach(matchedPos -> world.destroyBlock(matchedPos, false));
             held.shrink(1);
-            ItemStack shardStack = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
+            ItemStack shardStack = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
             if (!player.getInventory().add(shardStack)) {
                 Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), shardStack);
             }
@@ -81,7 +79,8 @@ public class EventHandler {
                 binding = getNewBinding(killed);
 
             var mainHand = player.getMainHandItem();
-            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
+            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER.get(),
+                    mainHand);
             if (mainHand.getItem() instanceof ISoulWeapon)
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, killed);
 

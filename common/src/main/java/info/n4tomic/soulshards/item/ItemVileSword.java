@@ -1,7 +1,7 @@
 package info.n4tomic.soulshards.item;
 
 import info.n4tomic.soulshards.api.ISoulWeapon;
-import info.n4tomic.soulshards.core.RegistrarSoulShards;
+import info.n4tomic.soulshards.core.registry.RegistrarSoulShards;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -26,7 +26,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
         private final LazyLoadedValue<Ingredient> ingredient;
 
         public MaterialVile() {
-            this.ingredient = new LazyLoadedValue<>(() -> Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT));
+            this.ingredient = new LazyLoadedValue<>(() -> Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT.get()));
         }
 
         @Override

@@ -4,7 +4,7 @@ import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.api.IShardTier;
 import info.n4tomic.soulshards.api.ISoulShard;
 import info.n4tomic.soulshards.block.TileEntitySoulCage;
-import info.n4tomic.soulshards.core.RegistrarSoulShards;
+import info.n4tomic.soulshards.core.registry.RegistrarSoulShards;
 import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.core.data.Tier;
 import net.minecraft.ChatFormatting;

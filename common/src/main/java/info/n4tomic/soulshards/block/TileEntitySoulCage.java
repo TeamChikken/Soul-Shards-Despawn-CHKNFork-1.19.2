@@ -3,12 +3,11 @@ package info.n4tomic.soulshards.block;
 import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.api.CageSpawnEvent;
 import info.n4tomic.soulshards.api.IShardTier;
-import info.n4tomic.soulshards.core.RegistrarSoulShards;
+import info.n4tomic.soulshards.core.registry.RegistrarSoulShards;
 import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -23,8 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 
 import java.util.Optional;
@@ -35,7 +32,7 @@ public class TileEntitySoulCage extends BlockEntity {
     private boolean active;
 
     public TileEntitySoulCage(BlockPos pos, BlockState state) {
-        super(RegistrarSoulShards.SOUL_CAGE_TE, pos, state);
+        super(RegistrarSoulShards.SOUL_CAGE_TE.get(), pos, state);
 
         this.inventory = new SimpleContainer(1) {
             @Override

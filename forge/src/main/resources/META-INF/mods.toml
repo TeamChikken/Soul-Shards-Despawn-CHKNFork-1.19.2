@@ -4,7 +4,7 @@ loaderVersion = "[43,)"
 license = "MIT"
 
 [[mods]]
-modId = "soulshardsresewn"
+modId = "soulshards"
 version = "${version}"
 displayName = "Soul Shards Resewn"
 authors = "N4tomic"
@@ -13,21 +13,21 @@ This is an example description! Tell everyone what your mod is about!
 '''
 #logoFile = ""
 
-[[dependencies.soulshardsresewn]]
+[[dependencies.soulshards]]
 modId = "forge"
 mandatory = true
 versionRange = "[43,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.soulshardsresewn]]
+[[dependencies.soulshards]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.soulshardsresewn]]
+[[dependencies.soulshards]]
 modId = "architectury"
 mandatory = true
 versionRange = "[6.2.43,)"
