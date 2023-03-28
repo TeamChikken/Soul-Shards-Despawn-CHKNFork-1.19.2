@@ -163,7 +163,7 @@ public class TileEntitySoulCage extends BlockEntity {
                 spawned.getEntityData().set(SoulShards.cageBornTag, true);
 
                 if (spawned.isAlive() && !hasReachedSpawnCap(spawned) && !isColliding(spawned)) {
-                    if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !spawned.getTags().contains(SoulShards.BOSS_TAG))
+                    if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && SoulShards.isBoss(spawned))
                         continue;
 
                     InteractionResult result = CageSpawnEvent.CAGE_SPAWN.invoker().onCageSpawn(binding,
