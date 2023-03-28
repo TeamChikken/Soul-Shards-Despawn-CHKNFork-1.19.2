@@ -6,7 +6,8 @@ import info.tehnut.soulshards.core.EventHandler;
 import info.tehnut.soulshards.core.RegistrarSoulShards;
 import info.tehnut.soulshards.core.data.Tier;
 import info.tehnut.soulshards.core.util.JsonUtil;
-import net.fabricmc.api.ModInitializer;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -28,7 +29,7 @@ public class SoulShards implements ModInitializer {
     }
 
     @Override
-    public void onInitialize() {
+    public void onInitialize(ModContainer container) {
         Tier.readTiers();
         ConfigSoulShards.handleMultiblock();
         RegistrarSoulShards.registerBlocks(Registry.BLOCK);

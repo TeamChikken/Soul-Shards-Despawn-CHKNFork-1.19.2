@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -157,8 +158,9 @@ public class MultiblockPattern {
                             var property = block.getStateDefinition().getProperty(e.getKey());
                             if (property != null) {
                                 String valueString = e.getValue().getAsString();
-                                var value = (Comparable)property.getValue(valueString).get();
-                                state = state.setValue(property, value);
+                                var value = property.getValue(valueString).get();
+                                // TODO: impl me
+                                //state = state.setValue(property, value);
                             }
                         }
                         states.add(state);
