@@ -21,6 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
+import org.quiltmc.loader.impl.util.log.Log;
+import org.quiltmc.loader.impl.util.log.LogCategory;
 
 import java.util.Set;
 
@@ -53,18 +55,18 @@ public class EventHandler {
     }
 
     public static void onEntityDeath(LivingEntity killed, DamageSource source) {
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !SoulShards.isBoss(killed))
+        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && SoulShards.isBoss(killed))
             return;
 
         if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && killed.getEntityData().get(SoulShards.cageBornTag))
             return;
 
-        if (source.getEntity() instanceof Player) {
-            var player = (Player) source.getEntity();
+        if (source.getEntity() instanceof Player player) {
             var entityId = getEntityId(killed);
 
-            if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId))
+            if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
                 return;
+            }
 
             ItemStack shardStack = getFirstShard(player, entityId);
             if (shardStack.isEmpty())
@@ -74,9 +76,6 @@ public class EventHandler {
             Binding binding = shard.getBinding(shardStack);
             if (binding == null)
                 binding = getNewBinding(killed);
-
-            if (binding == null)
-                return;
 
             var mainHand = player.getMainHandItem();
             int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
