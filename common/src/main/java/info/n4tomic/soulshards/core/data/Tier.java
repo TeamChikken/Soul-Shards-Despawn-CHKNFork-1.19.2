@@ -3,10 +3,10 @@ package info.n4tomic.soulshards.core.data;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
+import dev.architectury.platform.Platform;
 import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.api.IShardTier;
 import info.n4tomic.soulshards.core.util.JsonUtil;
-import net.fabricmc.loader.FabricLoader;
 
 import java.io.File;
 import java.util.List;
@@ -91,7 +91,8 @@ public class Tier implements IShardTier {
     }
 
     public static void readTiers() {
-        Tier[] tiers = JsonUtil.fromJson(TypeToken.get(Tier[].class), new File(FabricLoader.INSTANCE.getConfigDirectory(), SoulShards.MODID + "/tiers.json"), generateDefaults());
+        Tier[] tiers = JsonUtil.fromJson(TypeToken.get(Tier[].class), new File(Platform.getConfigFolder().toFile(),
+                SoulShards.MODID + "/tiers.json"), generateDefaults());
         for (Tier tier : tiers) {
             TIERS.put(tier.killRequirement, tier);
             INDEXED.add(tier);
