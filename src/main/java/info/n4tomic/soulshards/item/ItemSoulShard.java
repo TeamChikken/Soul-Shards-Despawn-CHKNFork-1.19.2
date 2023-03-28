@@ -57,12 +57,17 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return SoulShards.CONFIG.getClient().displayDurabilityBar() && getBinding(stack).getKills() < Tier.maxKills;
+        if (!SoulShards.CONFIG.getClient().displayDurabilityBar()) {
+            return false;
+        }
+        var binding = getBinding(stack);
+        return binding != null && binding.getKills() < Tier.maxKills;
     }
     @Override
     public int getBarWidth(ItemStack stack) {
         var maxPx = 13F;
-        var current = (float) getBinding(stack).getKills();
+        var binding = getBinding(stack);
+        var current = (float) (binding != null ? binding.getKills() : 0);
         var max = (float) Tier.maxKills;
         var percentage = current / max;
         return Math.round(maxPx * percentage);
@@ -182,7 +187,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
 
     @Override
-    public String getDescriptionId(ItemStack stack) {
+    public @NotNull String getDescriptionId(ItemStack stack) {
         Binding binding = getBinding(stack);
         return super.getDescriptionId(stack) + (binding == null || binding.getBoundEntity() == null ? "_unbound" : "");
     }
@@ -194,6 +199,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
 
     @Override
+    @Nullable
     public Binding getBinding(ItemStack stack) {
         return Binding.fromNBT(stack);
     }
