@@ -26,7 +26,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.impl.util.log.Log;
+import org.quiltmc.loader.impl.util.log.LogCategory;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 
 import java.util.List;
@@ -36,6 +39,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
     public ItemSoulShard() {
         super(new Properties().stacksTo(1).tab(QuiltItemGroup.TAB_MISC));
         // TODO: migrate me
+
         /*
          appendStacks(new ResourceLocation(SoulShards.MODID, "bound"),
                 (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
@@ -49,11 +53,14 @@ public class ItemSoulShard extends Item implements ISoulShard {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         var state = context.getLevel().getBlockState(context.getClickedPos());
         var binding = getBinding(context.getItemInHand());
-        if (binding == null)
+        Log.info(LogCategory.GENERAL, "Use on: %s %b", state.getBlock().getName(),
+                state.getBlock() instanceof SpawnerBlock);
+        if (binding == null) {
             return InteractionResult.PASS;
+        }
 
         if (state.getBlock() instanceof SpawnerBlock) {
             if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption()) {
@@ -69,16 +76,27 @@ public class ItemSoulShard extends Item implements ISoulShard {
                 return InteractionResult.PASS;
 
             var spawner = (SpawnerBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
-            if (spawner == null)
+            if (spawner == null) {
+                Log.warn(LogCategory.GENERAL, "Failed to get spawner entity at pos %s", context.getClickedPos().toString());
                 return InteractionResult.PASS;
+            }
 
             try {
                 ResourceLocation entityId = EntityType.getKey(spawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
-                if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId))
+                if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
+                    Log.debug(LogCategory.GENERAL, "Tried to consume entity which is disallowed in the config: %s",
+                            entityId.toString());
                     return InteractionResult.PASS;
+                }
 
-                if (binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
+                if (binding.getBoundEntity() == null) {
+                    binding.setBoundEntity(entityId);
+                }
+                else if (!binding.getBoundEntity().equals(entityId)) {
+                    Log.warn(LogCategory.GENERAL, "Tried to consume entity that doesn't match bound: %s vs %s",
+                            binding.getBoundEntity().toString(), binding.getBoundEntity().toString());
                     return InteractionResult.FAIL;
+                }
 
                 updateBinding(context.getItemInHand(), binding.addKills(SoulShards.CONFIG.getBalance().getAbsorptionBonus()));
                 context.getLevel().destroyBlock(context.getClickedPos(), false);
