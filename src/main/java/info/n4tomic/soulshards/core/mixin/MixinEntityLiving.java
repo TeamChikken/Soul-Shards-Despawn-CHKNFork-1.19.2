@@ -22,7 +22,7 @@ public class MixinEntityLiving {
             EntityDataSerializers.BOOLEAN);
     }
 
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
     private void initDataTracker(CallbackInfo callbackInfo) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof Player)

@@ -17,9 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
 
-    @Inject(method = "renderGuiItemDecorations(Lnet/minecraft/client/font/gui/Font;" +
-            "Lnet/minecraft/world/item/ItemStack;" +
-            "IILjava/lang/String;)V", at = @At("RETURN"))
+    @Inject(method = "renderGuiItemDecorations", at = @At("RETURN"))
     private void renderShardFullness(Font textRenderer, ItemStack stack, int x, int y, String text,
                                      CallbackInfo ci) {
         if (!SoulShards.CONFIG.getClient().displayDurabilityBar())

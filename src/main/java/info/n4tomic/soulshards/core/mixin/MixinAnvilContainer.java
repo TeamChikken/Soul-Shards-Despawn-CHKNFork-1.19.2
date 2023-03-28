@@ -5,11 +5,11 @@ import info.n4tomic.soulshards.core.RegistrarSoulShards;
 import info.n4tomic.soulshards.core.data.Binding;
 import info.n4tomic.soulshards.item.ItemSoulShard;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.inventory.AnvilMenu;
-import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.ItemCombinerMenu;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,14 +18,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AnvilMenu.class)
-public class MixinAnvilContainer {
+public class MixinAnvilContainer extends AbstractContainerMenu {
 
     @Shadow
     @Final
-    private NonNullList<Slot> slots;
-    @Shadow
-    @Final
     private DataSlot cost;
+
+    protected MixinAnvilContainer(@Nullable MenuType<?> menuType, int containerId) {
+        super(menuType, containerId);
+    }
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
     public void soulshards$createResult(CallbackInfo callbackInfo) {
@@ -50,5 +51,15 @@ public class MixinAnvilContainer {
                 callbackInfo.cancel();
             }
         }
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        return null;
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return false;
     }
 }
