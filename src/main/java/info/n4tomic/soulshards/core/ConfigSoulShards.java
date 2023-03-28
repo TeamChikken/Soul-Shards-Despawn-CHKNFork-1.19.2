@@ -2,11 +2,18 @@ package info.n4tomic.soulshards.core;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.gson.reflect.TypeToken;
+import info.n4tomic.soulshards.SoulShards;
 import info.n4tomic.soulshards.core.data.MultiblockPattern;
+import info.n4tomic.soulshards.core.util.JsonUtil;
+import net.minecraft.FileUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
+import org.apache.commons.io.FileUtils;
+import org.quiltmc.loader.api.QuiltLoader;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -42,19 +49,20 @@ public class ConfigSoulShards {
     }
 
     public static void handleMultiblock() {
-        // FIXME parsing is currently broke
-//        File multiblockFile = new File(FabricLoader.INSTANCE.getConfigDirectory(), SoulShards.MODID + "/multiblock.json");
-//        if (!multiblockFile.exists()) {
-//            try {
-//                FileUtils.copyInputStreamToFile(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json"), multiblockFile);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        multiblock = JsonUtil.fromJson(TypeToken.get(MultiblockPattern.class), multiblockFile);
-        if (multiblock == null)
+        File multiblockFile = new File(QuiltLoader.getConfigDir().toFile(), SoulShards.MODID + "/multiblock.json");
+        if (!multiblockFile.exists()) {
+            try {
+                FileUtils.copyInputStreamToFile(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json"),
+                        multiblockFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        multiblock = JsonUtil.fromJson(TypeToken.get(MultiblockPattern.class), multiblockFile);
+        if (multiblock == null) {
             multiblock = MultiblockPattern.DEFAULT;
+        }
     }
 
     public static MultiblockPattern getMultiblock() {

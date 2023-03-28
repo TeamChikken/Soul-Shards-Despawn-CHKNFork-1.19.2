@@ -6,6 +6,7 @@ import info.n4tomic.soulshards.core.util.INBTSerializable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -91,6 +92,7 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag> {
         this.kills = nbt.getInt("kills");
     }
 
+    @Nullable
     public static Binding fromNBT(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag == null || !tag.contains("binding"))

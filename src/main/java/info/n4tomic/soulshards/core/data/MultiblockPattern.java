@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -156,10 +158,7 @@ public class MultiblockPattern {
                         for (Map.Entry<String, JsonElement> e : stateObject.entrySet()) {
                             var property = block.getStateDefinition().getProperty(e.getKey());
                             if (property != null) {
-                                String valueString = e.getValue().getAsString();
-                                var value = property.getValue(valueString).get();
-                                // TODO: impl me
-                                //state = state.setValue(property, value);
+                                property.parseValue(JsonOps.INSTANCE, state, e.getValue());
                             }
                         }
                         states.add(state);
