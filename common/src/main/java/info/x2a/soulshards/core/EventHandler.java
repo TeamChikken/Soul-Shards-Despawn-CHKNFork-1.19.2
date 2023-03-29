@@ -12,6 +12,7 @@ import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
@@ -128,7 +129,7 @@ public class EventHandler {
     }
 
     private static ResourceLocation getEntityId(LivingEntity entity) {
-        ResourceLocation id = Registry.ENTITY_TYPE.getKey(entity.getType());
+        ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return BindingEvent.GET_ENTITY_ID.invoker().getEntityName(entity, id);
     }
 

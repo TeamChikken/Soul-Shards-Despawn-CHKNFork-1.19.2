@@ -7,6 +7,7 @@ import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.util.JsonUtil;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.io.FileUtils;
@@ -180,9 +181,9 @@ public class ConfigSoulShards {
 
         private static Map<ResourceLocation, Boolean> getDefaults() {
             Map<ResourceLocation, Boolean> defaults = Maps.newHashMap();
-            Registry.ENTITY_TYPE.stream().filter(e -> e.getCategory() == MobCategory.MISC)
+            BuiltInRegistries.ENTITY_TYPE.stream().filter(e -> e.getCategory() == MobCategory.MISC)
                     .forEach(e -> {
-                        var entityId = Registry.ENTITY_TYPE.getKey(e);
+                        var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(e);
                         if (DEFAULT_DISABLES.contains(entityId)) {
                             defaults.put(entityId, false);
                         }

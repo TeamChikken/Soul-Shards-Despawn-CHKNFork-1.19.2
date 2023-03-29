@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.level.Level;
@@ -22,7 +23,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.awt.Point;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @JsonAdapter(MultiblockPattern.Serializer.class)
@@ -133,7 +137,7 @@ public class MultiblockPattern {
 
             var itemId =
                     new ResourceLocation(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
-            ItemStack catalyst = new ItemStack(Registry.ITEM.get(itemId), 1);
+            ItemStack catalyst = new ItemStack(BuiltInRegistries.ITEM.get(itemId), 1);
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
             Point origin = context.deserialize(json.getAsJsonObject("origin"), Point.class);

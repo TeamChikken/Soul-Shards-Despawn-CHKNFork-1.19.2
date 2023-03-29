@@ -13,7 +13,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
     public static final Tier MATERIAL_VILE = new MaterialVile();
 
     public ItemVileSword() {
-        super(MATERIAL_VILE, 3, -2.4F, new Properties().tab(CreativeModeTab.TAB_COMBAT));
+        super(MATERIAL_VILE, 3, -2.4F, new Properties());
     }
 
     @Override

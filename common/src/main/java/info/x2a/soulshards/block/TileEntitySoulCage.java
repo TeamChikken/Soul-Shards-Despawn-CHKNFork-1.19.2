@@ -8,6 +8,7 @@ import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -136,7 +137,7 @@ public class TileEntitySoulCage extends BlockEntity {
         if (binding == null || binding.getBoundEntity() == null)
             return;
 
-        var toSpawn = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
+        var toSpawn = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
         IShardTier tier = binding.getTier();
         var pos = getBlockPos();
         var level = getLevel();
@@ -145,9 +146,9 @@ public class TileEntitySoulCage extends BlockEntity {
         spawnLoop:
         for (int i = 0; i < tier.getSpawnAmount(); i++) {
             for (int attempts = 0; attempts < 5; attempts++) {
-                double x = pos.getX() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D;
-                double y = pos.getY() + level.random.nextInt(3) - 1;
-                double z = pos.getZ() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D;
+                var x = (int) Math.round(pos.getX() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D);
+                var y = Math.round(pos.getY() + level.random.nextInt(3) - 1);
+                var z = (int) Math.round(pos.getZ() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D);
                 BlockPos spawnAt = new BlockPos(x, y, z);
 
                 var spawned = (LivingEntity) toSpawn.create(level);

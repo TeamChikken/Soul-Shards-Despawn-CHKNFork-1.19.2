@@ -1,5 +1,6 @@
 package info.x2a.soulshards.item;
 
+import dev.architectury.registry.CreativeTabRegistry;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.api.IShardTier;
 import info.x2a.soulshards.api.ISoulShard;
@@ -8,20 +9,19 @@ import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.core.data.Tier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SpawnerBlock;
@@ -34,7 +34,7 @@ import java.util.List;
 public class ItemSoulShard extends Item implements ISoulShard {
 
     public ItemSoulShard() {
-        super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_MISC));
+        super(new Properties().stacksTo(1));
     }
     @Override
     public int getBarColor(ItemStack stack) {
@@ -69,9 +69,9 @@ public class ItemSoulShard extends Item implements ISoulShard {
         if (state.getBlock() instanceof SpawnerBlock) {
             if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption()) {
                 if (context.getPlayer() != null)
-                    context.getPlayer().displayClientMessage(MutableComponent.create(new TranslatableContents("chat" +
+                    context.getPlayer().displayClientMessage(SoulShards.translate("chat" +
                                     ".soulshards" +
-                                    ".absorb_disabled")),
+                                    ".absorb_disabled"),
                             true);
                 return InteractionResult.PASS;
             }
@@ -86,7 +86,9 @@ public class ItemSoulShard extends Item implements ISoulShard {
             }
 
             try {
-                ResourceLocation entityId = EntityType.getKey(spawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
+                ResourceLocation entityId =
+                        EntityType.getKey(spawner.getSpawner().getOrCreateDisplayEntity(context.getLevel(),
+                                context.getLevel().random, context.getClickedPos()).getType());
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
                     SoulShards.Log.debug("Tried to consume entity which is disallowed in the " +
                                     "config: {}",
@@ -140,35 +142,21 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
         var greyColor = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GRAY);
         if (binding.getBoundEntity() != null) {
-            var entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
+            var entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
             if (entityEntry != null)
-                tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
-                        entityEntry.getDescription())).withStyle(greyColor));
+                tooltip.add(SoulShards.translate("tooltip.soulshards.bound",
+                        entityEntry.getDescription()).withStyle(greyColor));
             else
-                tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
-                        binding.getBoundEntity().toString())).setStyle(greyColor.withColor(ChatFormatting.RED)));
+                tooltip.add(SoulShards.translate("tooltip.soulshards.bound",
+                        binding.getBoundEntity().toString()).setStyle(greyColor.withColor(ChatFormatting.RED)));
         }
 
-        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.tier",
-                binding.getTier().getIndex())).withStyle(greyColor));
-        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.kills", binding.getKills())).setStyle(greyColor));
+        tooltip.add(SoulShards.translate("tooltip.soulshards.tier",
+                binding.getTier().getIndex()).withStyle(greyColor));
+        tooltip.add(SoulShards.translate("tooltip.soulshards.kills", binding.getKills()).setStyle(greyColor));
         if (options.isAdvanced() && binding.getOwner() != null)
-            tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.owner",
-                    binding.getOwner().toString())).setStyle(greyColor));
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (!allowedIn(group))
-            return;
-
-        items.add(new ItemStack(this));
-        for (IShardTier tier : Tier.INDEXED) {
-            ItemStack stack = new ItemStack(this);
-            Binding binding = new Binding(null, tier.getKillRequirement());
-            updateBinding(stack, binding);
-            items.add(stack);
-        }
+            tooltip.add(SoulShards.translate("tooltip.soulshards.owner",
+                    binding.getOwner().toString()).setStyle(greyColor));
     }
 
     @Override

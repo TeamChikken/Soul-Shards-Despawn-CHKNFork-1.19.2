@@ -6,7 +6,10 @@ import info.x2a.soulshards.core.ConfigSoulShards;
 import info.x2a.soulshards.core.EventHandler;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Tier;
+import info.x2a.soulshards.core.registry.SoulRegistries;
 import info.x2a.soulshards.core.util.JsonUtil;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
@@ -34,6 +37,14 @@ public class SoulShards {
         Log.info("Soul Shards Despawn rises once again");
     }
 
+    public static MutableComponent translate(String fmt, Object... args) {
+        return MutableComponent.create(new TranslatableContents(fmt, null, args));
+    }
+
+    public static MutableComponent translate(String fmt) {
+        return translate(fmt, TranslatableContents.NO_ARGS);
+    }
+
     public static void initCommon() {
         Tier.readTiers();
         ConfigSoulShards.handleMultiblock();
@@ -43,7 +54,7 @@ public class SoulShards {
         RegistrarSoulShards.registerBlocks();
         RegistrarSoulShards.registerItems();
         RegistrarSoulShards.registerEnchantments();
-        info.x2a.soulshards.core.registry.Registries.init();
+        SoulRegistries.init();
         EventHandler.init();
     }
 }

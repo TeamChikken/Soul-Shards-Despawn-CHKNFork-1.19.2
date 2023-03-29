@@ -6,6 +6,7 @@ import info.x2a.soulshards.core.data.Binding;
 import mcp.mobius.waila.api.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -19,7 +20,7 @@ public class SoulShardsWailaPlugin implements IWailaPlugin {
             @Override
             public void appendBody(ITooltip tooltip, IEntityAccessor accessor, IPluginConfig config) {
                 if (accessor.getEntity().getEntityData().get(SoulShards.cageBornTag))
-                    tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.cage_born")));
+                    tooltip.addLine(SoulShards.translate("tooltip.soulshards.cage_born"));
             }
         }, TooltipPosition.BODY, LivingEntity.class);
 
@@ -38,17 +39,18 @@ public class SoulShardsWailaPlugin implements IWailaPlugin {
                 Binding binding = new Binding(accessor.getServerData().getCompound("binding"));
 
                 if (binding.getBoundEntity() != null) {
-                    var entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
+                    var entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
                     if (entityEntry != null)
-                        tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
-                                entityEntry.getDescription())));
+                        tooltip.addLine(SoulShards.translate("tooltip.soulshards.bound",
+                                entityEntry.getDescription()));
+
                     else
-                        tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
-                                binding.getBoundEntity().toString())).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                        tooltip.addLine(SoulShards.translate("tooltip.soulshards.bound",
+                                binding.getBoundEntity().toString()).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                 }
 
-                tooltip.addLine(MutableComponent.create(new TranslatableContents("tooltip.soulshards.tier",
-                        binding.getTier().getIndex())));
+                tooltip.addLine(SoulShards.translate("tooltip.soulshards.tier",
+                        binding.getTier().getIndex()));
             }
         }, TooltipPosition.BODY, TileEntitySoulCage.class);
     }

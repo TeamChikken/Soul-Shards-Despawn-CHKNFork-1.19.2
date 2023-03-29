@@ -39,12 +39,12 @@ public class BlockSoulCage extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                          BlockHitResult result) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand,
+                                          @NotNull BlockHitResult result) {
         if (!player.isCrouching())
             return InteractionResult.PASS;
 
-        var cage = (TileEntitySoulCage)level.getBlockEntity(pos);
+        var cage = (TileEntitySoulCage) level.getBlockEntity(pos);
         if (cage == null) {
             return InteractionResult.PASS;
         }
@@ -53,8 +53,7 @@ public class BlockSoulCage extends Block implements EntityBlock {
             return InteractionResult.PASS;
 
         if (!player.getInventory().add(shard)) {
-            BlockPos playerPos = new BlockPos(player.position());
-            ItemEntity entity = new ItemEntity(level, playerPos.getX(), playerPos.getY(), playerPos.getZ(), shard);
+            ItemEntity entity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), shard);
             level.addFreshEntity(entity);
         }
         return InteractionResult.SUCCESS;
