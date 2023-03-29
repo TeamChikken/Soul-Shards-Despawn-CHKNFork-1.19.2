@@ -6,7 +6,9 @@ import dev.architectury.platform.Platform;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.util.JsonUtil;
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.io.FileUtils;
@@ -72,14 +74,14 @@ public class ConfigSoulShards {
 
     public static class ConfigBalance {
 
-        private boolean allowSpawnerAbsorption;
-        private int absorptionBonus;
-        private boolean allowBossSpawns;
-        private boolean countCageBornForShard;
-        private boolean requireOwnerOnline;
-        private boolean requireRedstoneSignal;
-        private boolean allowShardCombination;
-        private int spawnCap;
+        public boolean allowSpawnerAbsorption;
+        public int absorptionBonus;
+        public boolean allowBossSpawns;
+        public boolean countCageBornForShard;
+        public boolean requireOwnerOnline;
+        public boolean requireRedstoneSignal;
+        public boolean allowShardCombination;
+        public int spawnCap;
 
         public ConfigBalance(boolean allowSpawnerAbsorption, int absorptionBonus, boolean allowBossSpawns, boolean countCageBornForShard, boolean requireOwnerOnline, boolean requireRedstoneSignal, boolean allowShardCombination, int spawnCap) {
             this.allowSpawnerAbsorption = allowSpawnerAbsorption;
@@ -92,9 +94,15 @@ public class ConfigSoulShards {
             this.spawnCap = spawnCap;
         }
 
+        private static final ConfigBalance DEFAULT = new ConfigBalance();
+
         public ConfigBalance() {
             this(true, 200, false, false, false, false, true, 32);
         }
+
+        public void addToBuilder(ConfigBuilder builder) {
+        }
+
 
         public boolean allowSpawnerAbsorption() {
             return allowSpawnerAbsorption;
@@ -181,12 +189,12 @@ public class ConfigSoulShards {
         private static Map<ResourceLocation, Boolean> getDefaults() {
             Map<ResourceLocation, Boolean> defaults = Maps.newHashMap();
             Registry.ENTITY_TYPE.stream().filter(e -> e.getCategory() == MobCategory.MISC)
-                    .forEach(e -> {
-                        var entityId = Registry.ENTITY_TYPE.getKey(e);
-                        if (DEFAULT_DISABLES.contains(entityId)) {
-                            defaults.put(entityId, false);
-                        }
-                    });
+                                .forEach(e -> {
+                                    var entityId = Registry.ENTITY_TYPE.getKey(e);
+                                    if (DEFAULT_DISABLES.contains(entityId)) {
+                                        defaults.put(entityId, false);
+                                    }
+                                });
             return defaults;
         }
     }

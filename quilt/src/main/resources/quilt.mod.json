@@ -21,6 +21,9 @@
       ],
       "client_init": [
         "info.x2a.soulshards.quilt.QuiltSoulShardsClient"
+      ],
+      "modmenu": [
+        "info.x2a.soulshards.compat.modmenu.SoulShardsModMenu"
       ]
     },
     "depends": [

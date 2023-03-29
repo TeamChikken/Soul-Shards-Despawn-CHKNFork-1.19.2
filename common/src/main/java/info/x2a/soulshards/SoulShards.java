@@ -24,6 +24,7 @@ public class SoulShards {
             new ConfigSoulShards());
     public static EntityDataAccessor<Boolean> cageBornTag;
     public static GameRules.Key<GameRules.BooleanValue> allowCageSpawns;
+    public static boolean IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
     public static final String BOSS_TAG = "c:bosses";
 
     public static boolean isBoss(LivingEntity creature) {

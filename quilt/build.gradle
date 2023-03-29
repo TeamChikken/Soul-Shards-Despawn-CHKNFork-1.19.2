@@ -86,7 +86,8 @@ processResources {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        mavenQuilt(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
             from components.java
         }
     }
