@@ -22,10 +22,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.awt.Point;
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 @JsonAdapter(MultiblockPattern.Serializer.class)
@@ -106,10 +103,14 @@ public class MultiblockPattern {
         return slot.test(state);
     }
 
+    @JsonAdapter(DeserializerSlot.class)
     public static class Slot implements Predicate<BlockState> {
 
-        @JsonAdapter(SerializerBlockState.class)
         private final Set<BlockState> states;
+
+        public Slot(Set<BlockState> states) {
+            this.states = states;
+        }
 
         public Slot(BlockState... states) {
             this.states = Sets.newHashSet(states);
@@ -143,14 +144,26 @@ public class MultiblockPattern {
         }
     }
 
-    public static class SerializerBlockState implements JsonDeserializer<Set<BlockState>> {
+    public static class DeserializerSlot implements JsonDeserializer<Slot> {
+
+        private Block getAsBlock(JsonElement element) {
+            String resource;
+            if (element.isJsonObject()) {
+                resource = element.getAsJsonObject().getAsJsonPrimitive("block").getAsString();
+            } else {
+                resource = element.getAsString();
+            }
+            return Registry.BLOCK.get(new ResourceLocation(resource));
+        }
+
         @Override
-        public Set<BlockState> deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Slot deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             Set<BlockState> states = Sets.newHashSet();
-            for (JsonElement entry : element.getAsJsonArray()) {
+            var blocks = jsonElement.getAsJsonObject().getAsJsonArray("blocks");
+            for (JsonElement entry : blocks) {
+                Block block = getAsBlock(entry);
                 if (entry.isJsonObject()) {
                     JsonObject json = entry.getAsJsonObject();
-                    Block block = Registry.BLOCK.get(new ResourceLocation(json.getAsJsonPrimitive("block").getAsString()));
                     BlockState state = block.defaultBlockState();
                     if (json.has("states")) {
                         JsonObject stateObject = json.getAsJsonObject("states");
@@ -161,13 +174,12 @@ public class MultiblockPattern {
                             }
                         }
                         states.add(state);
-                    } else {
-                        states.addAll(block.getStateDefinition().getPossibleStates());
+                        continue;
                     }
                 }
+                states.addAll(block.getStateDefinition().getPossibleStates());
             }
-
-            return states;
+            return new Slot(states);
         }
     }
 }
