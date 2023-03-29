@@ -31,6 +31,14 @@ public class SoulShardsConfigScreen {
             hasPerms = GameInstance.getClient().player.hasPermissions(4);
         }
         if (hasPerms) { // OP perms
+            var entities = SoulShards.CONFIG.getEntityList();
+            var entityCat = entry.startSubCategory(Component.translatable("category.soulshards.entity_list"));
+            entityCat.add(entry.startStrList(Component.translatable("option.soulshards.disabled_entities"), entities.disabledIds())
+                               .setDefaultValue(DEFAULT_CONFIG.getEntityList()
+                                                              .disabledIds())
+                               .setSaveConsumer(v -> SoulShards.CONFIG.entityList = new ConfigSoulShards.ConfigEntityList(v))
+                               .setTooltip(Component.translatable("tooltip.soulshards.disabled_entities"))
+                    .build());
             builder.getOrCreateCategory(Component.translatable("category.soulshards.balance"))
                    .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.allow_shard_combine"), balance.allowShardCombination)
                                   .setTooltip(Component.translatable("tooltip.soulshards.allow_shard_combine"))
@@ -66,14 +74,9 @@ public class SoulShardsConfigScreen {
                                   .setDefaultValue(DEFAULT_CONFIG.getBalance().spawnCap)
                                   .setSaveConsumer(v -> balance.spawnCap = v)
                                   .setTooltip(Component.translatable("tooltip.soulshards.spawn_cap"))
-                           .build());
-            var entities = SoulShards.CONFIG.getEntityList();
-            var entityCat = entry.startSubCategory(Component.translatable("category.soulshards.entity_list"));
-            entityCat.add(entry.startStrList(Component.translatable("option.soulshards.disabled_entities"), entities.disabledIds())
-                               .setDefaultValue(DEFAULT_CONFIG.getEntityList()
-                                                              .disabledIds())
-                               .setSaveConsumer(v -> SoulShards.CONFIG.entityList = new ConfigSoulShards.ConfigEntityList(v))
-                    .build());
+                           .build())
+                   .addEntry(entityCat.build())
+            ;
         }
         var client = SoulShards.CONFIG.getClient();
         builder.getOrCreateCategory(Component.translatable("category.soulshards.client"))
