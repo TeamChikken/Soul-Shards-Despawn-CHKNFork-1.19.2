@@ -1,0 +1,55 @@
+name: Publish to all the places
+on:
+  release:
+    types: [ published ]
+
+env:
+  JAVA_VERSION: 17
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        loader: [ quilt, forge ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo env
+        run: env
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+      - name: Prep wrapper
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+      - name: Build
+        run: cd ${{ matrix.loader }} && ../gradlew clean build
+      - name: Publish
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          curseforge-id: 843552
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+
+          modrinth-id: MpNGsSsC
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+
+          github-token: "${{env.GITHUB_TOKEN}}"
+
+          name: "[${{ matrix.loader }} ${{env.MOD_VERSION}}]"
+          version: "${{env.MOD_VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+
+          files-primary: "${{ matrix.loader }}/build/libs/!(*-@(dev|sources|javadoc)).jar"
+
+          loaders: ${{ matrix.loader }}
+          java: "${{env.JAVA_VERSION}}""
+
