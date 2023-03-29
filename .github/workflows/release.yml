@@ -37,12 +37,12 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           curseforge-id: 843552
-          curseforge-token: "${{secret.CURSEFORGE_TOKEN}}"
+          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
 
           modrinth-id: MpNGsSsC
-          modrinth-token: "${{secret.MODRINTH_TOKEN}}"
+          modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
 
-          github-token: "${{secret.GH_TOKEN}}"
+          github-token: "${{secrets.GH_TOKEN}}"
 
           version-type: release
           changelog-file: CHANGELOG.md
