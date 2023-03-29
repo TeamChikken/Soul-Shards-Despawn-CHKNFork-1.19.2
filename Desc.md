@@ -45,7 +45,7 @@ thievery (vile sword + 5 levels soul steal = 7 per kill).
 ### Spawning mobs
 
 OK so now you've got your shard, filled with the ~~screams of your victims you monster~~ souls of a mob. The next step
-is crafting a soul cage. Once you have a cage, simply right click it with you shard and you can kick back and relax
+is crafting a soul cage. Once you have a cage, simply right click it with your shard and you can kick back and relax
 while hords of monsters appear out of thin air (unless you have a tier that needs a nearby player, then you need to stay
 within 16 blocks).
 
