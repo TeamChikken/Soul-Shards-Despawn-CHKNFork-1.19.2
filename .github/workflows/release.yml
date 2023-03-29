@@ -1,7 +1,7 @@
 name: Publish to all the places
 on:
   release:
-    types: [ published, edited ]
+    types: [ published ]
 
 env:
   JAVA_VERSION: 17
