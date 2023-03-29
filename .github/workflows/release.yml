@@ -2,6 +2,7 @@ name: Publish to all the places
 on:
   release:
     types: [ published ]
+  workflow_dispatch:
 
 env:
   JAVA_VERSION: 17
@@ -49,5 +50,4 @@ jobs:
           files-primary: "${{ matrix.loader }}/build/libs/!(*-@(dev|sources|javadoc)).jar"
 
           loaders: ${{ matrix.loader }}
-          java: "${{env.JAVA_VERSION}}"
 
