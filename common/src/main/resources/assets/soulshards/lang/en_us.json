@@ -35,5 +35,6 @@
   "commands.soulshards.error.not_a_entity": "%s is invalid or not registered.",
   "enchantment.soulshards.soul_stealer.desc": "Increases the souls collected per kill by one per level.",
   "jei.soulshards.soul_shard.desc": "A vessel for the Souls of the slain.\\n\\nObtained by creating a structure in the world and using a %s on the origin block.",
-  "gamerule.allowCageSpawns": "Allow mobs to be spawned via soul cages"
+  "gamerule.allowCageSpawns": "Allow mobs to be spawned via soul cages",
+  "itemGroup.soulshards.creative_tab": "Soul Shards"
 }
