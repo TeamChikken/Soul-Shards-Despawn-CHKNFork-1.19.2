@@ -42,9 +42,11 @@ jobs:
           modrinth-id: MpNGsSsC
           modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
 
-          github-token: "${{secrets.GH_TOKEN}}"
+          github-token: "${{env.GITHUB_TOKEN}}"
 
+          game-versions: ${{ env.github.event.release.target_commitish }}
           version-type: release
+          version-resolver: exact
 
           files-primary: "${{ matrix.loader }}/build/libs/!(*-@(dev|dev-shadow|sources|javadoc)).jar"
 
