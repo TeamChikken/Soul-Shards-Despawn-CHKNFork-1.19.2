@@ -6,7 +6,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResultHolder;
@@ -157,7 +156,7 @@ public class MultiblockPattern {
             } else {
                 resource = element.getAsString();
             }
-            return Registry.BLOCK.get(new ResourceLocation(resource));
+            return BuiltInRegistries.BLOCK.get(new ResourceLocation(resource));
         }
 
         @Override
