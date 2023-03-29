@@ -51,10 +51,7 @@ public class SoulShards {
 
         allowCageSpawns = GameRules.register("allowCageSpawns", GameRules.Category.SPAWNING,
                 GameRules.BooleanValue.create(true));
-        RegistrarSoulShards.registerBlocks();
-        RegistrarSoulShards.registerItems();
-        RegistrarSoulShards.registerEnchantments();
-        SoulRegistries.init();
+        RegistrarSoulShards.init();
         EventHandler.init();
     }
 }

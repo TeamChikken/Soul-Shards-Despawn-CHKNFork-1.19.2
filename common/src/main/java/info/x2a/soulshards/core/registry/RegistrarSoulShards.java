@@ -20,6 +20,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class RegistrarSoulShards {
 
@@ -32,7 +33,7 @@ public class RegistrarSoulShards {
 
     public static RegistrySupplier<Item> CORRUPTED_INGOT;
     public static RegistrySupplier<Enchantment> SOUL_STEALER;
-    public static List<ItemStack> CREATIVE_TAB_ITEMS = new ArrayList<>();
+    public static List<RegistrySupplier<? extends Item>> CREATIVE_TAB_ITEMS = new ArrayList<>();
 
     public static void init() {
         registerBlocks();
@@ -40,24 +41,24 @@ public class RegistrarSoulShards {
         registerEnchantments();
         CreativeTabRegistry.create(new ResourceLocation(SoulShards.MODID
                         , "creative_tab"),
-                (CreativeModeTab.Builder builder) -> builder.icon(() -> new ItemSoulShard().getDefaultInstance()).displayItems((params, output) -> {
-                    output.accept(new ItemSoulShard());
+                (CreativeModeTab.Builder builder) -> builder.icon(() -> new ItemStack(SOUL_SHARD.get())).displayItems((params, output) -> {
+                    var shard = SOUL_SHARD.get();
                     for (IShardTier tier : Tier.INDEXED) {
-                        var item = new ItemSoulShard();
-                        ItemStack stack = new ItemStack(item);
+                        ItemStack stack = new ItemStack(shard);
                         Binding binding = new Binding(null, tier.getKillRequirement());
-                        item.updateBinding(stack, binding);
-                        output.accept(item);
+                        shard.updateBinding(stack, binding);
+                        output.accept(stack);
                     }
-                    output.acceptAll(CREATIVE_TAB_ITEMS);
+                    output.acceptAll(CREATIVE_TAB_ITEMS.stream().map(s -> new ItemStack(s.get())).collect(Collectors.toList()));
                 }));
     }
 
     public static <T extends Item> RegistrySupplier<T> registerAndAddCreative(DeferredRegister<Item> reg,
                                                                               ResourceLocation id,
                                                                               Supplier<T> prov) {
-        CREATIVE_TAB_ITEMS.add(new ItemStack(prov.get()));
-        return reg.register(id, prov);
+        var supplier = reg.register(id, prov);
+        CREATIVE_TAB_ITEMS.add(supplier);
+        return supplier;
     }
 
     public static void registerBlocks() {
@@ -73,7 +74,6 @@ public class RegistrarSoulShards {
     }
 
     public static void registerItems() {
-        var registry = SoulRegistries.ITEMS;
         regItem("soul_cage", () -> new BlockItem(SOUL_CAGE.get(), new Item.Properties()));
         regItem("vile_dust", () -> new Item(new Item.Properties()));
         regItem("vile_sword", ItemVileSword::new);
