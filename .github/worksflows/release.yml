@@ -43,7 +43,6 @@ jobs:
 
           github-token: "${{env.GITHUB_TOKEN}}"
 
-          name: "[${{ matrix.loader }} ${{env.MOD_VERSION}}]"
           version: "${{env.MOD_VERSION}}"
           version-type: release
           changelog-file: CHANGELOG.md
