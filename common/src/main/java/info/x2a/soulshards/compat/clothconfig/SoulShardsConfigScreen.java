@@ -93,6 +93,8 @@ public class SoulShardsConfigScreen {
     }
 
     private void onSave() {
-        Client.sendConfig(SoulShards.CONFIG);
+        if (GameInstance.getClient().player != null) {
+            Client.sendConfig(SoulShards.CONFIG);
+        }
     }
 }
