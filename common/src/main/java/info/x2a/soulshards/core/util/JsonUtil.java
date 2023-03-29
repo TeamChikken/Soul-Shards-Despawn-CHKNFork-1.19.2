@@ -33,7 +33,11 @@ public class JsonUtil {
     }
 
     private static final Gson GSON =
-            new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().registerTypeAdapter(ResourceLocation.class, new ResourceLocationAdaptor()).create();
+            new GsonBuilder().setPrettyPrinting()
+                             .disableHtmlEscaping()
+                             .serializeNulls()
+                             .registerTypeAdapter(ResourceLocation.class, new ResourceLocationAdaptor())
+                             .create();
 
     /**
      * Reads a {@link T} back from the given file. If the file does not exist, a new file will be generated with the

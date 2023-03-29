@@ -14,9 +14,7 @@ import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigSoulShards {
 
@@ -24,7 +22,7 @@ public class ConfigSoulShards {
 
     private ConfigBalance balance;
     private ConfigClient client;
-    private ConfigEntityList entityList;
+    public ConfigEntityList entityList;
 
     private ConfigSoulShards(ConfigBalance balance, ConfigClient client, ConfigEntityList entityList) {
         this.balance = balance;
@@ -138,7 +136,7 @@ public class ConfigSoulShards {
     }
 
     public static class ConfigClient {
-        private boolean displayDurabilityBar;
+        public boolean displayDurabilityBar;
 
         public ConfigClient(boolean displayDurabilityBar) {
             this.displayDurabilityBar = displayDurabilityBar;
@@ -178,8 +176,23 @@ public class ConfigSoulShards {
             this.entities = entities;
         }
 
+        public ConfigEntityList(Iterable<String> disabled) {
+            this.entities = new HashMap<>();
+            for (var entry : disabled) {
+                entities.put(new ResourceLocation(entry), false);
+            }
+        }
+
         public ConfigEntityList() {
             this(getDefaults());
+        }
+
+        public List<String> disabledIds() {
+            return this.entities.entrySet()
+                                .stream()
+                                .filter(e -> !e.getValue())
+                                .map(e -> e.getKey().toString())
+                                .toList();
         }
 
         public boolean isEnabled(ResourceLocation entityId) {
