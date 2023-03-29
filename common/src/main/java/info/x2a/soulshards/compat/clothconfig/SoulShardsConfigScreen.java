@@ -26,7 +26,11 @@ public class SoulShardsConfigScreen {
         var entry = builder.entryBuilder();
         var cfg = SoulShards.CONFIG;
         var balance = cfg.getBalance();
-        if (GameInstance.getClient().player.hasPermissions(4)) { // OP perms
+        var hasPerms = true;
+        if (GameInstance.getClient().player != null) {
+            hasPerms = GameInstance.getClient().player.hasPermissions(4);
+        }
+        if (hasPerms) { // OP perms
             builder.getOrCreateCategory(Component.translatable("category.soulshards.balance"))
                    .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.allow_shard_combine"), balance.allowShardCombination)
                                   .setTooltip(Component.translatable("tooltip.soulshards.allow_shard_combine"))
