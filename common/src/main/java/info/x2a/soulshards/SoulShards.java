@@ -1,11 +1,9 @@
 package info.x2a.soulshards;
 
 import com.google.gson.reflect.TypeToken;
-import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
-import info.x2a.soulshards.core.ConfigSoulShards;
+import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.EventHandler;
 import info.x2a.soulshards.core.network.Channels;
 import info.x2a.soulshards.core.network.message.ConfigUpdate;
@@ -14,12 +12,10 @@ import info.x2a.soulshards.core.data.Tier;
 import info.x2a.soulshards.core.util.JsonUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.transformer.Config;
 
 import java.io.File;
 
@@ -27,9 +23,9 @@ public class SoulShards {
 
     public static final String MODID = "soulshards";
     public static final Logger Log = LogManager.getLogger("Soul Shards Despawn");
-    public static ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class),
+    public static ConfigServer CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigServer.class),
             new File(Platform.getConfigFolder().toFile(), MODID + "/" + MODID + ".json"),
-            new ConfigSoulShards());
+            new ConfigServer());
     public static EntityDataAccessor<Boolean> cageBornTag;
     public static GameRules.Key<GameRules.BooleanValue> allowCageSpawns;
     public static boolean IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
@@ -53,7 +49,7 @@ public class SoulShards {
 
     public static void initCommon() {
         Tier.readTiers();
-        ConfigSoulShards.handleMultiblock();
+        ConfigServer.handleMultiblock();
         PlayerEvent.PLAYER_JOIN.register(p -> {
             Channels.CONFIG_UPDATE.sendToPlayer(p, new ConfigUpdate(CONFIG));
         });

@@ -1,23 +1,18 @@
 package info.x2a.soulshards.compat.clothconfig;
 
 
-import dev.architectury.platform.Platform;
 import dev.architectury.utils.GameInstance;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.network.Client;
-import info.x2a.soulshards.core.ConfigSoulShards;
+import info.x2a.soulshards.core.config.ConfigServer;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import net.minecraft.client.Game;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
 
 
 public class SoulShardsConfigScreen {
     private final Screen popup;
-    private static final ConfigSoulShards DEFAULT_CONFIG = new ConfigSoulShards();
+    private static final ConfigServer DEFAULT_CONFIG = new ConfigServer();
 
     public SoulShardsConfigScreen(Screen parent) {
         var builder = ConfigBuilder.create().setParentScreen(parent).setTitle(Component.translatable("title" +
@@ -36,7 +31,7 @@ public class SoulShardsConfigScreen {
             entityCat.add(entry.startStrList(Component.translatable("option.soulshards.disabled_entities"), entities.disabledIds())
                                .setDefaultValue(DEFAULT_CONFIG.getEntityList()
                                                               .disabledIds())
-                               .setSaveConsumer(v -> SoulShards.CONFIG.entityList = new ConfigSoulShards.ConfigEntityList(v))
+                               .setSaveConsumer(v -> SoulShards.CONFIG.entityList = new ConfigServer.ConfigEntityList(v))
                                .setTooltip(Component.translatable("tooltip.soulshards.disabled_entities"))
                     .build());
             builder.getOrCreateCategory(Component.translatable("category.soulshards.balance"))

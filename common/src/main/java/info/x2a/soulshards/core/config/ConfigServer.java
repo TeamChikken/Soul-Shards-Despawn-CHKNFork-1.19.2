@@ -1,4 +1,4 @@
-package info.x2a.soulshards.core;
+package info.x2a.soulshards.core.config;
 
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
@@ -8,7 +8,6 @@ import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.util.JsonUtil;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.io.FileUtils;
@@ -16,7 +15,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.*;
 
-public class ConfigSoulShards {
+public class ConfigServer {
 
     private static MultiblockPattern multiblock;
 
@@ -24,13 +23,13 @@ public class ConfigSoulShards {
     private ConfigClient client;
     public ConfigEntityList entityList;
 
-    private ConfigSoulShards(ConfigBalance balance, ConfigClient client, ConfigEntityList entityList) {
+    private ConfigServer(ConfigBalance balance, ConfigClient client, ConfigEntityList entityList) {
         this.balance = balance;
         this.client = client;
         this.entityList = entityList;
     }
 
-    public ConfigSoulShards() {
+    public ConfigServer() {
         this(new ConfigBalance(), new ConfigClient(), new ConfigEntityList());
     }
 
@@ -50,7 +49,7 @@ public class ConfigSoulShards {
         File multiblockFile = new File(Platform.getConfigFolder().toFile(), SoulShards.MODID + "/multiblock.json");
         if (!multiblockFile.exists()) {
             try {
-                FileUtils.copyInputStreamToFile(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json"),
+                FileUtils.copyInputStreamToFile(ConfigServer.class.getResourceAsStream("/data/multiblock.json"),
                         multiblockFile);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -132,22 +131,6 @@ public class ConfigSoulShards {
 
         public int getSpawnCap() {
             return spawnCap;
-        }
-    }
-
-    public static class ConfigClient {
-        public boolean displayDurabilityBar;
-
-        public ConfigClient(boolean displayDurabilityBar) {
-            this.displayDurabilityBar = displayDurabilityBar;
-        }
-
-        public ConfigClient() {
-            this(true);
-        }
-
-        public boolean displayDurabilityBar() {
-            return displayDurabilityBar;
         }
     }
 

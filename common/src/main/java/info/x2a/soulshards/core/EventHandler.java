@@ -5,6 +5,7 @@ import dev.architectury.event.events.common.InteractionEvent;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.api.BindingEvent;
 import info.x2a.soulshards.api.ISoulWeapon;
+import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.data.Tier;
@@ -30,7 +31,7 @@ public class EventHandler {
 
     public static void init() {
         InteractionEvent.RIGHT_CLICK_BLOCK.register((player, hand, pos, direction) -> {
-            MultiblockPattern pattern = ConfigSoulShards.getMultiblock();
+            MultiblockPattern pattern = ConfigServer.getMultiblock();
 
             ItemStack held = player.getMainHandItem();
             if (!ItemStack.isSame(pattern.getCatalyst(), held))
