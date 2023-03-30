@@ -10,6 +10,7 @@ import info.x2a.soulshards.core.network.Channels;
 import info.x2a.soulshards.core.network.message.ConfigUpdate;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Tier;
+import info.x2a.soulshards.core.util.JsonResource;
 import info.x2a.soulshards.core.util.JsonUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
@@ -24,13 +25,15 @@ public class SoulShards {
 
     public static final String MODID = "soulshards";
     public static final Logger Log = LogManager.getLogger("Soul Shards Despawn");
-    public static ConfigServer CONFIG_SERVER = JsonUtil.fromJson(TypeToken.get(ConfigServer.class),
-            new File(Platform.getConfigFolder().toFile(), MODID + "/server.json"),
-            new ConfigServer());
 
-    public static ConfigClient CONFIG_CLIENT = JsonUtil.fromJson(TypeToken.get(ConfigClient.class),
+    private static final JsonResource<ConfigServer> CONFIG_SERVER_RES = new JsonResource<>(new File(Platform.getConfigFolder()
+                                                                                                            .toFile(), MODID + "/server.json"), new ConfigServer(), TypeToken.get(ConfigServer.class));
+
+    private static final JsonResource<ConfigClient> CONFIG_CLIENT_RES = new JsonResource<>(
             new File(Platform.getConfigFolder().toFile(), MODID + "/client.json"),
-            new ConfigClient());
+            new ConfigClient(), TypeToken.get(ConfigClient.class));
+    public static ConfigServer CONFIG_SERVER;
+    public static ConfigClient CONFIG_CLIENT;
     public static EntityDataAccessor<Boolean> cageBornTag;
     public static GameRules.Key<GameRules.BooleanValue> allowCageSpawns;
     public static boolean IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
@@ -42,6 +45,16 @@ public class SoulShards {
 
     public static void afterLoad() {
         Log.info("Soul Shards Despawn rises once again");
+        CONFIG_SERVER = CONFIG_SERVER_RES.get();
+        CONFIG_CLIENT = CONFIG_CLIENT_RES.get();
+    }
+
+    public static void saveClient() {
+        CONFIG_CLIENT_RES.save();
+    }
+
+    public static void saveServer() {
+        CONFIG_SERVER_RES.save();
     }
 
     public static ResourceLocation makeResource(String name) {
@@ -53,6 +66,7 @@ public class SoulShards {
     }
 
     public static void initCommon() {
+        afterLoad();
         Tier.readTiers();
         ConfigServer.handleMultiblock();
         PlayerEvent.PLAYER_JOIN.register(p -> {
@@ -67,6 +81,5 @@ public class SoulShards {
         info.x2a.soulshards.core.registry.Registries.init();
         EventHandler.init();
         initNetwork();
-        afterLoad();
     }
 }

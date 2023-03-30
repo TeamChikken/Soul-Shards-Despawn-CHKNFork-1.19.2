@@ -54,5 +54,6 @@ public final class ConfigUpdate {
         }
         SoulShards.CONFIG_SERVER.balance = balance;
         SoulShards.CONFIG_SERVER.entityList = entityList;
+        SoulShards.saveServer();
     }
 }

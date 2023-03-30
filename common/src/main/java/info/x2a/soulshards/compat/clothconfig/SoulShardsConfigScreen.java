@@ -16,6 +16,14 @@ public class SoulShardsConfigScreen {
     private static final ConfigServer DEFAULT_CONFIG = new ConfigServer();
     private static final ConfigClient DEFAULT_CONFIG_CLI = new ConfigClient();
 
+    private static boolean playerHasPerms() {
+        if (GameInstance.getClient().player != null) {
+            return GameInstance.getClient().player.hasPermissions(4);
+        } else {
+            return true;
+        }
+    }
+
     public SoulShardsConfigScreen(Screen parent) {
         var builder = ConfigBuilder.create().setParentScreen(parent).setTitle(Component.translatable("title" +
                 ".soulshards" +
@@ -95,7 +103,8 @@ public class SoulShardsConfigScreen {
     }
 
     private void onSave() {
-        if (GameInstance.getClient().player != null) {
+        SoulShards.saveClient();
+        if (playerHasPerms()) {
             Client.sendConfig(SoulShards.CONFIG_SERVER);
         }
     }

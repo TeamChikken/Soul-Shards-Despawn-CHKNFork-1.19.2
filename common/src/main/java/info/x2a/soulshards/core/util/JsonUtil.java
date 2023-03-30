@@ -43,17 +43,17 @@ public class JsonUtil {
      * Reads a {@link T} back from the given file. If the file does not exist, a new file will be generated with the
      * provided default and the default will be returned.
      *
-     * @param token The token type to use for deserialization.
-     * @param file  The file to read the JSON from.
-     * @param def   The default value to use if the file does not exist.
-     * @param <T>   The object type to give back.
-     * @return a {@link T} that was read from the given file or {@code def} if the file did not exist.
+     * @param token    The token type to use for deserialization.
+     * @param file     The file to read the JSON from.
+     * @param fallback The default value to use if the file does not exist.
+     * @param <T>      The object type to give back.
+     * @return a {@link T} that was read from the given file or {@code fallback} if the file did not exist.
      */
-    public static <T> T fromJson(TypeToken<T> token, File file, T def) {
+    public static <T> T fromJson(TypeToken<T> token, File file, T fallback) {
         T ret = fromJson(token, file);
         if (ret == null) {
-            toJson(def, token, file);
-            ret = def;
+            toJson(fallback, token, file);
+            ret = fallback;
         }
 
         return ret;
