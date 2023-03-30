@@ -14,9 +14,7 @@ import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigServer {
 
@@ -182,12 +180,12 @@ public class ConfigServer {
         private static Map<ResourceLocation, Boolean> getDefaults() {
             Map<ResourceLocation, Boolean> defaults = Maps.newHashMap();
             BuiltInRegistries.ENTITY_TYPE.stream().filter(e -> e.getCategory() == MobCategory.MISC)
-                                .forEach(e -> {
-                                    var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(e);
-                                    if (DEFAULT_DISABLES.contains(entityId)) {
-                                        defaults.put(entityId, false);
-                                    }
-                                });
+                                         .forEach(e -> {
+                                             var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(e);
+                                             if (DEFAULT_DISABLES.contains(entityId)) {
+                                                 defaults.put(entityId, false);
+                                             }
+                                         });
             return defaults;
         }
     }
