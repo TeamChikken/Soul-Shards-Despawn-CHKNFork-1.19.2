@@ -57,16 +57,17 @@ public class EventHandler {
     }
 
     public static void onEntityDeath(LivingEntity killed, DamageSource source) {
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && SoulShards.isBoss(killed))
+        if (!SoulShards.CONFIG_SERVER.getBalance().allowBossSpawns() && SoulShards.isBoss(killed))
             return;
 
-        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && killed.getEntityData().get(SoulShards.cageBornTag))
+        if (!SoulShards.CONFIG_SERVER.getBalance().countCageBornForShard() && killed.getEntityData()
+                                                                                    .get(SoulShards.cageBornTag))
             return;
 
         if (source.getEntity() instanceof Player player) {
             var entityId = getEntityId(killed);
 
-            if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
+            if (!SoulShards.CONFIG_SERVER.getEntityList().isEnabled(entityId)) {
                 return;
             }
 

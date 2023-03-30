@@ -3,6 +3,7 @@ package info.x2a.soulshards;
 import com.google.gson.reflect.TypeToken;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
+import info.x2a.soulshards.core.config.ConfigClient;
 import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.EventHandler;
 import info.x2a.soulshards.core.network.Channels;
@@ -23,9 +24,13 @@ public class SoulShards {
 
     public static final String MODID = "soulshards";
     public static final Logger Log = LogManager.getLogger("Soul Shards Despawn");
-    public static ConfigServer CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigServer.class),
-            new File(Platform.getConfigFolder().toFile(), MODID + "/" + MODID + ".json"),
+    public static ConfigServer CONFIG_SERVER = JsonUtil.fromJson(TypeToken.get(ConfigServer.class),
+            new File(Platform.getConfigFolder().toFile(), MODID + "/server.json"),
             new ConfigServer());
+
+    public static ConfigClient CONFIG_CLIENT = JsonUtil.fromJson(TypeToken.get(ConfigClient.class),
+            new File(Platform.getConfigFolder().toFile(), MODID + "/client.json"),
+            new ConfigClient());
     public static EntityDataAccessor<Boolean> cageBornTag;
     public static GameRules.Key<GameRules.BooleanValue> allowCageSpawns;
     public static boolean IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
@@ -51,7 +56,7 @@ public class SoulShards {
         Tier.readTiers();
         ConfigServer.handleMultiblock();
         PlayerEvent.PLAYER_JOIN.register(p -> {
-            Channels.CONFIG_UPDATE.sendToPlayer(p, new ConfigUpdate(CONFIG));
+            Channels.CONFIG_UPDATE.sendToPlayer(p, new ConfigUpdate(CONFIG_SERVER));
         });
 
         allowCageSpawns = GameRules.register("allowCageSpawns", GameRules.Category.SPAWNING,

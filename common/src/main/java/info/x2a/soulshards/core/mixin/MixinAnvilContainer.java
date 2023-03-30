@@ -23,10 +23,10 @@ public class MixinAnvilContainer {
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
     public void soulshards$createResult(CallbackInfo callbackInfo) {
-        if (!SoulShards.CONFIG.getBalance().allowShardCombination())
+        if (!SoulShards.CONFIG_SERVER.getBalance().allowShardCombination())
             return;
 
-        var slots = ((AbstractContainerMenu)(Object)this).slots;
+        var slots = ((AbstractContainerMenu) (Object) this).slots;
         ItemStack leftStack = slots.get(ItemCombinerMenu.INPUT_SLOT).getItem();
         ItemStack rightStack = slots.get(ItemCombinerMenu.ADDITIONAL_SLOT).getItem();
 

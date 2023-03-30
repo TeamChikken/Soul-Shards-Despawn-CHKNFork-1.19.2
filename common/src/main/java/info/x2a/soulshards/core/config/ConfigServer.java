@@ -20,25 +20,19 @@ public class ConfigServer {
     private static MultiblockPattern multiblock;
 
     public ConfigBalance balance;
-    private ConfigClient client;
     public ConfigEntityList entityList;
 
-    private ConfigServer(ConfigBalance balance, ConfigClient client, ConfigEntityList entityList) {
+    private ConfigServer(ConfigBalance balance, ConfigEntityList entityList) {
         this.balance = balance;
-        this.client = client;
         this.entityList = entityList;
     }
 
     public ConfigServer() {
-        this(new ConfigBalance(), new ConfigClient(), new ConfigEntityList());
+        this(new ConfigBalance(), new ConfigEntityList());
     }
 
     public ConfigBalance getBalance() {
         return balance;
-    }
-
-    public ConfigClient getClient() {
-        return client;
     }
 
     public ConfigEntityList getEntityList() {

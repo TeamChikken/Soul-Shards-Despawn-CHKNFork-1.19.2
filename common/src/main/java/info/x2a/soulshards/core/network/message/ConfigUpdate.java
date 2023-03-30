@@ -52,7 +52,7 @@ public final class ConfigUpdate {
                                                        .filter(p -> !p.getUUID().equals(player.getUUID()))
                                                        .toList(), new ConfigUpdate(balance, entityList));
         }
-        SoulShards.CONFIG.balance = balance;
-        SoulShards.CONFIG.entityList = entityList;
+        SoulShards.CONFIG_SERVER.balance = balance;
+        SoulShards.CONFIG_SERVER.entityList = entityList;
     }
 }

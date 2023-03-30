@@ -36,18 +36,21 @@ public class ItemSoulShard extends Item implements ISoulShard {
     public ItemSoulShard() {
         super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_MISC));
     }
+
     @Override
     public int getBarColor(ItemStack stack) {
         return 0x9F63ED;
     }
+
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        if (!SoulShards.CONFIG.getClient().displayDurabilityBar()) {
+        if (!SoulShards.CONFIG_CLIENT.displayDurabilityBar()) {
             return false;
         }
         var binding = getBinding(stack);
         return binding != null && binding.getKills() < Tier.maxKills;
     }
+
     @Override
     public int getBarWidth(ItemStack stack) {
         var maxPx = 13F;
@@ -67,7 +70,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
         }
 
         if (state.getBlock() instanceof SpawnerBlock) {
-            if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption()) {
+            if (!SoulShards.CONFIG_SERVER.getBalance().allowSpawnerAbsorption()) {
                 if (context.getPlayer() != null)
                     context.getPlayer().displayClientMessage(MutableComponent.create(new TranslatableContents("chat" +
                                     ".soulshards" +
@@ -86,8 +89,10 @@ public class ItemSoulShard extends Item implements ISoulShard {
             }
 
             try {
-                ResourceLocation entityId = EntityType.getKey(spawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
-                if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
+                ResourceLocation entityId = EntityType.getKey(spawner.getSpawner()
+                                                                     .getOrCreateDisplayEntity(context.getLevel())
+                                                                     .getType());
+                if (!SoulShards.CONFIG_SERVER.getEntityList().isEnabled(entityId)) {
                     SoulShards.Log.debug("Tried to consume entity which is disallowed in the " +
                                     "config: {}",
                             entityId.toString());
@@ -96,15 +101,15 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
                 if (binding.getBoundEntity() == null) {
                     binding.setBoundEntity(entityId);
-                }
-                else if (!binding.getBoundEntity().equals(entityId)) {
+                } else if (!binding.getBoundEntity().equals(entityId)) {
                     SoulShards.Log.warn("Tried to consume entity that doesn't match bound: {} vs" +
                                     " {}",
                             binding.getBoundEntity().toString(), binding.getBoundEntity().toString());
                     return InteractionResult.FAIL;
                 }
 
-                updateBinding(context.getItemInHand(), binding.addKills(SoulShards.CONFIG.getBalance().getAbsorptionBonus()));
+                updateBinding(context.getItemInHand(), binding.addKills(SoulShards.CONFIG_SERVER.getBalance()
+                                                                                                .getAbsorptionBonus()));
                 context.getLevel().destroyBlock(context.getClickedPos(), false);
                 return InteractionResult.SUCCESS;
             } catch (Throwable e) {
@@ -151,7 +156,8 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
         tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.tier",
                 binding.getTier().getIndex())).withStyle(greyColor));
-        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.kills", binding.getKills())).setStyle(greyColor));
+        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.kills", binding.getKills()))
+                                    .setStyle(greyColor));
         if (options.isAdvanced() && binding.getOwner() != null)
             tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.owner",
                     binding.getOwner().toString())).setStyle(greyColor));
