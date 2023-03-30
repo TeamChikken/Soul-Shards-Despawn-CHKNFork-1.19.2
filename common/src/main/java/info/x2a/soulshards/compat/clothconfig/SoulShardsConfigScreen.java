@@ -121,7 +121,7 @@ public class SoulShardsConfigScreen {
 
     private void onSave() {
         SoulShards.saveClient();
-        if (playerHasPerms()) {
+        if (GameInstance.getClient().player != null && playerHasPerms()) {
             Client.sendConfig(SoulShards.CONFIG_SERVER);
         }
     }
