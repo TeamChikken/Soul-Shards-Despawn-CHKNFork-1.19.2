@@ -14,7 +14,7 @@ jobs:
   build:
     strategy:
       matrix:
-        loader: [ quilt, forge ]
+        loader: [ quilt, forge, fabric ]
     runs-on: ubuntu-latest
     steps:
       - name: Echo env

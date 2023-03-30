@@ -59,5 +59,6 @@ public class SoulShards {
         info.x2a.soulshards.core.registry.Registries.init();
         EventHandler.init();
         initNetwork();
+        afterLoad();
     }
 }

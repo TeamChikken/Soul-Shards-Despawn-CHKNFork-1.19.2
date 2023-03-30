@@ -1,0 +1,21 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+configurations {
+    common
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${libs.versions.fabric.loader.get()}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${libs.versions.fabric.api.get()}"
+    // Remove the next line if you don't want to depend on the API
+    modApi "dev.architectury:architectury-fabric:${libs.versions.architectury.get()}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+}

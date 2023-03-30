@@ -43,6 +43,10 @@
         "id": "architectury",
         "version": ">=6.2.43"
       }
+    ],
+    "recommend": [
+      "modmenu",
+      "cloth-config"
     ]
   },
   "mixin": "soulshards.mixins.json",

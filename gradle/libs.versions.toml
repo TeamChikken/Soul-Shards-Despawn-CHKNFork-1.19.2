@@ -7,6 +7,7 @@ architectury = "6.2.43"
 fabric_loader = "0.14.9"
 wthit = "5.14.1"
 forge = "1.19.2-43.0.8"
+fabric_api = "0.76.0+1.19.2"
 
 quilted_fabric_api = "4.0.0-beta.26+0.72.0-1.19.2"
 clothconfig = "10.0.96"
