@@ -123,6 +123,8 @@ public class SoulShardsConfigScreen {
         SoulShards.saveClient();
         if (GameInstance.getClient().player != null && playerHasPerms()) {
             Client.sendConfig(SoulShards.CONFIG_SERVER);
+        } else if (GameInstance.getClient().player == null && GameInstance.getServer() == null) { // In menu
+            SoulShards.saveServer();
         }
     }
 }
