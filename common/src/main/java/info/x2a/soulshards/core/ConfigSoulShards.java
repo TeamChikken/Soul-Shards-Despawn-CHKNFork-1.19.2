@@ -20,7 +20,7 @@ public class ConfigSoulShards {
 
     private static MultiblockPattern multiblock;
 
-    private ConfigBalance balance;
+    public ConfigBalance balance;
     private ConfigClient client;
     public ConfigEntityList entityList;
 

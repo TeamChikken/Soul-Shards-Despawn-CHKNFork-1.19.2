@@ -12,21 +12,31 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
-public class ConfigUpdate {
-    public final ConfigSoulShards config;
+public final class ConfigUpdate {
+    private final ConfigSoulShards.ConfigBalance balance;
+    private final ConfigSoulShards.ConfigEntityList entityList;
+
+
+    public ConfigUpdate(ConfigSoulShards.ConfigBalance balance, ConfigSoulShards.ConfigEntityList entityList) {
+        this.balance = balance;
+        this.entityList = entityList;
+    }
 
     public ConfigUpdate(ConfigSoulShards config) {
-        this.config = config;
+        this.balance = config.getBalance();
+        this.entityList = config.entityList;
     }
 
     public ConfigUpdate(FriendlyByteBuf buf) {
-        this.config = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), buf.toString(StandardCharsets.UTF_8));
+        this.balance = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.ConfigBalance.class), new String(buf.readByteArray(), StandardCharsets.UTF_8));
+        this.entityList = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.ConfigEntityList.class), new String(buf.readByteArray(), StandardCharsets.UTF_8));
     }
 
     public void encode(FriendlyByteBuf buf) {
-        var tkn = TypeToken.get(ConfigSoulShards.class);
-        var json = JsonUtil.getJson(config, tkn);
-        buf.writeBytes(json.getBytes(StandardCharsets.UTF_8));
+        buf.writeByteArray(JsonUtil.getJson(balance, TypeToken.get(ConfigSoulShards.ConfigBalance.class))
+                                   .getBytes(StandardCharsets.UTF_8));
+        buf.writeByteArray(JsonUtil.getJson(entityList, TypeToken.get(ConfigSoulShards.ConfigEntityList.class))
+                                   .getBytes(StandardCharsets.UTF_8));
     }
 
     public void apply(Supplier<NetworkManager.PacketContext> ctx) {
@@ -35,14 +45,15 @@ public class ConfigUpdate {
                                               .getPlayerList()
                                               .isOp(ctx.get().getPlayer().getGameProfile())) {
             return;
-        } else {
+        } else if (!player.isLocalPlayer()) {
             Channels.CONFIG_UPDATE.sendToPlayers(player.getServer()
                                                        .getPlayerList()
                                                        .getPlayers()
                                                        .stream()
                                                        .filter(p -> !p.getUUID().equals(player.getUUID()))
-                                                       .toList(), new ConfigUpdate(config));
+                                                       .toList(), new ConfigUpdate(balance, entityList));
         }
-        SoulShards.CONFIG = config;
+        SoulShards.CONFIG.balance = balance;
+        SoulShards.CONFIG.entityList = entityList;
     }
 }
