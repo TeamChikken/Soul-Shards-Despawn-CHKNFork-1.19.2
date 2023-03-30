@@ -21,11 +21,15 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class EventHandler {
 
@@ -54,6 +58,26 @@ public class EventHandler {
             }
             return EventResult.interruptTrue();
         });
+    }
+
+    public static void onAnvilCraft(ItemStack leftStack, ItemStack rightStack, Consumer<ItemStack> craftResult, Consumer<Integer> cost) {
+        if (!SoulShards.CONFIG_SERVER.getBalance().allowShardCombination())
+            return;
+
+        if (leftStack.getItem() instanceof ItemSoulShard && rightStack.getItem() instanceof ItemSoulShard) {
+            Binding left = ((ItemSoulShard) leftStack.getItem()).getBinding(leftStack);
+            Binding right = ((ItemSoulShard) rightStack.getItem()).getBinding(rightStack);
+
+            if (left == null || right == null)
+                return;
+
+            if (left.getBoundEntity() != null && left.getBoundEntity().equals(right.getBoundEntity())) {
+                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
+                ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
+                cost.accept(left.getTier().getIndex() * 6);
+                craftResult.accept(output);
+            }
+        }
     }
 
     public static void onEntityDeath(LivingEntity killed, DamageSource source) {
