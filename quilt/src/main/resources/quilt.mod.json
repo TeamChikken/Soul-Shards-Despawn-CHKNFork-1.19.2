@@ -42,11 +42,19 @@
       {
         "id": "architectury",
         "version": ">=6.2.43"
+      },
+      {
+        "id": "modmenu",
+        "version": "*",
+        "optional": true,
+        "reason": "Provides config menu"
+      },
+      {
+        "id": "cloth-config",
+        "version": ">=8.0.0",
+        "optional": true,
+        "reason": "Provides config screen"
       }
-    ],
-    "recommend": [
-      "modmenu",
-      "cloth-config"
     ]
   },
   "mixin": "soulshards.mixins.json",
