@@ -40,17 +40,19 @@ public final class ConfigUpdate {
 
     public void apply(Supplier<NetworkManager.PacketContext> ctx) {
         var player = ctx.get().getPlayer();
-        if (!player.isLocalPlayer() && !player.getServer()
-                                              .getPlayerList()
-                                              .isOp(ctx.get().getPlayer().getGameProfile())) {
-            return;
-        } else if (!player.isLocalPlayer()) {
-            Channels.CONFIG_UPDATE.sendToPlayers(player.getServer()
-                                                       .getPlayerList()
-                                                       .getPlayers()
-                                                       .stream()
-                                                       .filter(p -> !p.getUUID().equals(player.getUUID()))
-                                                       .toList(), new ConfigUpdate(balance, entityList));
+        if (player != null && !player.isLocalPlayer()) {
+            if (!player.getServer()
+                       .getPlayerList()
+                       .isOp(ctx.get().getPlayer().getGameProfile())) {
+                return;
+            } else {
+                Channels.CONFIG_UPDATE.sendToPlayers(player.getServer()
+                                                           .getPlayerList()
+                                                           .getPlayers()
+                                                           .stream()
+                                                           .filter(p -> !p.getUUID().equals(player.getUUID()))
+                                                           .toList(), new ConfigUpdate(balance, entityList));
+            }
         }
         SoulShards.CONFIG_SERVER.balance = balance;
         SoulShards.CONFIG_SERVER.entityList = entityList;

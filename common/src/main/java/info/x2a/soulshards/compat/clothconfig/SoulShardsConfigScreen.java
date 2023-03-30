@@ -1,14 +1,18 @@
 package info.x2a.soulshards.compat.clothconfig;
 
 
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.utils.GameInstance;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.config.ConfigClient;
 import info.x2a.soulshards.core.network.Client;
 import info.x2a.soulshards.core.config.ConfigServer;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 
 public class SoulShardsConfigScreen {
@@ -24,10 +28,12 @@ public class SoulShardsConfigScreen {
         }
     }
 
-    public SoulShardsConfigScreen(Screen parent) {
-        var builder = ConfigBuilder.create().setParentScreen(parent).setTitle(Component.translatable("title" +
-                ".soulshards" +
-                ".config")).setSavingRunnable(this::onSave);
+    public SoulShardsConfigScreen(@Nullable Screen parent) {
+        var builder = ConfigBuilder
+                .create()
+                .setParentScreen(parent)
+                .setTitle(Component.translatable("title.soulshards.config"))
+                .setSavingRunnable(this::onSave);
         var entry = builder.entryBuilder();
         var hasPerms = true;
         if (GameInstance.getClient().player != null) {
@@ -96,6 +102,17 @@ public class SoulShardsConfigScreen {
                        .build())
                .addEntry(entityCat.build())
         ;
+    }
+
+    public static void popup() {
+        ClientTickEvent.CLIENT_POST.register(new ClientTickEvent.Client() {
+            @Override
+            public void tick(Minecraft ev) {
+                var screen = new SoulShardsConfigScreen(null).screen();
+                ev.forceSetScreen(screen);
+                ClientTickEvent.CLIENT_POST.unregister(this);
+            }
+        });
     }
 
     public Screen screen() {

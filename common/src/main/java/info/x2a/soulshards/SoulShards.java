@@ -11,7 +11,6 @@ import info.x2a.soulshards.core.network.message.ConfigUpdate;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Tier;
 import info.x2a.soulshards.core.util.JsonResource;
-import info.x2a.soulshards.core.util.JsonUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +35,7 @@ public class SoulShards {
     public static ConfigClient CONFIG_CLIENT;
     public static EntityDataAccessor<Boolean> cageBornTag;
     public static GameRules.Key<GameRules.BooleanValue> allowCageSpawns;
-    public static boolean IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
+    public static boolean IS_CLOTH_CONFIG_LOADED;
     public static final String BOSS_TAG = "c:bosses";
 
     public static boolean isBoss(LivingEntity creature) {
@@ -45,6 +44,7 @@ public class SoulShards {
 
     public static void afterLoad() {
         Log.info("Soul Shards Despawn rises once again");
+        IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
         CONFIG_SERVER = CONFIG_SERVER_RES.get();
         CONFIG_CLIENT = CONFIG_CLIENT_RES.get();
     }
@@ -70,7 +70,9 @@ public class SoulShards {
         Tier.readTiers();
         ConfigServer.handleMultiblock();
         PlayerEvent.PLAYER_JOIN.register(p -> {
-            Channels.CONFIG_UPDATE.sendToPlayer(p, new ConfigUpdate(CONFIG_SERVER));
+            if (!p.isLocalPlayer() && !p.getServer().isSingleplayer()) {
+                Channels.CONFIG_UPDATE.sendToPlayer(p, new ConfigUpdate(CONFIG_SERVER));
+            }
         });
 
         allowCageSpawns = GameRules.register("allowCageSpawns", GameRules.Category.SPAWNING,
