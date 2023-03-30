@@ -32,7 +32,7 @@ public class SoulShardsConfigScreen {
         var builder = ConfigBuilder
                 .create()
                 .setParentScreen(parent)
-                .setTitle(Component.translatable("title.soulshards.config"))
+                .setTitle(Component.translatable("itemGroup.soulshards"))
                 .setSavingRunnable(this::onSave);
         var entry = builder.entryBuilder();
         var hasPerms = true;
