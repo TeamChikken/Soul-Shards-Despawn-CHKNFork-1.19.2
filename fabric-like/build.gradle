@@ -17,5 +17,9 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-fabric:${libs.versions.architectury.get()}"
 
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${libs.versions.clothconfig.get()}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
 }

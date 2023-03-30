@@ -44,7 +44,7 @@ public class SoulShards {
 
     public static void afterLoad() {
         Log.info("Soul Shards Despawn rises once again");
-        IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config");
+        IS_CLOTH_CONFIG_LOADED = Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config");
         CONFIG_SERVER = CONFIG_SERVER_RES.get();
         CONFIG_CLIENT = CONFIG_CLIENT_RES.get();
     }
