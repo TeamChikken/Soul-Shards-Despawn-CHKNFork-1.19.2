@@ -42,6 +42,7 @@ jobs:
           modrinth-id: MpNGsSsC
           modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
 
+          name: "[${{ matrix.loader }} ${{ env.GITHUB_REF }}]"
           github-token: "${{env.GITHUB_TOKEN}}"
 
           game-versions: ${{ env.github.event.release.target_commitish }}
