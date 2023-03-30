@@ -42,7 +42,8 @@ public class TileEntitySoulCage extends BlockEntity {
                     return false;
 
                 Binding binding = ((ItemSoulShard) stack.getItem()).getBinding(stack);
-                return binding != null && binding.getBoundEntity() != null && SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity());
+                return binding != null && binding.getBoundEntity() != null && SoulShards.CONFIG_SERVER.getEntityList()
+                                                                                                      .isEnabled(binding.getBoundEntity());
             }
         };
     }
@@ -68,13 +69,13 @@ public class TileEntitySoulCage extends BlockEntity {
         if (tier.getSpawnAmount() == 0)
             return Optional.empty();
 
-        if (SoulShards.CONFIG.getBalance().requireOwnerOnline() && !ownerOnline())
+        if (SoulShards.CONFIG_SERVER.getBalance().requireOwnerOnline() && !ownerOnline())
             return Optional.empty();
 
-        if (!SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
+        if (!SoulShards.CONFIG_SERVER.getEntityList().isEnabled(binding.getBoundEntity()))
             return Optional.empty();
 
-        if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal()) {
+        if (!SoulShards.CONFIG_SERVER.getBalance().requireRedstoneSignal()) {
             if (state.getValue(BlockSoulCage.POWERED) && tier.checkRedstone())
                 return Optional.empty();
         } else if (!state.getValue(BlockSoulCage.POWERED))
@@ -86,11 +87,13 @@ public class TileEntitySoulCage extends BlockEntity {
 
         return Optional.of(binding);
     }
+
     public static void ticker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if (blockEntity instanceof TileEntitySoulCage me) {
             me.tick();
         }
     }
+
     public void tick() {
         if (level == null || level.isClientSide)
             return;
@@ -162,7 +165,7 @@ public class TileEntitySoulCage extends BlockEntity {
                 spawned.getEntityData().set(SoulShards.cageBornTag, true);
 
                 if (spawned.isAlive() && !hasReachedSpawnCap(spawned) && !isColliding(spawned)) {
-                    if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && SoulShards.isBoss(spawned))
+                    if (!SoulShards.CONFIG_SERVER.getBalance().allowBossSpawns() && SoulShards.isBoss(spawned))
                         continue;
 
                     InteractionResult result = CageSpawnEvent.CAGE_SPAWN.invoker().onCageSpawn(binding,
@@ -172,7 +175,7 @@ public class TileEntitySoulCage extends BlockEntity {
 
                     getLevel().addFreshEntity(spawned);
                     if (spawned instanceof Mob)
-                        ((Mob) spawned).finalizeSpawn((ServerLevel)level,
+                        ((Mob) spawned).finalizeSpawn((ServerLevel) level,
                                 level.getCurrentDifficultyAt(pos),
                                 MobSpawnType.SPAWNER,
                                 null,
@@ -203,7 +206,7 @@ public class TileEntitySoulCage extends BlockEntity {
 
         int mobCount = getLevel().getEntitiesOfClass(living.getClass(), box,
                 e -> e != null && e.getEntityData().get(SoulShards.cageBornTag)).size();
-        return mobCount >= SoulShards.CONFIG.getBalance().getSpawnCap();
+        return mobCount >= SoulShards.CONFIG_SERVER.getBalance().getSpawnCap();
     }
 
     private boolean isColliding(LivingEntity entity) {
@@ -223,7 +226,9 @@ public class TileEntitySoulCage extends BlockEntity {
     public boolean ownerOnline() {
         Binding binding = getBinding();
         //noinspection ConstantConditions
-        return binding != null && binding.getOwner() != null && getLevel().getServer().getPlayerList().getPlayer(binding.getOwner()) == null;
+        return binding != null && binding.getOwner() != null && getLevel().getServer()
+                                                                          .getPlayerList()
+                                                                          .getPlayer(binding.getOwner()) == null;
     }
 
     public Container getInventory() {

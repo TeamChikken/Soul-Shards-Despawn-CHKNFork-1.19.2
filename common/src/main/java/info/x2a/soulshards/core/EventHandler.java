@@ -5,6 +5,7 @@ import dev.architectury.event.events.common.InteractionEvent;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.api.BindingEvent;
 import info.x2a.soulshards.api.ISoulWeapon;
+import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.data.Tier;
@@ -21,17 +22,21 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class EventHandler {
 
     public static void init() {
         InteractionEvent.RIGHT_CLICK_BLOCK.register((player, hand, pos, direction) -> {
-            MultiblockPattern pattern = ConfigSoulShards.getMultiblock();
+            MultiblockPattern pattern = ConfigServer.getMultiblock();
 
             ItemStack held = player.getMainHandItem();
             if (!ItemStack.isSame(pattern.getCatalyst(), held))
@@ -56,17 +61,38 @@ public class EventHandler {
         });
     }
 
-    public static void onEntityDeath(LivingEntity killed, DamageSource source) {
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && SoulShards.isBoss(killed))
+    public static void onAnvilCraft(ItemStack leftStack, ItemStack rightStack, Consumer<ItemStack> craftResult, Consumer<Integer> cost) {
+        if (!SoulShards.CONFIG_SERVER.getBalance().allowShardCombination())
             return;
 
-        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && killed.getEntityData().get(SoulShards.cageBornTag))
+        if (leftStack.getItem() instanceof ItemSoulShard && rightStack.getItem() instanceof ItemSoulShard) {
+            Binding left = ((ItemSoulShard) leftStack.getItem()).getBinding(leftStack);
+            Binding right = ((ItemSoulShard) rightStack.getItem()).getBinding(rightStack);
+
+            if (left == null || right == null)
+                return;
+
+            if (left.getBoundEntity() != null && left.getBoundEntity().equals(right.getBoundEntity())) {
+                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
+                ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
+                cost.accept(left.getTier().getIndex() * 6);
+                craftResult.accept(output);
+            }
+        }
+    }
+
+    public static void onEntityDeath(LivingEntity killed, DamageSource source) {
+        if (!SoulShards.CONFIG_SERVER.getBalance().allowBossSpawns() && SoulShards.isBoss(killed))
+            return;
+
+        if (!SoulShards.CONFIG_SERVER.getBalance().countCageBornForShard() && killed.getEntityData()
+                                                                                    .get(SoulShards.cageBornTag))
             return;
 
         if (source.getEntity() instanceof Player player) {
             var entityId = getEntityId(killed);
 
-            if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) {
+            if (!SoulShards.CONFIG_SERVER.getEntityList().isEnabled(entityId)) {
                 return;
             }
 

@@ -39,6 +39,7 @@ remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
+    archiveClassifier.set("quilt")
 }
 jar {
     archiveClassifier.set("dev")
@@ -66,6 +67,8 @@ dependencies {
     }
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionQuilt")) { transitive false }
+    common(project(path: ":fabric-like", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":fabric-like", configuration: "transformProductionQuilt")) { transitive false }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -86,7 +89,8 @@ processResources {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        mavenQuilt(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
             from components.java
         }
     }

@@ -1,6 +1,7 @@
 package info.x2a.soulshards.core.mixin;
 
 import info.x2a.soulshards.SoulShards;
+import info.x2a.soulshards.core.EventHandler;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.item.ItemSoulShard;
@@ -23,27 +24,14 @@ public class MixinAnvilContainer {
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
     public void soulshards$createResult(CallbackInfo callbackInfo) {
-        if (!SoulShards.CONFIG.getBalance().allowShardCombination())
-            return;
-
         var slots = ((AbstractContainerMenu) (Object) this).slots;
         ItemStack leftStack = slots.get(0).getItem();
         ItemStack rightStack = slots.get(1).getItem();
-
-        if (leftStack.getItem() instanceof ItemSoulShard && rightStack.getItem() instanceof ItemSoulShard) {
-            Binding left = ((ItemSoulShard) leftStack.getItem()).getBinding(leftStack);
-            Binding right = ((ItemSoulShard) rightStack.getItem()).getBinding(rightStack);
-
-            if (left == null || right == null)
-                return;
-
-            if (left.getBoundEntity() != null && left.getBoundEntity().equals(right.getBoundEntity())) {
-                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
-                ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
-                slots.get(2).set(output);
-                cost.set(left.getTier().getIndex() * 6);
-                callbackInfo.cancel();
-            }
-        }
+        EventHandler.onAnvilCraft(leftStack, rightStack, output -> {
+            slots.get(2).set(output);
+            callbackInfo.cancel();
+        }, costOut -> {
+            cost.set(costOut);
+        });
     }
 }

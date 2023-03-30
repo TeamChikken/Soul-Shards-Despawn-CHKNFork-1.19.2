@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[43,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/0x00002a/Soul-Shards-Despawn/"
 license = "MIT"
 
 [[mods]]
@@ -11,7 +11,7 @@ authors = "0x00002a"
 description = '''
 Custom spawners for any and all mobs!
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
 [[dependencies.soulshards]]
 modId = "forge"

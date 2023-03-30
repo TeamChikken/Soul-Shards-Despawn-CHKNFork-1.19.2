@@ -46,17 +46,8 @@ allprojects {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
         }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'Modrinth'
-                    url = 'https://api.modrinth.com/maven'
-                }
-            }
-            filter {
-                includeGroup 'maven.modrinth'
-            }
-        }
+        maven { url "https://maven.shedaniel.me/" }
+        maven { url "https://maven.terraformersmc.com/releases/" }
     }
 
     tasks.withType(JavaCompile) {

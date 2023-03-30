@@ -13,6 +13,8 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${libs.versions.architectury.get()}"
     modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${libs.versions.wthit.get()}"
+    modApi("me.shedaniel.cloth:cloth-config:${libs.versions.clothconfig.get()}")
+    modApi "com.terraformersmc:modmenu:${libs.versions.modmenu.get()}"
 }
 
 publishing {

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "soulshards",
+  "version": "${version}",
+  "name": "Soul Shards Despawn",
+  "description": "Powerful spawners for any mob!",
+  "mixins": [
+    "soulshards.mixins.json"
+  ],
+  "authors": [
+    "0x00002a"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/soul-shards-despawn/",
+    "sources": "https://github.com/0x00002a/Soul-Shards-Despawn/"
+  },
+  "license": "MIT",
+  "icon": "assets/soulshards/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "info.x2a.soulshards.fabric.SoulShardsModFabric"
+    ],
+    "client": [
+      "info.x2a.soulshards.fabric.SoulShardsModFabricClient"
+    ],
+    "modmenu": [
+      "info.x2a.soulshards.compat.modmenu.SoulShardsModMenu"
+    ]
+  },
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19.2",
+    "architectury": ">=6.2.43"
+  },
+  "recommend": [
+    "modmenu",
+    "cloth-config"
+  ],
+  "custom": {
+    "waila:plugins": {
+      "id": "soulshards",
+      "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin"
+    }
+  }
+}

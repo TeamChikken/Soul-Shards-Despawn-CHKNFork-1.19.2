@@ -1,4 +1,4 @@
-package info.x2a.soulshards.core;
+package info.x2a.soulshards.core.config;
 
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
@@ -6,6 +6,7 @@ import dev.architectury.platform.Platform;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.util.JsonUtil;
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -17,30 +18,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ConfigSoulShards {
+public class ConfigServer {
 
     private static MultiblockPattern multiblock;
 
-    private ConfigBalance balance;
-    private ConfigClient client;
-    private ConfigEntityList entityList;
+    public ConfigBalance balance;
+    public ConfigEntityList entityList;
 
-    private ConfigSoulShards(ConfigBalance balance, ConfigClient client, ConfigEntityList entityList) {
+    private ConfigServer(ConfigBalance balance, ConfigEntityList entityList) {
         this.balance = balance;
-        this.client = client;
         this.entityList = entityList;
     }
 
-    public ConfigSoulShards() {
-        this(new ConfigBalance(), new ConfigClient(), new ConfigEntityList());
+    public ConfigServer() {
+        this(new ConfigBalance(), new ConfigEntityList());
     }
 
     public ConfigBalance getBalance() {
         return balance;
-    }
-
-    public ConfigClient getClient() {
-        return client;
     }
 
     public ConfigEntityList getEntityList() {
@@ -51,7 +46,7 @@ public class ConfigSoulShards {
         File multiblockFile = new File(Platform.getConfigFolder().toFile(), SoulShards.MODID + "/multiblock.json");
         if (!multiblockFile.exists()) {
             try {
-                FileUtils.copyInputStreamToFile(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json"),
+                FileUtils.copyInputStreamToFile(ConfigServer.class.getResourceAsStream("/data/multiblock.json"),
                         multiblockFile);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -73,14 +68,14 @@ public class ConfigSoulShards {
 
     public static class ConfigBalance {
 
-        private boolean allowSpawnerAbsorption;
-        private int absorptionBonus;
-        private boolean allowBossSpawns;
-        private boolean countCageBornForShard;
-        private boolean requireOwnerOnline;
-        private boolean requireRedstoneSignal;
-        private boolean allowShardCombination;
-        private int spawnCap;
+        public boolean allowSpawnerAbsorption;
+        public int absorptionBonus;
+        public boolean allowBossSpawns;
+        public boolean countCageBornForShard;
+        public boolean requireOwnerOnline;
+        public boolean requireRedstoneSignal;
+        public boolean allowShardCombination;
+        public int spawnCap;
 
         public ConfigBalance(boolean allowSpawnerAbsorption, int absorptionBonus, boolean allowBossSpawns, boolean countCageBornForShard, boolean requireOwnerOnline, boolean requireRedstoneSignal, boolean allowShardCombination, int spawnCap) {
             this.allowSpawnerAbsorption = allowSpawnerAbsorption;
@@ -93,9 +88,15 @@ public class ConfigSoulShards {
             this.spawnCap = spawnCap;
         }
 
+        private static final ConfigBalance DEFAULT = new ConfigBalance();
+
         public ConfigBalance() {
             this(true, 200, false, false, false, false, true, 32);
         }
+
+        public void addToBuilder(ConfigBuilder builder) {
+        }
+
 
         public boolean allowSpawnerAbsorption() {
             return allowSpawnerAbsorption;
@@ -130,22 +131,6 @@ public class ConfigSoulShards {
         }
     }
 
-    public static class ConfigClient {
-        private boolean displayDurabilityBar;
-
-        public ConfigClient(boolean displayDurabilityBar) {
-            this.displayDurabilityBar = displayDurabilityBar;
-        }
-
-        public ConfigClient() {
-            this(true);
-        }
-
-        public boolean displayDurabilityBar() {
-            return displayDurabilityBar;
-        }
-    }
-
     public static class ConfigEntityList {
         private static final Set<ResourceLocation> DEFAULT_DISABLES = createDefaultDisables();
 
@@ -171,8 +156,23 @@ public class ConfigSoulShards {
             this.entities = entities;
         }
 
+        public ConfigEntityList(Iterable<String> disabled) {
+            this.entities = new HashMap<>();
+            for (var entry : disabled) {
+                entities.put(new ResourceLocation(entry), false);
+            }
+        }
+
         public ConfigEntityList() {
             this(getDefaults());
+        }
+
+        public List<String> disabledIds() {
+            return this.entities.entrySet()
+                                .stream()
+                                .filter(e -> !e.getValue())
+                                .map(e -> e.getKey().toString())
+                                .toList();
         }
 
         public boolean isEnabled(ResourceLocation entityId) {
@@ -182,12 +182,12 @@ public class ConfigSoulShards {
         private static Map<ResourceLocation, Boolean> getDefaults() {
             Map<ResourceLocation, Boolean> defaults = Maps.newHashMap();
             BuiltInRegistries.ENTITY_TYPE.stream().filter(e -> e.getCategory() == MobCategory.MISC)
-                    .forEach(e -> {
-                        var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(e);
-                        if (DEFAULT_DISABLES.contains(entityId)) {
-                            defaults.put(entityId, false);
-                        }
-                    });
+                                .forEach(e -> {
+                                    var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(e);
+                                    if (DEFAULT_DISABLES.contains(entityId)) {
+                                        defaults.put(entityId, false);
+                                    }
+                                });
             return defaults;
         }
     }
