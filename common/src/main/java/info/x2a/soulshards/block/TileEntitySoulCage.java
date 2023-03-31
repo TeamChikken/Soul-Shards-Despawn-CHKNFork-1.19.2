@@ -84,8 +84,7 @@ public class TileEntitySoulCage extends BlockEntity {
         } else if (!state.getValue(BlockSoulCage.POWERED))
             return Optional.empty();
 
-        if (tier.checkPlayer() && level.getNearestPlayer(pos.getX(), pos.getY(), pos.getX(), 16,
-                false) == null)
+        if (tier.checkPlayer() && level.hasNearbyAlivePlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getX() + 0.5, 16))
             return Optional.empty();
 
         return Optional.of(binding);
