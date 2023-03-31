@@ -62,7 +62,7 @@ public class BlockSoulCage extends Block implements EntityBlock {
 
     @Override
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2,
-                               boolean boolean_1) {
+                         boolean boolean_1) {
         if (blockState.getBlock() != blockState2.getBlock()) {
             TileEntitySoulCage cage = (TileEntitySoulCage) level.getBlockEntity(blockPos);
             if (cage != null)
@@ -97,7 +97,7 @@ public class BlockSoulCage extends Block implements EntityBlock {
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos neighborPos,
-                               boolean someBool) {
+                                boolean someBool) {
         handleRedstoneChange(world, state, pos);
     }
 
@@ -110,7 +110,7 @@ public class BlockSoulCage extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-                                                            BlockEntityType<T> blockEntityType) {
+                                                                  BlockEntityType<T> blockEntityType) {
         return TileEntitySoulCage::ticker;
     }
 

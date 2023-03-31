@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public class MixinEntityLiving {
@@ -25,7 +26,7 @@ public class MixinEntityLiving {
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void registerDataTracker(CallbackInfo callbackInfo) {
         SoulShards.cageBornTag = SynchedEntityData.defineId(LivingEntity.class,
-            EntityDataSerializers.BOOLEAN);
+                EntityDataSerializers.BOOLEAN);
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
@@ -35,7 +36,7 @@ public class MixinEntityLiving {
             if (entity instanceof Player)
                 return;
             entity.getEntityData().define(SoulShards.cageBornTag, false);
-        } catch(Exception e) {
+        } catch (Exception e) {
             SoulShards.Log.error("during synched data: {}", e.getMessage());
         }
     }
@@ -47,5 +48,16 @@ public class MixinEntityLiving {
             return;
 
         EventHandler.onEntityDeath(entity, damageSource);
+    }
+
+    @Inject(method = "shouldDropExperience", at = @At("RETURN"))
+    private void shouldDropXp(CallbackInfoReturnable<Boolean> cir) {
+        var me = (LivingEntity) (Object) this;
+        if (!cir.getReturnValue()) {
+            return;
+        }
+        if (!EventHandler.shouldDropXp(me)) {
+            cir.setReturnValue(false);
+        }
     }
 }

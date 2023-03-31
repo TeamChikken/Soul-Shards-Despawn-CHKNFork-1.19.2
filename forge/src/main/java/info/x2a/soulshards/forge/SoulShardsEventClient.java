@@ -10,6 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,5 +42,12 @@ public class SoulShardsEventClient {
     @SubscribeEvent
     public static void anvilItemCrafted(AnvilUpdateEvent ev) {
         EventHandler.onAnvilCraft(ev.getLeft(), ev.getRight(), ev::setOutput, ev::setCost);
+    }
+
+    @SubscribeEvent
+    public static void entityDropXp(LivingExperienceDropEvent ev) {
+        if (!EventHandler.shouldDropXp(ev.getEntity())) {
+            ev.setDroppedExperience(0);
+        }
     }
 }

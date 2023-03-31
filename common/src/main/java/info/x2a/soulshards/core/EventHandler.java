@@ -81,7 +81,15 @@ public class EventHandler {
         }
     }
 
+    public static boolean shouldDropXp(LivingEntity entity) {
+        return !entity.getEntityData()
+                      .get(SoulShards.cageBornTag) || SoulShards.CONFIG_SERVER.getBalance().dropExperience;
+    }
+
     public static void onEntityDeath(LivingEntity killed, DamageSource source) {
+        if (!shouldDropXp(killed)) {
+            killed.skipDropExperience();
+        }
         if (!SoulShards.CONFIG_SERVER.getBalance().allowBossSpawns() && SoulShards.isBoss(killed))
             return;
 

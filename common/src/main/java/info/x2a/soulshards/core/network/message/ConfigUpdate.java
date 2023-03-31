@@ -7,6 +7,7 @@ import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.network.Channels;
 import info.x2a.soulshards.core.util.JsonUtil;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
@@ -39,23 +40,27 @@ public final class ConfigUpdate {
     }
 
     public void apply(Supplier<NetworkManager.PacketContext> ctx) {
-        var player = ctx.get().getPlayer();
-        if (player != null && !player.isLocalPlayer()) {
-            if (!player.getServer()
-                       .getPlayerList()
-                       .isOp(ctx.get().getPlayer().getGameProfile())) {
-                return;
-            } else {
-                Channels.CONFIG_UPDATE.sendToPlayers(player.getServer()
-                                                           .getPlayerList()
-                                                           .getPlayers()
-                                                           .stream()
-                                                           .filter(p -> !p.getUUID().equals(player.getUUID()))
-                                                           .toList(), new ConfigUpdate(balance, entityList));
+        try {
+            var player = ctx.get().getPlayer();
+            if (player instanceof ServerPlayer) { // we are serverside
+                var server = player.getServer();
+                if (server.getPlayerList().isOp(player.getGameProfile())) {
+                    Channels.CONFIG_UPDATE.sendToPlayers(server
+                            .getPlayerList()
+                            .getPlayers()
+                            .stream()
+                            .filter(p -> !p.getUUID().equals(player.getUUID()))
+                            .toList(), new ConfigUpdate(balance, entityList));
+                    SoulShards.CONFIG_SERVER.balance = balance;
+                    SoulShards.CONFIG_SERVER.entityList = entityList;
+                    SoulShards.saveServer();
+                }
+            } else { // we are clientside
+                SoulShards.CONFIG_SERVER.balance = balance;
+                SoulShards.CONFIG_SERVER.entityList = entityList;
             }
+        } catch (Exception e) {
+            SoulShards.Log.error("recv config: {}", e.getMessage());
         }
-        SoulShards.CONFIG_SERVER.balance = balance;
-        SoulShards.CONFIG_SERVER.entityList = entityList;
-        SoulShards.saveServer();
     }
 }

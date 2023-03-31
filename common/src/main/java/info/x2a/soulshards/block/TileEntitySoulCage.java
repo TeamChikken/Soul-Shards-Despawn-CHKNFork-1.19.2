@@ -3,6 +3,7 @@ package info.x2a.soulshards.block;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.api.CageSpawnEvent;
 import info.x2a.soulshards.api.IShardTier;
+import info.x2a.soulshards.api.ISoulShard;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.item.ItemSoulShard;
@@ -24,12 +25,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class TileEntitySoulCage extends BlockEntity {
 
     private final Container inventory;
+    private long activeTime;
     private boolean active;
 
     public TileEntitySoulCage(BlockPos pos, BlockState state) {
@@ -94,6 +97,11 @@ public class TileEntitySoulCage extends BlockEntity {
         }
     }
 
+    public void setShard(ItemStack shard) {
+        inventory.setItem(0, shard);
+        activeTime = ((ISoulShard) shard.getItem()).getBinding(shard).getTier().getCooldown();
+    }
+
     public void tick() {
         if (level == null || level.isClientSide)
             return;
@@ -103,6 +111,7 @@ public class TileEntitySoulCage extends BlockEntity {
         if (result.isEmpty()) {
             if (active) {
                 setState(false);
+                activeTime = 0;
                 level.updateNeighborsAt(pos, getBlockState().getBlock());
             }
             return;
@@ -110,28 +119,32 @@ public class TileEntitySoulCage extends BlockEntity {
 
         if (!active) {
             setState(true);
+            activeTime = activeTime % result.get().getTier().getCooldown();
             level.updateNeighborsAt(pos, getBlockState().getBlock());
         }
+        activeTime++;
 
-        if (level.getGameTime() % result.get().getTier().getCooldown() == 0)
+        if (activeTime % result.get().getTier().getCooldown() == 0)
             spawnEntities();
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
 
         if (tag.contains("shard"))
             inventory.setItem(0, ItemStack.of(tag.getCompound("shard")));
         this.active = tag.getBoolean("active");
+        this.activeTime = tag.getLong("activeTime");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         ItemStack shardStack = inventory.getItem(0);
         if (!shardStack.isEmpty())
             tag.put("shard", shardStack.save(new CompoundTag()));
         tag.putBoolean("active", active);
+        tag.putLong("activeTime", activeTime);
         super.saveAdditional(tag);
     }
 
@@ -164,7 +177,7 @@ public class TileEntitySoulCage extends BlockEntity {
                 spawned.moveTo(spawnAt, level.random.nextFloat() * 360F, 0F);
                 spawned.getEntityData().set(SoulShards.cageBornTag, true);
 
-                if (spawned.isAlive() && !hasReachedSpawnCap(spawned) && !isColliding(spawned)) {
+                if (spawned.isAlive() && !hasReachedSpawnCap(spawned) && level.noCollision(spawned)) {
                     if (!SoulShards.CONFIG_SERVER.getBalance().allowBossSpawns() && SoulShards.isBoss(spawned))
                         continue;
 
@@ -173,14 +186,22 @@ public class TileEntitySoulCage extends BlockEntity {
                     if (result == InteractionResult.FAIL)
                         continue spawnLoop;
 
-                    getLevel().addFreshEntity(spawned);
-                    if (spawned instanceof Mob)
+                    if (spawned instanceof Mob) {
                         ((Mob) spawned).finalizeSpawn((ServerLevel) level,
                                 level.getCurrentDifficultyAt(pos),
                                 MobSpawnType.SPAWNER,
                                 null,
                                 null);
-                    break;
+                    }
+                    if (level instanceof ServerLevel lvl) {
+                        if (!lvl.tryAddFreshEntityWithPassengers(spawned)) {
+                            continue;
+                        }
+                        if (spawned instanceof Mob) {
+                            ((Mob) spawned).spawnAnim();
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -207,11 +228,6 @@ public class TileEntitySoulCage extends BlockEntity {
         int mobCount = getLevel().getEntitiesOfClass(living.getClass(), box,
                 e -> e != null && e.getEntityData().get(SoulShards.cageBornTag)).size();
         return mobCount >= SoulShards.CONFIG_SERVER.getBalance().getSpawnCap();
-    }
-
-    private boolean isColliding(LivingEntity entity) {
-        return !getLevel().noCollision(entity, entity.getBoundingBox()) || getLevel().getEntitiesOfClass(LivingEntity.class,
-                entity.getBoundingBox(), e -> true).isEmpty();
     }
 
     public void setState(boolean active) {

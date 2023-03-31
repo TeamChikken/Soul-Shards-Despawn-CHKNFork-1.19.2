@@ -28,6 +28,8 @@
   "tooltip.soulshards.spawn_cap": "Max number of mobs in the area around a soul cage",
   "option.soulshards.display_durability_bar": "Display filled %",
   "tooltip.soulshards.display_durability_bar": "Display percentage filled of soul shard as durability bar",
+  "tooltip.soulshards.drop_xp": "Should cage born mobs drop xp",
+  "option.soulshards.drop_xp": "Cage born drop XP",
   "option.soulshards.disabled_entities": "Disabled",
   "tooltip.soulshards.disabled_entities": "These entities will not be spawnable by a soul cage",
   "category.soulshards.client": "Client",

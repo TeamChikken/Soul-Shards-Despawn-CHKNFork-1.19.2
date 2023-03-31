@@ -73,9 +73,12 @@ public class ConfigServer {
         public boolean requireOwnerOnline;
         public boolean requireRedstoneSignal;
         public boolean allowShardCombination;
+
+        public boolean dropExperience;
+
         public int spawnCap;
 
-        public ConfigBalance(boolean allowSpawnerAbsorption, int absorptionBonus, boolean allowBossSpawns, boolean countCageBornForShard, boolean requireOwnerOnline, boolean requireRedstoneSignal, boolean allowShardCombination, int spawnCap) {
+        public ConfigBalance(boolean allowSpawnerAbsorption, int absorptionBonus, boolean allowBossSpawns, boolean countCageBornForShard, boolean requireOwnerOnline, boolean requireRedstoneSignal, boolean allowShardCombination, int spawnCap, boolean dropExperience) {
             this.allowSpawnerAbsorption = allowSpawnerAbsorption;
             this.absorptionBonus = absorptionBonus;
             this.allowBossSpawns = allowBossSpawns;
@@ -83,16 +86,14 @@ public class ConfigServer {
             this.requireOwnerOnline = requireOwnerOnline;
             this.requireRedstoneSignal = requireRedstoneSignal;
             this.allowShardCombination = allowShardCombination;
+            this.dropExperience = dropExperience;
             this.spawnCap = spawnCap;
         }
 
         private static final ConfigBalance DEFAULT = new ConfigBalance();
 
         public ConfigBalance() {
-            this(true, 200, false, false, false, false, true, 32);
-        }
-
-        public void addToBuilder(ConfigBuilder builder) {
+            this(true, 200, false, false, false, false, true, 32, true);
         }
 
 
