@@ -125,7 +125,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
             ItemStack cageStack = cage.getInventory().getItem(0);
             if (cageStack.isEmpty() && cage.getInventory().canPlaceItem(0, context.getItemInHand())) {
-                cage.getInventory().setItem(0, context.getItemInHand().copy());
+                cage.setShard(context.getItemInHand().copy());
                 context.getItemInHand().shrink(1);
                 cage.setChanged();
                 cage.setState(true);
