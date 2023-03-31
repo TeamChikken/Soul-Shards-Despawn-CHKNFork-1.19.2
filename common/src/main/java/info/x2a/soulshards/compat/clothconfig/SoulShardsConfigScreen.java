@@ -12,6 +12,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -64,6 +65,11 @@ public class SoulShardsConfigScreen {
         public BooleanToggleBuilder bool(String name, String target) {
             return mkBuilder(name, target, (entry::startBooleanToggle));
         }
+
+        @Nullable
+        public IntFieldBuilder ient(String name, String target) {
+            return mkBuilder(name, target, entry::startIntField);
+        }
     }
 
     private final Screen popup;
@@ -104,7 +110,6 @@ public class SoulShardsConfigScreen {
 
     private void addServerCfg(ConfigBuilder builder) {
         var cfg = SoulShards.CONFIG_SERVER;
-        var balance = cfg.getBalance();
         var entry = builder.entryBuilder();
         var entities = SoulShards.CONFIG_SERVER.getEntityList();
         var entityCat = entry.startSubCategory(Component.translatable("category.soulshards.entity_list"));
@@ -119,40 +124,17 @@ public class SoulShardsConfigScreen {
             builder.getOrCreateCategory(Component.translatable("category.soulshards.balance"))
                    .addEntry(helper.bool("allow_shard_combine", "allowShardCombination")
                            .build())
-                   .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.allow_shard_combine"), balance.allowShardCombination)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.allow_shard_combine"))
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().allowShardCombination)
-                                  .setSaveConsumer(v -> balance.allowShardCombination = v)
+                   .addEntry(helper.bool("allow_boss_spawns", "allowBossSpawn")
                            .build())
-                   .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.allow_boss_spawns"), balance.allowBossSpawns)
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().allowBossSpawns)
-                                  .setSaveConsumer(v -> balance.allowBossSpawns = v)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.allow_boss_spawns"))
+                   .addEntry(helper.bool("absorb_bonus", "absorptionBonus")
                            .build())
-                   .addEntry(entry.startIntField(Component.translatable("option.soulshards.absorb_bonus"), balance.absorptionBonus)
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().absorptionBonus)
-                                  .setSaveConsumer(v -> balance.absorptionBonus = v)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.absorb_bonus"))
+                   .addEntry(helper.bool("count_cage_born", "countCageBornForShard")
                            .build())
-                   .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.count_cage_born"), balance.countCageBornForShard)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.count_cage_born"))
-                                  .setSaveConsumer(v -> balance.countCageBornForShard = v)
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().countCageBornForShard)
+                   .addEntry(helper.bool("require_owner_online", "requireOwnerOnline")
                            .build())
-                   .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.require_owner_online"), balance.requireOwnerOnline)
-                                  .setSaveConsumer(v -> balance.requireOwnerOnline = v)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.require_owner_online"))
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().requireOwnerOnline)
+                   .addEntry(helper.bool("require_redstone", "requireRedstoneSignal")
                            .build())
-                   .addEntry(entry.startBooleanToggle(Component.translatable("option.soulshards.require_redstone"), balance.requireRedstoneSignal)
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().requireRedstoneSignal)
-                                  .setSaveConsumer(v -> balance.requireRedstoneSignal = v)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.require_redstone"))
-                           .build())
-                   .addEntry(entry.startIntField(Component.translatable("option.soulshards.spawn_cap"), balance.spawnCap)
-                                  .setDefaultValue(DEFAULT_CONFIG.getBalance().spawnCap)
-                                  .setSaveConsumer(v -> balance.spawnCap = v)
-                                  .setTooltip(Component.translatable("tooltip.soulshards.spawn_cap"))
+                   .addEntry(helper.ient("spawn_cap", "spawnCap")
                            .build())
                    .addEntry(entityCat.build())
             ;
