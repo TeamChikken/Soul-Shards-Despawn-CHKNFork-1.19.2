@@ -26,6 +26,9 @@
     ],
     "modmenu": [
       "info.x2a.soulshards.compat.modmenu.SoulShardsModMenu"
+    ],
+    "jei_mod_plugin": [
+      "info.x2a.soulshards.compat.jei.SoulShardsJei"
     ]
   },
   "depends": {

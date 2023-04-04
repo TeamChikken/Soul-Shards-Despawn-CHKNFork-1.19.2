@@ -4,7 +4,7 @@ minecraft = "1.19.2"
 quilt_mappings = "1.19.2+build.21"
 quilt_loader = "0.17.8"
 architectury = "6.2.43"
-fabric_loader = "0.14.9"
+fabric_loader = "0.14.10"
 wthit = "5.14.1"
 forge = "1.19.2-43.0.8"
 fabric_api = "0.76.0+1.19.2"
@@ -12,6 +12,7 @@ fabric_api = "0.76.0+1.19.2"
 quilted_fabric_api = "4.0.0-beta.26+0.72.0-1.19.2"
 clothconfig = "8.2.88"
 modmenu = "6.1.0-rc.4"
+jei = "11.6.0.1013"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }

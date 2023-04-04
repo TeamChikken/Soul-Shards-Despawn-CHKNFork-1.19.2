@@ -13,12 +13,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.InteractionResult;
 
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.Point;
 import java.lang.reflect.Type;
@@ -43,8 +47,10 @@ public class MultiblockPattern {
                         Blocks.QUARTZ_PILLAR.defaultBlockState(),
                         Blocks.CHISELED_QUARTZ_BLOCK.defaultBlockState(),
                         Blocks.SMOOTH_QUARTZ.defaultBlockState(),
-                        Blocks.QUARTZ_SLAB.defaultBlockState().setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE),
-                        Blocks.SMOOTH_QUARTZ_SLAB.defaultBlockState().setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE)
+                        Blocks.QUARTZ_SLAB.defaultBlockState()
+                                          .setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE),
+                        Blocks.SMOOTH_QUARTZ_SLAB.defaultBlockState()
+                                                 .setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE)
                 ));
                 put('G', new Slot(Blocks.GLOWSTONE));
             }}
@@ -54,6 +60,19 @@ public class MultiblockPattern {
     private final String[] shape;
     private final Point origin;
     private final Map<Character, Slot> definition;
+
+    public String[] getShape() {
+        return shape;
+    }
+
+    @Nullable
+    public Slot getSlot(int x, int y) {
+        try {
+            return definition.get(shape[y].charAt(y));
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public MultiblockPattern(ItemStack catalyst, String[] shape, Point origin, Map<Character, Slot> definition) {
         this.catalyst = catalyst;
@@ -118,6 +137,11 @@ public class MultiblockPattern {
 
         public Slot(Block block) {
             this(block.getStateDefinition().getPossibleStates().toArray(new BlockState[0]));
+        }
+
+        @Nullable
+        public List<BlockState> getStates() {
+            return this.states.stream().toList();
         }
 
         @Override
