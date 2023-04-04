@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -51,8 +52,10 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
     private long drawTick = 0;
     private static final int MAX_SPIN = 45;
     private static final double SPIN_INCREMENT = 15D;
-    private static final int CRAFTING_X = 21;
-    private static final int CRAFTING_Y = 1;
+    private static final int CRAFTING_X = 22;
+    private static final int CRAFTING_Y = 2;
+    private static final int CRAFTING_W = 49;
+    private static final int CRAFTING_H = 49;
 
     public ShardCreationCategory(IGuiHelper gui) {
         this.background = gui.createDrawable(SoulShards.makeResource("gui/soulshardcrafting.png"), 0, 0, WIDTH, HEIGHT);
@@ -68,7 +71,7 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("title.soulshards.multiblock_crafting");
+        return Component.translatable("title.soulshards.soulshard_crafting");
     }
 
     @Override
@@ -104,14 +107,24 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
     @Override
     public @NotNull List<Component> getTooltipStrings(MultiblockWrapper recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
         var comps = new ArrayList<Component>();
+        comps.add(Component.translatable("desc.soulshards.soulshard_crafting").withStyle(ChatFormatting.DARK_AQUA));
+        comps.add(Component.translatable("misc.soulshards.catalyst")
+                           .append(": ")
+                           .append(recipe.pattern.getCatalyst().getHoverName())
+                           .withStyle(ChatFormatting.AQUA));
         if (mouseX > CRAFTING_X && mouseX < WIDTH - CRAFTING_X && mouseY > CRAFTING_Y && mouseY < HEIGHT - CRAFTING_Y) {
             for (var slot : recipe.pattern.getSlots()) {
                 var states = slot.getStates();
                 var currState = states.get((int) (drawTick % states.size()));
-                for (var state : slot.getStates()) {
-                    comps.add(state.getBlock()
-                                   .getName()
-                                   .withStyle(state == currState ? ChatFormatting.WHITE : ChatFormatting.DARK_GRAY));
+                if (states.size() > 1) {
+                    comps.add(Component.translatable("jei.soulshards.oneof"));
+                    for (var state : slot.getStates()) {
+                        comps.add(Component.literal(" ").append(state.getBlock()
+                                                                     .getName()
+                                                                     .withStyle(state == currState ? ChatFormatting.WHITE : ChatFormatting.DARK_GRAY)));
+                    }
+                } else {
+                    comps.add(currState.getBlock().getName());
                 }
             }
         }

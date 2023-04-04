@@ -6,6 +6,7 @@ import info.x2a.soulshards.compat.jei.ingredients.MultiblockHelper;
 import info.x2a.soulshards.compat.jei.ingredients.MultiblockIngredient;
 import info.x2a.soulshards.compat.jei.ingredients.MultiblockRenderer;
 import info.x2a.soulshards.core.config.ConfigServer;
+import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.registration.IModIngredientRegistration;
