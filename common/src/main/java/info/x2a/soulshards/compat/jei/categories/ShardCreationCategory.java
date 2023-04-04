@@ -1,23 +1,42 @@
 package info.x2a.soulshards.compat.jei.categories;
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.compat.jei.SoulShardsJei;
 import info.x2a.soulshards.compat.jei.ingredients.MultiblockIngredient;
 import info.x2a.soulshards.core.data.MultiblockPattern;
+import info.x2a.soulshards.core.registry.RegistrarSoulShards;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.BufferUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ShardCreationCategory implements IRecipeCategory<ShardCreationCategory.MultiblockWrapper> {
@@ -25,10 +44,21 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
     public static final RecipeType<MultiblockWrapper> RECIPE = new RecipeType<>(CAT_ID, MultiblockWrapper.class);
     private final IDrawable background;
     private final IDrawable icon;
+    private static final int WIDTH = 93;
+    private static final int HEIGHT = 53;
+    private long lastDrawMs = 0;
+    private final long switchStateInterval = 3000;
+    private long drawTick = 0;
+    private static final int MAX_SPIN = 45;
+    private static final double SPIN_INCREMENT = 15D;
+    private static final int CRAFTING_X = 21;
+    private static final int CRAFTING_Y = 1;
 
     public ShardCreationCategory(IGuiHelper gui) {
-        this.background = gui.createBlankDrawable(200, 200);
-        this.icon = gui.createBlankDrawable(20, 20);
+        this.background = gui.createDrawable(SoulShards.makeResource("gui/soulshardcrafting.png"), 0, 0, WIDTH, HEIGHT);
+
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, RegistrarSoulShards.SOUL_SHARD.get()
+                                                                                                        .getDefaultInstance());
     }
 
     @Override
@@ -53,26 +83,77 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
 
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull MultiblockWrapper recipe, @NotNull IFocusGroup focuses) {
-        builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
-               .addIngredients(Ingredient.of(recipe.pattern.getCatalyst()));
         var shape = recipe.pattern.getShape();
-        var z = 0;
+        var blockItems = new ArrayList<ItemStack>();
         for (var y = 0; y != shape.length; ++y) {
             for (var x = 0; x != shape[y].length(); ++x) {
-                int finalX = x;
-                int finalY = y;
-                var ingredients = recipe.pattern.getSlot(x, y).getStates().stream().map(blockState -> {
-                    if (blockState.getBlock() instanceof EntityBlock block) {
-                        return new MultiblockIngredient(block.newBlockEntity(new BlockPos(finalX, finalY, z), blockState));
-                    } else {
-                        return null;
-                    }
-                }).filter(Objects::nonNull).toList();
-                builder.addSlot(RecipeIngredientRole.INPUT, x, y)
-                       .addIngredients(SoulShardsJei.MULTIBLOCK_INGREDIENT, ingredients);
+                for (var state : recipe.pattern.getSlot(x, y).getStates()) {
+                    blockItems.add(state.getBlock().asItem().getDefaultInstance());
+                }
             }
         }
+        builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
+               .addIngredients(Ingredient.of(blockItems.stream()));
+        var HEIGHT_OFFSET = 19;
+        builder.addSlot(RecipeIngredientRole.INPUT, 2, HEIGHT_OFFSET)
+               .addIngredients(Ingredient.of(recipe.pattern.getCatalyst()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, WIDTH - 20, HEIGHT_OFFSET)
+               .addIngredient(VanillaTypes.ITEM_STACK, RegistrarSoulShards.SOUL_SHARD.get().getDefaultInstance());
+    }
 
+    @Override
+    public @NotNull List<Component> getTooltipStrings(MultiblockWrapper recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
+        var comps = new ArrayList<Component>();
+        if (mouseX > CRAFTING_X && mouseX < WIDTH - CRAFTING_X && mouseY > CRAFTING_Y && mouseY < HEIGHT - CRAFTING_Y) {
+            for (var slot : recipe.pattern.getSlots()) {
+                var states = slot.getStates();
+                var currState = states.get((int) (drawTick % states.size()));
+                for (var state : slot.getStates()) {
+                    comps.add(state.getBlock()
+                                   .getName()
+                                   .withStyle(state == currState ? ChatFormatting.WHITE : ChatFormatting.DARK_GRAY));
+                }
+            }
+        }
+        return comps;
+    }
+
+    @Override
+    public void draw(@NotNull MultiblockWrapper recipe, IRecipeSlotsView slots, PoseStack poses, double mouseX, double mouseY) {
+        var time = System.currentTimeMillis();
+        if (lastDrawMs == 0) {
+            lastDrawMs = time;
+        }
+        if (time - lastDrawMs >= switchStateInterval) {
+            lastDrawMs = time;
+            ++drawTick;
+        }
+        var mc = Minecraft.getInstance();
+        float scaling = (float) (mc.getWindow().getGuiScale() * 3.5F);
+        var shape = recipe.pattern.getShape();
+        var brender = mc.getBlockRenderer();
+        var buf = mc.renderBuffers().bufferSource();
+        var width = recipe.pattern.getShape()[0].length() * 16f;
+        var height = recipe.pattern.getShape().length * 16F;
+        Lighting.setupForFlatItems();
+        poses.pushPose();
+        poses.translate(CRAFTING_X + width, CRAFTING_Y + height, 100);
+        poses.scale(scaling, -scaling, 1);
+        var spinTicks = (long) (2 * MAX_SPIN / SPIN_INCREMENT);
+        var spin = (MAX_SPIN - (drawTick % spinTicks));
+        for (var y = 0; y != shape.length; ++y) {
+            for (var x = 0; x != shape[y].length(); ++x) {
+                poses.pushPose();
+                poses.translate(x, y, 0);
+                var states = recipe.pattern.getSlot(x, y)
+                                           .getStates();
+                brender.renderSingleBlock(states
+                        .get((int) (drawTick % states.size())), poses, buf, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                poses.popPose();
+            }
+        }
+        buf.endBatch();
+        poses.popPose();
     }
 
     public static class MultiblockWrapper {

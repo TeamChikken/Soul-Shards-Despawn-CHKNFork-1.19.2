@@ -74,6 +74,10 @@ public class MultiblockPattern {
         }
     }
 
+    public Collection<Slot> getSlots() {
+        return definition.values();
+    }
+
     public MultiblockPattern(ItemStack catalyst, String[] shape, Point origin, Map<Character, Slot> definition) {
         this.catalyst = catalyst;
         this.shape = shape;
