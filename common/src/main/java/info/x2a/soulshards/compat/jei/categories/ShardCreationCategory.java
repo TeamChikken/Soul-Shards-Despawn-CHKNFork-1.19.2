@@ -144,14 +144,19 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
         var mc = Minecraft.getInstance();
         float scaling = (float) (mc.getWindow().getGuiScale() * 3.5F);
         var shape = recipe.pattern.getShape();
+        float baseHeight = shape.length;
+        float padding = 0;
+        float baseWidth = shape[0].length();
+        float scaleX = ((CRAFTING_W - padding * 2) / baseWidth);
+        float scaleY = ((CRAFTING_H - padding * 2) / baseHeight);
         var brender = mc.getBlockRenderer();
         var buf = mc.renderBuffers().bufferSource();
-        var width = recipe.pattern.getShape()[0].length() * 16f;
-        var height = recipe.pattern.getShape().length * 16F;
+        var xoffset = padding;
+        var yoffset = baseHeight * scaleY + padding;
         Lighting.setupForFlatItems();
         poses.pushPose();
-        poses.translate(CRAFTING_X + width, CRAFTING_Y + height, 100);
-        poses.scale(scaling, -scaling, 1);
+        poses.translate(CRAFTING_X + xoffset, CRAFTING_Y + yoffset, 100);
+        poses.scale(scaleX, -scaleY, 1);
         var spinTicks = (long) (2 * MAX_SPIN / SPIN_INCREMENT);
         var spin = (MAX_SPIN - (drawTick % spinTicks));
         for (var y = 0; y != shape.length; ++y) {
