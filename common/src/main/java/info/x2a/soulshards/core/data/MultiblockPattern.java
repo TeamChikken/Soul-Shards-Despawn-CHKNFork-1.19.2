@@ -58,7 +58,7 @@ public class MultiblockPattern {
 
     private final ItemStack catalyst;
     private final String[] shape;
-    private final Point origin;
+    public final Point origin;
     private final Map<Character, Slot> definition;
 
     public String[] getShape() {
@@ -68,7 +68,7 @@ public class MultiblockPattern {
     @Nullable
     public Slot getSlot(int x, int y) {
         try {
-            return definition.get(shape[y].charAt(y));
+            return definition.get(shape[y].charAt(x));
         } catch (Exception e) {
             return null;
         }
