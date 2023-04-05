@@ -1,12 +1,9 @@
 package info.x2a.soulshards.compat.jei.categories;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import info.x2a.soulshards.SoulShards;
-import info.x2a.soulshards.compat.jei.SoulShardsJei;
-import info.x2a.soulshards.compat.jei.ingredients.MultiblockIngredient;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import mezz.jei.api.constants.VanillaTypes;
@@ -22,23 +19,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ShardCreationCategory implements IRecipeCategory<ShardCreationCategory.MultiblockWrapper> {
     private static final ResourceLocation CAT_ID = SoulShards.makeResource("multiblock_crafting");
@@ -48,10 +36,8 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
     private static final int WIDTH = 93;
     private static final int HEIGHT = 53;
     private long lastDrawMs = 0;
-    private final long switchStateInterval = 3000;
+    private final long switchStateInterval = 1000;
     private long drawTick = 0;
-    private static final int MAX_SPIN = 45;
-    private static final double SPIN_INCREMENT = 15D;
     private static final int CRAFTING_X = 22;
     private static final int CRAFTING_Y = 2;
     private static final int CRAFTING_W = 49;
@@ -128,6 +114,9 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
                 }
             }
         }
+        comps.add(Component.translatable("jei.soulshards.consumes_warning")
+                           .withStyle(ChatFormatting.RED)
+                           .withStyle(ChatFormatting.BOLD));
         return comps;
     }
 
@@ -142,7 +131,6 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
             ++drawTick;
         }
         var mc = Minecraft.getInstance();
-        float scaling = (float) (mc.getWindow().getGuiScale() * 3.5F);
         var shape = recipe.pattern.getShape();
         float baseHeight = shape.length;
         float padding = 0;
@@ -160,7 +148,6 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
                 poses.pushPose();
                 poses.mulPose(Vector3f.XP.rotationDegrees(90));
                 poses.translate(x, 0, y);
-                //poses.mulPose(Vector3f.YP.rotationDegrees(90));
                 var states = recipe.pattern.getSlot(x, y)
                                            .getStates();
                 brender.renderSingleBlock(states

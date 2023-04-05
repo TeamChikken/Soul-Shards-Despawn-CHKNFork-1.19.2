@@ -50,6 +50,5 @@ public class SoulShardsJei implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(ConfigServer.getMultiblock().getCatalyst(), ShardCreationCategory.RECIPE);
     }
 }
