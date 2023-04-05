@@ -91,11 +91,12 @@ public class CursingCategory implements IRecipeCategory<CursingRecipe> {
         var buf = mc.renderBuffers().bufferSource();
         Lighting.setupForFlatItems();
         stack.pushPose();
+        stack.translate(0, -1.5, 0);
         brender.renderSingleBlock(RegistrarSoulShards.CURSED_FIRE.get()
                                                                  .defaultBlockState(), stack, buf, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         stack.popPose();
         stack.pushPose();
-        stack.translate(0, -1.5, 0);
+        stack.translate(0, -2, 0);
         brender.renderSingleBlock(Blocks.SOUL_SAND.defaultBlockState(), stack, buf, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         stack.popPose();
         buf.endBatch();
