@@ -2,6 +2,7 @@ package info.x2a.soulshards.core.registry;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import info.x2a.soulshards.SoulShards;
+import info.x2a.soulshards.block.BlockHallowedFire;
 import info.x2a.soulshards.block.BlockSoulCage;
 import info.x2a.soulshards.block.BlockCursedFire;
 import info.x2a.soulshards.block.TileEntitySoulCage;
@@ -20,6 +21,7 @@ public class RegistrarSoulShards {
 
     public static RegistrySupplier<BlockSoulCage> SOUL_CAGE;
     public static RegistrySupplier<BlockCursedFire> CURSED_FIRE;
+    public static RegistrySupplier<BlockHallowedFire> HALLOWED_FIRE;
 
     public static RegistrySupplier<BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE;
 
@@ -32,6 +34,7 @@ public class RegistrarSoulShards {
 
     public static void registerBlocks() {
         CURSED_FIRE = Registries.BLOCKS.register(SoulShards.makeResource("cursed_fire"), BlockCursedFire::new);
+        HALLOWED_FIRE = Registries.BLOCKS.register(SoulShards.makeResource("hallowed_fire"), BlockHallowedFire::new);
         SOUL_CAGE = Registries.BLOCKS.register(new ResourceLocation(SoulShards.MODID, "soul_cage"), BlockSoulCage::new);
         SOUL_CAGE_TE = Registries.BLOCK_ENTITIES.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
                 () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get())
