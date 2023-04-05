@@ -4,23 +4,19 @@
 
 Adds balanced & configurable spawners for any mob, modded or vanilla!
 
+It is **highly** recommended you use a mod like JEI (or REI) for exploring the recipes in this mod.
+
 ## Progression
 
-With the default config this mod requires getting to the nether before it can be started.
+This mod requires getting to the nether before it can be started.
 
 ### Getting started
 
 To get started with this mod you will need to create a soul shard. You will need a diamond and a multiblock of the form:
 
-```
+![JEI crafting screen](https://i.imgur.com/KoVd6nq.png)
 
-⬛⬜⬛
-⬜🟨⬜
-⬛⬜⬛
-```
-
-Where `⬛` is obsidian, `⬜` is a block of quartz and `🟨` is a block of glowstone (this pattern is also configurable).
-Once you have placed these blocks simply right click the glowstone with the diamond in your hand.
+Once you have placed these blocks simply right-click the glowstone with the diamond in your hand.
 
 ### Getting souls
 
@@ -63,4 +59,10 @@ mod [Soul Shards](http://www.minecraftforum.net/forums/mapping-and-modding/minec
 
 I forked Respawn because it was not updated past 1.15 and the repository has been archived. I ported the 1.15 fabric
 version to the mojang mappings and 1.19 (also adding back in features from 1.12.2 that were removed in the 1.15 version)
+
+### Differences from Respawn
+
+- Vile dust crafting
+- Hallowed and cursed flames
+- Quartz and Steel
 
