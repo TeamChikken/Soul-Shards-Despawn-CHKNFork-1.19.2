@@ -6,6 +6,7 @@
   "item.soulshards.corrupted_essence": "Corrupted Essence",
   "item.soulshards.vile_dust": "Vile Dust",
   "item.soulshards.vile_sword": "Vile Sword",
+  "item.soulshards.flint_and_quartz": "Flint & Quartz",
   "block.soulshards.soul_cage": "Soul Cage",
   "tooltip.soulshards.bound": "Bound to: %s",
   "tooltip.soulshards.kills": "Souls: %d",
@@ -56,6 +57,8 @@
   "title.soulshards.soulshard_crafting": "Soul Shard Multiblock Crafting",
   "misc.soulshards.catalyst": "Catalyst",
   "desc.soulshards.soulshard_crafting": "Right click the origin block with the catalyst to make a soul shard",
+  "desc.soulshards.cursing": "Throw the input item into a cursed fire (create by using flint & quartz on soul sand)",
+  "title.soulshards.cursing": "Cursing",
   "misc.soulshards.origin": "Origin",
   "jei.soulshards.consumes_warning": "All blocks are consumed",
   "gamerule.allowCageSpawns": "Allow mobs to be spawned via soul cages"

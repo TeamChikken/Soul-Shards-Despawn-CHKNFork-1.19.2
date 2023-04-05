@@ -9,15 +9,18 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.GsonRecipeSerializer;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
@@ -71,6 +74,11 @@ public class CursingRecipe implements Recipe<Container> {
     @Override
     public ResourceLocation getId() {
         return SoulShards.makeResource("cursing");
+    }
+
+    @Override
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(null, Ingredient.of(input.getDefaultInstance()));
     }
 
     @Override
