@@ -38,6 +38,7 @@ class IdByCodecAdaptor implements JsonSerializer<Item>, JsonDeserializer<Item> {
 }
 
 public class CursingRecipe implements Recipe<Container> {
+    public static ResourceLocation ID = SoulShards.makeResource("cursing");
     @JsonAdapter(IdByCodecAdaptor.class)
     Item input;
     @JsonAdapter(IdByCodecAdaptor.class)
@@ -73,7 +74,7 @@ public class CursingRecipe implements Recipe<Container> {
 
     @Override
     public ResourceLocation getId() {
-        return SoulShards.makeResource("cursing");
+        return ID;
     }
 
     @Override

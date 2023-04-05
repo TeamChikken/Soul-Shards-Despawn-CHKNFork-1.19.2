@@ -51,13 +51,13 @@ public class RegistrarSoulShards {
     }
 
     public static void registerRecipes() {
-        CURSING_RECIPE = Registries.RECIPES.register(SoulShards.makeResource("cursing"), () -> new RecipeType<CursingRecipe>() {
+        CURSING_RECIPE = Registries.RECIPES.register(CursingRecipe.ID, () -> new RecipeType<>() {
             @Override
             public String toString() {
                 return "cursing";
             }
         });
-        Registries.RECIPE_SERIALIZERS.register(SoulShards.makeResource("cursing"), () -> new GsonRecipeSerializer<CursingRecipe>(TypeToken.get(CursingRecipe.class)));
+        Registries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
         Registries.RECIPES.register();
         Registries.RECIPE_SERIALIZERS.register();
         SoulShards.Log.info("Recipes registered");
