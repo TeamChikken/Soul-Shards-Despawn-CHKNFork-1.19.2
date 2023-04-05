@@ -9,10 +9,7 @@ import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.ingredients.IIngredientType;
-import mezz.jei.api.registration.IModIngredientRegistration;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +28,11 @@ public class SoulShardsJei implements IModPlugin {
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
         registration.register(MULTIBLOCK_INGREDIENT, new ArrayList<>(), new MultiblockHelper(), new MultiblockRenderer());
+    }
+
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.useNbtForSubtypes(RegistrarSoulShards.SOUL_SHARD.get());
     }
 
     @Override

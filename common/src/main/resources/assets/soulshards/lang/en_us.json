@@ -57,5 +57,6 @@
   "misc.soulshards.catalyst": "Catalyst",
   "desc.soulshards.soulshard_crafting": "Right click the origin block with the catalyst to make a soul shard",
   "misc.soulshards.origin": "Origin",
+  "jei.soulshards.consumes_warning": "All blocks are consumed",
   "gamerule.allowCageSpawns": "Allow mobs to be spawned via soul cages"
 }
