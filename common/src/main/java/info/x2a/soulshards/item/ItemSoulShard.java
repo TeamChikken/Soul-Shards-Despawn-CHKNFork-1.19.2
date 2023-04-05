@@ -147,22 +147,43 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
         var greyColor = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GRAY);
         if (binding.getBoundEntity() != null) {
-            var entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
-            if (entityEntry != null)
-                tooltip.add(SoulShards.translate("tooltip.soulshards.bound",
-                        entityEntry.getDescription()).withStyle(greyColor));
-            else
-                tooltip.add(SoulShards.translate("tooltip.soulshards.bound",
+            var opt = Registry.ENTITY_TYPE.getOptional(binding.getBoundEntity());
+            if (opt.isPresent()) {
+                tooltip.add(Component.translatable("tooltip.soulshards.bound",
+                        opt.get().getDescription()).withStyle(greyColor));
+            } else {
+                tooltip.add(Component.translatable("tooltip.soulshards.bound",
                         binding.getBoundEntity().toString()).setStyle(greyColor.withColor(ChatFormatting.RED)));
+            }
         }
 
-        tooltip.add(SoulShards.translate("tooltip.soulshards.tier",
+        tooltip.add(Component.translatable("tooltip.soulshards.tier",
                 binding.getTier().getIndex()).withStyle(greyColor));
-        tooltip.add(SoulShards.translate("tooltip.soulshards.kills", binding.getKills())
-                                    .setStyle(greyColor));
-        if (options.isAdvanced() && binding.getOwner() != null)
-            tooltip.add(SoulShards.translate("tooltip.soulshards.owner",
-                    binding.getOwner().toString()).setStyle(greyColor));
+        tooltip.add(Component.translatable("tooltip.soulshards.kills", binding.getKills())
+                             .setStyle(greyColor));
+        if (options.isAdvanced()) {
+            if (binding.getOwner() != null) {
+                tooltip.add(Component.translatable("tooltip.soulshards.owner",
+                        binding.getOwner().toString()).withStyle(ChatFormatting.AQUA));
+            }
+        }
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        if (!allowedIn(group))
+            return;
+
+        items.add(new ItemStack(this));
+        for (IShardTier tier : Tier.INDEXED) {
+            if (tier.getKillRequirement() == 0) {
+                continue;
+            }
+            ItemStack stack = new ItemStack(this);
+            Binding binding = new Binding(null, tier.getKillRequirement());
+            updateBinding(stack, binding);
+            items.add(stack);
+        }
     }
 
     @Override

@@ -1,0 +1,6 @@
+{
+  "type": "soulshards:cursing",
+  "input": "minecraft:amethyst_shard",
+  "result": "soulshards:soul_shard",
+  "quantity": "1"
+}

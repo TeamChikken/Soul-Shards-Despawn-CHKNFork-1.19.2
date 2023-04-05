@@ -21,6 +21,8 @@ public class SoulShardsModForge {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener((FMLClientSetupEvent ev) -> {
             RenderTypeRegistry.register(RenderType.cutout(), RegistrarSoulShards.SOUL_CAGE.get());
+            RenderTypeRegistry.register(RenderType.cutout(), RegistrarSoulShards.CURSED_FIRE.get());
+            RenderTypeRegistry.register(RenderType.cutout(), RegistrarSoulShards.HALLOWED_FIRE.get());
         });
         SoulShards.initCommon();
         if (SoulShards.IS_CLOTH_CONFIG_LOADED) {

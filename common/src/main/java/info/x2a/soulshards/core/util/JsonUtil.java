@@ -1,8 +1,6 @@
 package info.x2a.soulshards.core.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -13,12 +11,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * A simple utility for reading and writing JSON files. To handle custom (de)serialization, use
  * {@link com.google.gson.annotations.JsonAdapter} on your types.
  */
 public class JsonUtil {
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD})
+    public @interface JsonSkip {
+    }
+
     private static class ResourceLocationAdaptor extends TypeAdapter<ResourceLocation> {
 
         @Override
@@ -37,6 +44,17 @@ public class JsonUtil {
                              .disableHtmlEscaping()
                              .serializeNulls()
                              .registerTypeAdapter(ResourceLocation.class, new ResourceLocationAdaptor())
+                             .setExclusionStrategies(new ExclusionStrategy() {
+                                 @Override
+                                 public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                                     return fieldAttributes.getAnnotation(JsonSkip.class) != null;
+                                 }
+
+                                 @Override
+                                 public boolean shouldSkipClass(Class<?> aClass) {
+                                     return false;
+                                 }
+                             })
                              .create();
 
     /**
@@ -80,6 +98,10 @@ public class JsonUtil {
         }
 
         return null;
+    }
+
+    public static <T> T fromJson(TypeToken<T> token, JsonElement json) {
+        return GSON.fromJson(json, token.getType());
     }
 
     public static <T> T fromJson(TypeToken<T> token, String json) {

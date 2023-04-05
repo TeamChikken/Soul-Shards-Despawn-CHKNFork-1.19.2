@@ -34,5 +34,7 @@ public class SoulShardsModFabricLike {
             });
         }
         BlockRenderLayerMap.INSTANCE.putBlock(RegistrarSoulShards.SOUL_CAGE.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(RegistrarSoulShards.CURSED_FIRE.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(RegistrarSoulShards.HALLOWED_FIRE.get(), RenderType.cutout());
     }
 }
