@@ -1,4 +1,4 @@
-package info.x2a.soulshards.core;
+package info.x2a.soulshards.core.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 
-public class GsonRecipeSerializer<R extends Recipe<?>> implements RecipeSerializer<R> {
+public class GsonRecipeSerializer<R extends RecipeSerde<?>> implements RecipeSerializer<R> {
     private final TypeToken<R> token;
 
     public GsonRecipeSerializer(TypeToken<R> token) {
@@ -20,12 +20,16 @@ public class GsonRecipeSerializer<R extends Recipe<?>> implements RecipeSerializ
 
     @Override
     public @NotNull R fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
-        return JsonUtil.fromJson(token, jsonObject);
+        R val = JsonUtil.fromJson(token, jsonObject);
+        val.setId(resourceLocation);
+        return val;
     }
 
     @Override
     public @NotNull R fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf friendlyByteBuf) {
-        return JsonUtil.fromJson(token, friendlyByteBuf.readUtf());
+        R val = JsonUtil.fromJson(token, friendlyByteBuf.readUtf());
+        val.setId(resourceLocation);
+        return val;
     }
 
     @Override

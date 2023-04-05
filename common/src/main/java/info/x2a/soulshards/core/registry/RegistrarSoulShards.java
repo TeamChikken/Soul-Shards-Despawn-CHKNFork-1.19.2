@@ -7,7 +7,7 @@ import info.x2a.soulshards.block.BlockHallowedFire;
 import info.x2a.soulshards.block.BlockSoulCage;
 import info.x2a.soulshards.block.BlockCursedFire;
 import info.x2a.soulshards.block.TileEntitySoulCage;
-import info.x2a.soulshards.core.GsonRecipeSerializer;
+import info.x2a.soulshards.core.util.GsonRecipeSerializer;
 import info.x2a.soulshards.core.recipe.CursingRecipe;
 import info.x2a.soulshards.core.util.EnchantmentSoulStealer;
 import info.x2a.soulshards.item.ItemQuartzAndSteel;

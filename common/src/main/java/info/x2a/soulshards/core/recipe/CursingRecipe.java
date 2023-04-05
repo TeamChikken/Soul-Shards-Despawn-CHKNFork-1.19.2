@@ -4,11 +4,11 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.x2a.soulshards.SoulShards;
-import info.x2a.soulshards.core.GsonRecipeSerializer;
+import info.x2a.soulshards.core.util.GsonRecipeSerializer;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
+import info.x2a.soulshards.core.util.JsonUtil;
+import info.x2a.soulshards.core.util.RecipeSerde;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +22,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.Transient;
 import java.lang.reflect.Type;
 
 class IdByCodecAdaptor implements JsonSerializer<Item>, JsonDeserializer<Item> {
@@ -37,8 +38,11 @@ class IdByCodecAdaptor implements JsonSerializer<Item>, JsonDeserializer<Item> {
     }
 }
 
-public class CursingRecipe implements Recipe<Container> {
+public class CursingRecipe implements RecipeSerde<Container> {
     public static ResourceLocation ID = SoulShards.makeResource("cursing");
+
+    @JsonUtil.JsonSkip
+    private ResourceLocation id;
     @JsonAdapter(IdByCodecAdaptor.class)
     Item input;
     @JsonAdapter(IdByCodecAdaptor.class)
@@ -74,7 +78,7 @@ public class CursingRecipe implements Recipe<Container> {
 
     @Override
     public ResourceLocation getId() {
-        return ID;
+        return id;
     }
 
     @Override
@@ -90,5 +94,10 @@ public class CursingRecipe implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return RegistrarSoulShards.CURSING_RECIPE.get();
+    }
+
+    @Override
+    public void setId(ResourceLocation id) {
+        this.id = id;
     }
 }
