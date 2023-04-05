@@ -151,18 +151,16 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
         float scaleY = ((CRAFTING_H - padding * 2) / baseHeight);
         var brender = mc.getBlockRenderer();
         var buf = mc.renderBuffers().bufferSource();
-        var xoffset = padding;
-        var yoffset = baseHeight * scaleY + padding;
         Lighting.setupForFlatItems();
         poses.pushPose();
-        poses.translate(CRAFTING_X + xoffset, CRAFTING_Y + yoffset, 100);
+        poses.translate(CRAFTING_X + padding, CRAFTING_Y + padding, 100);
         poses.scale(scaleX, -scaleY, 1);
-        var spinTicks = (long) (2 * MAX_SPIN / SPIN_INCREMENT);
-        var spin = (MAX_SPIN - (drawTick % spinTicks));
         for (var y = 0; y != shape.length; ++y) {
             for (var x = 0; x != shape[y].length(); ++x) {
                 poses.pushPose();
-                poses.translate(x, y, 0);
+                poses.mulPose(Vector3f.XP.rotationDegrees(90));
+                poses.translate(x, 0, y);
+                //poses.mulPose(Vector3f.YP.rotationDegrees(90));
                 var states = recipe.pattern.getSlot(x, y)
                                            .getStates();
                 brender.renderSingleBlock(states
