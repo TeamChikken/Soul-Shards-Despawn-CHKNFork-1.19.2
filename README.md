@@ -21,7 +21,31 @@ the [Respawn Wiki](https://github.com/TehNut/Soul-Shards-Respawn/wiki) for more 
 
 Soul Shards Despawn is licensed under the [MIT](https://tldrlegal.com/license/mit-license) license.
 
-All of the art is property of [BBoldt](https://github.com/BBoldt/). The art is released into the public domain.
+The art is a little more complex.
+
+All the art from Soul Shards Respawn is property of [BBoldt](https://github.com/BBoldt/). The art is released into the
+public domain. This art is:
+
+- `icon.png`
+- `soul_cage.png`
+- `soul_cage_active.png`
+- `corrupted_essence.png`
+- `corrupted_ingot.png`
+- `soul_shard.png`
+- `soul_shard_tier_n.png`
+- `vile_dust.png`
+- `vile_sword.png`
+- Banner image + icon
+
+Additionally, there are my entirely my own work assets in here:
+
+- `flint_and_quartz.png`
+
+And then there are modified versions of the vanilla assets (recolours and such). I am not entirely sure the licensing on
+these but I believe it is
+allowed as I am not charging for them:
+
+- `cursed_fire_n.png`
 
 ## Custom Builds
 

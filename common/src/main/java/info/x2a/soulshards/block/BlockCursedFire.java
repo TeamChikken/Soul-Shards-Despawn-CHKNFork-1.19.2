@@ -13,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DropperBlock;
 import net.minecraft.world.level.block.SoulFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
@@ -43,13 +44,9 @@ public class BlockCursedFire extends SoulFireBlock {
 
                     stack.shrink(1);
                     var newStack = recipe.getResultItem();
-                    var x = (level.random.nextDouble() - level.random.nextDouble()) * 0.5F;
-                    var y = 1;
-                    var z = (level.random.nextDouble() - level.random.nextDouble()) * 0.5F;
-                    if (x < 2 && z < 2) {
-                        x += 2;
-                    }
-                    var newEnt = new ItemEntity(level, blockPos.getX() + x, blockPos.getY() + 1 + y, blockPos.getZ() + z, newStack);
+
+                    var newEnt = new ItemEntity(level, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), newStack);
+                    newEnt.setDeltaMovement(entity.getDeltaMovement().reverse());
                     level.addFreshEntity(newEnt);
                 }
                 return;
