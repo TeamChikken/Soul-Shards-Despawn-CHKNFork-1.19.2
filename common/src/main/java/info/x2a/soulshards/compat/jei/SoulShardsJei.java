@@ -13,7 +13,6 @@ import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +61,7 @@ public class SoulShardsJei implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(Blocks.SOUL_SAND.asItem().getDefaultInstance(), CursingCategory.RECIPE);
-        registration.addRecipeCatalyst(RegistrarSoulShards.FLINT_AND_QUARTZ.get()
+        registration.addRecipeCatalyst(RegistrarSoulShards.QUARTZ_AND_STEEL.get()
                                                                            .getDefaultInstance(), CursingCategory.RECIPE);
     }
 }

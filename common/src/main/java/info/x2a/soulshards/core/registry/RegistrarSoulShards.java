@@ -10,7 +10,7 @@ import info.x2a.soulshards.block.TileEntitySoulCage;
 import info.x2a.soulshards.core.GsonRecipeSerializer;
 import info.x2a.soulshards.core.recipe.CursingRecipe;
 import info.x2a.soulshards.core.util.EnchantmentSoulStealer;
-import info.x2a.soulshards.item.ItemFlintAndQuartz;
+import info.x2a.soulshards.item.ItemQuartzAndSteel;
 import info.x2a.soulshards.item.ItemSoulShard;
 import info.x2a.soulshards.item.ItemVileSword;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +30,7 @@ public class RegistrarSoulShards {
     public static RegistrySupplier<BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE;
 
     public static RegistrySupplier<ItemSoulShard> SOUL_SHARD;
-    public static RegistrySupplier<ItemFlintAndQuartz> FLINT_AND_QUARTZ;
+    public static RegistrySupplier<ItemQuartzAndSteel> QUARTZ_AND_STEEL;
     //public static final RegistrySupplier<Item> VILE_SWORD; = new ItemVileSword();
 
     public static RegistrySupplier<Item> CORRUPTED_INGOT;
@@ -68,7 +68,7 @@ public class RegistrarSoulShards {
         registry.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
                 () -> new BlockItem(SOUL_CAGE.get(),
                         new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
-        FLINT_AND_QUARTZ = registry.register(SoulShards.makeResource("flint_and_quartz"), ItemFlintAndQuartz::new);
+        QUARTZ_AND_STEEL = registry.register(SoulShards.makeResource("quartz_and_steel"), ItemQuartzAndSteel::new);
         SOUL_SHARD = registry.register(new ResourceLocation(SoulShards.MODID, "soul_shard"),
                 ItemSoulShard::new);
         registry.register(new ResourceLocation(SoulShards.MODID, "vile_sword"), ItemVileSword::new);

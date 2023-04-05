@@ -8,18 +8,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.FlintAndSteelItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoulSandBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemFlintAndQuartz extends FlintAndSteelItem {
-    public ItemFlintAndQuartz() {
+public class ItemQuartzAndSteel extends FlintAndSteelItem {
+    public ItemQuartzAndSteel() {
         super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_TOOLS));
     }
 

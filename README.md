@@ -39,7 +39,7 @@ public domain. This art is:
 
 Additionally, there are my entirely my own work assets in here:
 
-- `flint_and_quartz.png`
+- `quartz_and_steel.png`
 
 And then there are modified versions of the vanilla assets (recolours and such). I am not entirely sure the licensing on
 these but I believe it is
