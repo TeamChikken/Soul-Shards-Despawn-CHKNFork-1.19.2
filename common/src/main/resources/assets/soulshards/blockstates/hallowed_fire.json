@@ -1,6 +1,13 @@
 {
   "multipart": [
     {
+      "when": {
+        "up": "false",
+        "north": "false",
+        "west": "false",
+        "south": "false",
+        "east": "false"
+      },
       "apply": [
         {
           "model": "soulshards:block/hallowed_fire_floor0"
@@ -11,6 +18,20 @@
       ]
     },
     {
+      "when": {
+        "OR": [
+          {
+            "north": "true"
+          },
+          {
+            "up": "false",
+            "north": "false",
+            "west": "false",
+            "south": "false",
+            "east": "false"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "soulshards:block/hallowed_fire_side0"
@@ -27,6 +48,20 @@
       ]
     },
     {
+      "when": {
+        "OR": [
+          {
+            "east": "true"
+          },
+          {
+            "up": "false",
+            "north": "false",
+            "west": "false",
+            "south": "false",
+            "east": "false"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "soulshards:block/hallowed_fire_side0",
@@ -47,6 +82,20 @@
       ]
     },
     {
+      "when": {
+        "OR": [
+          {
+            "south": "true"
+          },
+          {
+            "up": "false",
+            "north": "false",
+            "west": "false",
+            "south": "false",
+            "east": "false"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "soulshards:block/hallowed_fire_side0",
@@ -67,6 +116,20 @@
       ]
     },
     {
+      "when": {
+        "OR": [
+          {
+            "west": "true"
+          },
+          {
+            "up": "false",
+            "north": "false",
+            "west": "false",
+            "south": "false",
+            "east": "false"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "soulshards:block/hallowed_fire_side0",
@@ -83,6 +146,25 @@
         {
           "model": "soulshards:block/hallowed_fire_side_alt1",
           "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": [
+        {
+          "model": "soulshards:block/hallowed_fire_up0"
+        },
+        {
+          "model": "soulshards:block/hallowed_fire_up1"
+        },
+        {
+          "model": "soulshards:block/hallowed_fire_up_alt0"
+        },
+        {
+          "model": "soulshards:block/hallowed_fire_up_alt1"
         }
       ]
     }
