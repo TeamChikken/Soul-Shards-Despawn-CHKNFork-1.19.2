@@ -33,7 +33,6 @@ public class ItemQuartzAndSteel extends FlintAndSteelItem {
                 fire = RegistrarSoulShards.CURSED_FIRE.get().defaultBlockState();
             } else {
                 fire = RegistrarSoulShards.HALLOWED_FIRE.get().getStateForFace(level, pos);
-                //fire = BaseFireBlock.getState(level, pos); //RegistrarSoulShards.HALLOWED_FIRE.get().getStateForFace(level, pos);
             }
             level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom()
                                                                                                        .nextFloat() * 0.4F + 0.8F);

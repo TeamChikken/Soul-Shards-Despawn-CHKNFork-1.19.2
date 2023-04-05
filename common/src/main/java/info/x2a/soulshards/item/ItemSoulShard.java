@@ -145,22 +145,26 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
         var greyColor = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GRAY);
         if (binding.getBoundEntity() != null) {
-            var entityEntry = Registry.ENTITY_TYPE.get(binding.getBoundEntity());
-            if (entityEntry != null)
-                tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
-                        entityEntry.getDescription())).withStyle(greyColor));
-            else
-                tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.bound",
-                        binding.getBoundEntity().toString())).setStyle(greyColor.withColor(ChatFormatting.RED)));
+            var opt = Registry.ENTITY_TYPE.getOptional(binding.getBoundEntity());
+            if (opt.isPresent()) {
+                tooltip.add(Component.translatable("tooltip.soulshards.bound",
+                        opt.get().getDescription()).withStyle(greyColor));
+            } else {
+                tooltip.add(Component.translatable("tooltip.soulshards.bound",
+                        binding.getBoundEntity().toString()).setStyle(greyColor.withColor(ChatFormatting.RED)));
+            }
         }
 
-        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.tier",
-                binding.getTier().getIndex())).withStyle(greyColor));
-        tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.kills", binding.getKills()))
-                                    .setStyle(greyColor));
-        if (options.isAdvanced() && binding.getOwner() != null)
-            tooltip.add(MutableComponent.create(new TranslatableContents("tooltip.soulshards.owner",
-                    binding.getOwner().toString())).setStyle(greyColor));
+        tooltip.add(Component.translatable("tooltip.soulshards.tier",
+                binding.getTier().getIndex()).withStyle(greyColor));
+        tooltip.add(Component.translatable("tooltip.soulshards.kills", binding.getKills())
+                             .setStyle(greyColor));
+        if (options.isAdvanced()) {
+            if (binding.getOwner() != null) {
+                tooltip.add(Component.translatable("tooltip.soulshards.owner",
+                        binding.getOwner().toString()).withStyle(ChatFormatting.AQUA));
+            }
+        }
     }
 
     @Override
