@@ -2,6 +2,7 @@ package info.x2a.soulshards.core.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -80,6 +81,10 @@ public class JsonUtil {
         }
 
         return null;
+    }
+
+    public static <T> T fromJson(TypeToken<T> token, JsonElement json) {
+        return GSON.fromJson(json, token.getType());
     }
 
     public static <T> T fromJson(TypeToken<T> token, String json) {
