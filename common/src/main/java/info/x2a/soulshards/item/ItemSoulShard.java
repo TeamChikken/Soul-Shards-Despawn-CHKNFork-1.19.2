@@ -170,6 +170,9 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
         items.add(new ItemStack(this));
         for (IShardTier tier : Tier.INDEXED) {
+            if (tier.getKillRequirement() == 0) {
+                continue;
+            }
             ItemStack stack = new ItemStack(this);
             Binding binding = new Binding(null, tier.getKillRequirement());
             updateBinding(stack, binding);
