@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -34,12 +35,13 @@ public class ItemFlintAndQuartz extends FlintAndSteelItem {
             if (blockSt.getBlock() instanceof SoulSandBlock) {
                 fire = RegistrarSoulShards.CURSED_FIRE.get().defaultBlockState();
             } else {
-                fire = RegistrarSoulShards.HALLOWED_FIRE.get().defaultBlockState();
+                fire = RegistrarSoulShards.HALLOWED_FIRE.get().getStateForFace(level, pos);
+                //fire = BaseFireBlock.getState(level, pos); //RegistrarSoulShards.HALLOWED_FIRE.get().getStateForFace(level, pos);
             }
             level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom()
                                                                                                        .nextFloat() * 0.4F + 0.8F);
             level.setBlock(pos, fire, 11);
-            level.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
+            level.gameEvent(player, GameEvent.BLOCK_PLACE, ctx.getClickedPos());
             if (player instanceof ServerPlayer sp) {
                 CriteriaTriggers.PLACED_BLOCK.trigger(sp, ctx.getClickedPos(), ctx.getItemInHand());
             }

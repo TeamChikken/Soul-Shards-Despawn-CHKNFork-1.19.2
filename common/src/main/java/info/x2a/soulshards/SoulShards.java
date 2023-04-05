@@ -21,8 +21,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 public class SoulShards {
-    // TODO: Blue fire + glowstone = vile dust?
-
     public static final String MODID = "soulshards";
     public static final Logger Log = LogManager.getLogger("Soul Shards Despawn");
 

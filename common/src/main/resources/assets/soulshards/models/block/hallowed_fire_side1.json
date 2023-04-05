@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_fire_side",
+  "textures": {
+    "fire": "soulshards:block/hallowed_fire_1"
+  }
+}
