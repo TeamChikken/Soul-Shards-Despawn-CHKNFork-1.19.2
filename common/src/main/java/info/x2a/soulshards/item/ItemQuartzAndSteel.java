@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemQuartzAndSteel extends FlintAndSteelItem {
     public ItemQuartzAndSteel() {
-        super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_TOOLS));
+        super(new Properties().durability(64).tab(CreativeModeTab.TAB_TOOLS));
     }
 
     @Override
@@ -40,6 +40,8 @@ public class ItemQuartzAndSteel extends FlintAndSteelItem {
             level.gameEvent(player, GameEvent.BLOCK_PLACE, ctx.getClickedPos());
             if (player instanceof ServerPlayer sp) {
                 CriteriaTriggers.PLACED_BLOCK.trigger(sp, ctx.getClickedPos(), ctx.getItemInHand());
+                var me = ctx.getItemInHand();
+                me.hurtAndBreak(1, sp, px -> px.broadcastBreakEvent(ctx.getHand()));
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         } else {
