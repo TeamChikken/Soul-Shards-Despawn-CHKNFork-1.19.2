@@ -23,13 +23,23 @@ side = "BOTH"
 [[dependencies.soulshards]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,)"
+versionRange = "${minecraft_version}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.soulshards]]
 modId = "architectury"
 mandatory = true
-versionRange = "[6.2.43,)"
+versionRange = "[${architectury_version},)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.soulshards]]
+modId = "jei"
+mandatory = false
+versionRange = "[${jei_version},)"
+
+[[dependencies.soulshards]]
+modId = "cloth-config"
+mandatory = false
+versionRange = "[${cloth_config_version},)"

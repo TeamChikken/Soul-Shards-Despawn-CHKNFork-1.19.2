@@ -37,20 +37,25 @@
       },
       {
         "id": "minecraft",
-        "version": ">=1.19.2"
+        "version": "=${minecraft_version}"
       },
       {
         "id": "architectury",
-        "version": ">=6.2.43"
+        "version": ">=${architectury_version}"
       },
       {
         "id": "modmenu",
-        "version": ">=6.1.0-rc.4",
+        "version": ">=${modmenu_version}",
         "optional": true
       },
       {
         "id": "cloth-config",
-        "version": ">=8.2.88",
+        "version": ">=${cloth_config_version}",
+        "optional": true
+      },
+      {
+        "id": "jei",
+        "version": ">=${jei_version}",
         "optional": true
       }
     ]

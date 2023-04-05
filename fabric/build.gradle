@@ -37,7 +37,7 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand("version": project.version, "minecraft_version": libs.versions.minecraft.get(), "architectury_version": libs.versions.architectury.get(), "jei_version": libs.versions.jei.get(), "cloth_config_version": libs.versions.clothconfig.get(), "modmenu_version": libs.versions.modmenu.get())
     }
 }
 

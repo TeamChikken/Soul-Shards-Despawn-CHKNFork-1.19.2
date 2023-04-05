@@ -38,7 +38,7 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("META-INF/mods.toml") {
-        expand("version": project.version, "group": project.group)
+        expand("version": project.version, "group": project.group, "minecraft_version": libs.versions.minecraft.get(), "architectury_version": libs.versions.architectury.get(), "jei_version": libs.versions.jei.get(), "cloth_config_version": libs.versions.clothconfig.get(), "modmenu_version": libs.versions.modmenu.get())
     }
 }
 
