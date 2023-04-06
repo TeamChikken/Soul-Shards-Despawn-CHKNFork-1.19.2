@@ -9,6 +9,7 @@ import info.x2a.soulshards.compat.jei.ingredients.MultiblockRenderer;
 import info.x2a.soulshards.core.config.ConfigServer;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@JeiPlugin
 public class SoulShardsJei implements IModPlugin {
     public static final IIngredientType<MultiblockIngredient> MULTIBLOCK_INGREDIENT = () -> MultiblockIngredient.class;
     public static final RecipeBackground DEFAULT_BG = new RecipeBackground(SoulShards.makeResource("gui/soulshardcrafting.png"), 93, 53, 22, 2, 49, 49, new Vec2[]{new Vec2(2, 19)}, new Vec2[]{new Vec2(73, 19)});

@@ -16,6 +16,7 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config:${libs.versions.clothconfig.get()}")
     modApi "com.terraformersmc:modmenu:${libs.versions.modmenu.get()}"
     modCompileOnlyApi "mezz.jei:jei-${libs.versions.minecraft.get()}-common-api:${libs.versions.jei.get()}"
+    modRuntimeOnly "mezz.jei:jei-${libs.versions.minecraft.get()}-common:${libs.versions.jei.get()}"
 }
 
 publishing {
