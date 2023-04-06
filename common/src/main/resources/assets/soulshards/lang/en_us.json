@@ -59,7 +59,7 @@
   "title.soulshards.soulshard_crafting": "Soul Shard Multiblock Crafting",
   "misc.soulshards.catalyst": "Catalyst",
   "desc.soulshards.soulshard_crafting": "Right click the origin block with the catalyst to make a soul shard",
-  "desc.soulshards.cursing": "Throw the input item into a cursed fire\\n(create by using flint & quartz on soul sand)",
+  "desc.soulshards.cursing": "Cast it into the fire!",
   "title.soulshards.cursing": "Cursing",
   "misc.soulshards.origin": "Origin",
   "jei.soulshards.consumes_warning": "All blocks are consumed",
