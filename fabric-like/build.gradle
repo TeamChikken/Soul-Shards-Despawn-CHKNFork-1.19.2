@@ -16,6 +16,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${libs.versions.fabric.api.get()}"
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-fabric:${libs.versions.architectury.get()}"
+    modRuntimeOnly "mezz.jei:jei-${libs.versions.minecraft.get()}-fabric:${libs.versions.jei.get()}"
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${libs.versions.clothconfig.get()}") {
         exclude(group: "net.fabricmc.fabric-api")

@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -29,6 +29,7 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-forge:${libs.versions.architectury.get()}"
     modApi "me.shedaniel.cloth:cloth-config-forge:${libs.versions.clothconfig.get()}"
+    modRuntimeOnly "mezz.jei:jei-${libs.versions.minecraft.get()}-forge:${libs.versions.jei.get()}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
