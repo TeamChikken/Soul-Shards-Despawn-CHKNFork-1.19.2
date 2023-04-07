@@ -1,3 +1,26 @@
+# 1.x.4
+
+## Features
+
+- Quartz and Steel item
+- Vile sword frame item
+- Cursed & Hallowed fire
+- Cursing as a crafting type
+- Tooltip for vile sword
+- Soul shard can now be crafted by cursing an amethyst
+- JEI displays for soul shard crafting
+- JEI displays for cursing
+
+## Changes
+
+- Vile sword now crafted by cursing a vile sword frame
+- Vile dust now crafted by cursing glowstone dust
+
+## Fixes
+
+- 0 kill soul shard included in creative menu
+- Dependency versions in mod metadata
+
 # 1.0.3
 
 ## Fixes

@@ -12,10 +12,7 @@ of [Soul Shards Respawn](https://github.com/TehNut-Mods/Soul-Shards-Respawn), wh
 on [Soul Shards: Reborn by Moze_Intel](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/1445947-1-7-10-soul-shards-reborn-original-soul-shards)
 and [Soul Shards: The Old Ways by Team Whammich](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2329877-soul-shards-the-old-ways-rc9-update).
 
-This version is a near direct clone of the original mod.
-
-All configuration options for Respawn also work for this mod. See
-the [Respawn Wiki](https://github.com/TehNut/Soul-Shards-Respawn/wiki) for more information.
+This version is an update on the original with slight progression changes.
 
 ## License
 
@@ -37,15 +34,22 @@ public domain. This art is:
 - `vile_sword.png`
 - Banner image + icon
 
+I (0x00002a) have also modified some of this art to create new assets:
+
+- `vile_sword_base.png`: `vile_sword.png`
+
 Additionally, there are my entirely my own work assets in here:
 
 - `quartz_and_steel.png`
+
+My own assets and my modifications to public domain assets are CC0 (public domain).
 
 And then there are modified versions of the vanilla assets (recolours and such). I am not entirely sure the licensing on
 these but I believe it is
 allowed as I am not charging for them:
 
 - `cursed_fire_n.png`
+- `hallowed_fire_n.png`
 
 ## Custom Builds
 

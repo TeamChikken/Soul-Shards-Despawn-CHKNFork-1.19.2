@@ -2,11 +2,17 @@ package info.x2a.soulshards.item;
 
 import info.x2a.soulshards.api.ISoulWeapon;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class ItemVileSword extends SwordItem implements ISoulWeapon {
 
@@ -21,12 +27,18 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
         return 1;
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip,
+                                TooltipFlag options) {
+        tooltip.add(Component.translatable("tooltip.soulshards.vile_sword"));
+    }
+
     public static class MaterialVile implements Tier {
 
-        private final LazyLoadedValue<Ingredient> ingredient;
+        private final Supplier<Ingredient> ingredient;
 
         public MaterialVile() {
-            this.ingredient = new LazyLoadedValue<>(() -> Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT.get()));
+            this.ingredient = () -> Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT.get());
         }
 
         @Override
@@ -55,7 +67,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
         }
 
         @Override
-        public Ingredient getRepairIngredient() {
+        public @NotNull Ingredient getRepairIngredient() {
             return ingredient.get();
         }
 

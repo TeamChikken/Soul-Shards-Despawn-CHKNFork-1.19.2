@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -13,6 +13,7 @@ loom {
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+        mixinConfig "soulshards.mixins.json"
     }
 }
 
@@ -29,6 +30,7 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-forge:${libs.versions.architectury.get()}"
     modApi "me.shedaniel.cloth:cloth-config-forge:${libs.versions.clothconfig.get()}"
+    modRuntimeOnly "mezz.jei:jei-${libs.versions.minecraft.get()}-forge:${libs.versions.jei.get()}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -38,7 +40,7 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("META-INF/mods.toml") {
-        expand("version": project.version, "group": project.group)
+        expand("version": project.version, "group": project.group, "minecraft_version": libs.versions.minecraft.get(), "architectury_version": libs.versions.architectury.get(), "jei_version": libs.versions.jei.get(), "cloth_config_version": libs.versions.clothconfig.get(), "modmenu_version": libs.versions.modmenu.get())
     }
 }
 

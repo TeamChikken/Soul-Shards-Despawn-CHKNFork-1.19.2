@@ -1,6 +1,5 @@
 plugins {
-    //id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 def build_number = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'CUSTOM'
@@ -83,7 +82,7 @@ processResources {
     inputs.property 'version', project.version
 
     filesMatching('quilt.mod.json') {
-        expand("version": project.version, "group": project.group)
+        expand("version": project.version, "group": project.group, "minecraft_version": libs.versions.minecraft.get(), "architectury_version": libs.versions.architectury.get(), "jei_version": libs.versions.jei.get(), "cloth_config_version": libs.versions.clothconfig.get(), "modmenu_version": libs.versions.modmenu.get())
     }
 }
 

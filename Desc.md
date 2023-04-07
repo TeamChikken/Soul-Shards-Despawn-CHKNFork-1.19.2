@@ -63,6 +63,7 @@ version to the mojang mappings and 1.19 (also adding back in features from 1.12.
 ### Differences from Respawn
 
 - Vile dust crafting
+- Vile sword crafting
 - Hallowed and cursed flames
 - Quartz and Steel
 

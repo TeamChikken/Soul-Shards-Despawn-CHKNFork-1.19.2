@@ -24,6 +24,9 @@
       ],
       "modmenu": [
         "info.x2a.soulshards.compat.modmenu.SoulShardsModMenu"
+      ],
+      "jei_mod_plugin": [
+        "info.x2a.soulshards.compat.jei.SoulShardsJei"
       ]
     },
     "depends": [
@@ -37,27 +40,28 @@
       },
       {
         "id": "minecraft",
-        "version": ">=1.19.2"
+        "version": "=${minecraft_version}"
       },
       {
         "id": "architectury",
-        "version": ">=6.2.43"
+        "version": ">=${architectury_version}"
       },
       {
         "id": "modmenu",
-        "version": ">=6.1.0-rc.4",
+        "version": ">=${modmenu_version}",
         "optional": true
       },
       {
         "id": "cloth-config",
-        "version": ">=8.2.88",
+        "version": ">=${cloth_config_version}",
+        "optional": true
+      },
+      {
+        "id": "jei",
+        "version": ">=${jei_version}",
         "optional": true
       }
     ]
   },
-  "mixin": "soulshards.mixins.json",
-  "waila:plugins": {
-    "id": "soulshards",
-    "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin"
-  }
+  "mixin": "soulshards.mixins.json"
 }

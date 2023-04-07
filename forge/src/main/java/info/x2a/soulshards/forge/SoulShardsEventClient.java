@@ -31,25 +31,4 @@ public class SoulShardsEventClient {
                                                                           })));
         }
     }
-
-    @SubscribeEvent
-    public static void entityDied(LivingDeathEvent event) {
-        if (event.getEntity() instanceof Player) {
-            return;
-        }
-        EventHandler.onEntityDeath(event.getEntity(), event.getSource());
-    }
-
-    @SubscribeEvent
-    public static void anvilItemCrafted(AnvilUpdateEvent ev) {
-        EventHandler.onAnvilCraft(ev.getLeft(), ev.getRight(), ev::setOutput, ev::setCost);
-    }
-
-    @SubscribeEvent
-    public static void entityDropXp(LivingExperienceDropEvent ev) {
-        if (!EventHandler.shouldDropXp(ev.getEntity())) {
-            ev.setDroppedExperience(0);
-        }
-    }
-
 }

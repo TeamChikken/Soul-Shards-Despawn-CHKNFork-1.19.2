@@ -33,17 +33,12 @@
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19.2",
-    "architectury": ">=6.2.43"
+    "minecraft": "=${minecraft_version}",
+    "architectury": ">=${architectury_version}"
   },
-  "recommend": [
-    "modmenu",
-    "cloth-config"
-  ],
-  "custom": {
-    "waila:plugins": {
-      "id": "soulshards",
-      "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin"
-    }
+  "recommends": {
+    "modmenu": ">=${modmenu_version}",
+    "cloth-config": ">=${cloth_config_version}",
+    "jei": ">=${jei_version}"
   }
 }

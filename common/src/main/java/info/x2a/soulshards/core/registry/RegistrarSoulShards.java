@@ -110,6 +110,8 @@ public class RegistrarSoulShards {
         SOUL_SHARD = regItem("soul_shard", ItemSoulShard::new);
         CORRUPTED_INGOT = regItem("corrupted_ingot",
                 () -> new Item(new Item.Properties()));
+        regItem("vile_sword_base", () -> new Item(new Item.Properties().stacksTo(1)));
+        QUARTZ_AND_STEEL = regItem("quartz_and_steel", ItemQuartzAndSteel::new);
         SoulRegistries.ITEMS.register();
     }
 

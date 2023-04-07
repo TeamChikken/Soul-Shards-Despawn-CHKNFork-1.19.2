@@ -12,7 +12,7 @@ fabric_api = "0.76.0+1.19.4"
 quilted_fabric_api = "6.0.0-beta.2+0.76.0-1.19.4"
 clothconfig = "10.0.96"
 modmenu = "6.1.0-rc.4"
-jei = "11.6.0.1013"
+jei = "11.5.2.1007"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }

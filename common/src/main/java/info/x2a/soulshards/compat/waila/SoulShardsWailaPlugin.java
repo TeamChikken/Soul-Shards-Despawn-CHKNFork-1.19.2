@@ -43,18 +43,18 @@ public class SoulShardsWailaPlugin implements IWailaPlugin {
                 Binding binding = new Binding(accessor.getServerData().getCompound("binding"));
 
                 if (binding.getBoundEntity() != null) {
-                    var entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
-                    if (entityEntry != null)
-                        tooltip.addLine(SoulShards.translate("tooltip.soulshards.bound",
-                                entityEntry.getDescription()));
-
-                    else
-                        tooltip.addLine(SoulShards.translate("tooltip.soulshards.bound",
-                                                                binding.getBoundEntity().toString())
-                                                        .setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                    var opt = Registry.ENTITY_TYPE.getOptional(binding.getBoundEntity());
+                    if (opt.isPresent()) {
+                        tooltip.addLine(Component.translatable("tooltip.soulshards.bound",
+                                opt.get().getDescription()));
+                    } else {
+                        tooltip.addLine(Component.translatable("tooltip.soulshards.bound",
+                                                         binding.getBoundEntity().toString())
+                                                 .setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                    }
                 }
 
-                tooltip.addLine(SoulShards.translate("tooltip.soulshards.tier",
+                tooltip.addLine(Component.translatable("tooltip.soulshards.tier",
                         binding.getTier().getIndex()));
             }
         }, TooltipPosition.BODY, TileEntitySoulCage.class);

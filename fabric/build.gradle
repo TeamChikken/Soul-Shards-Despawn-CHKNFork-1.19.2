@@ -24,7 +24,6 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${libs.versions.fabric.api.get()}"
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-fabric:${libs.versions.architectury.get()}"
-    modApi "mezz.jei:jei-${libs.versions.minecraft.get()}-fabric:${libs.versions.jei.get()}"
 
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
@@ -37,7 +36,7 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand("version": project.version, "minecraft_version": libs.versions.minecraft.get(), "architectury_version": libs.versions.architectury.get(), "jei_version": libs.versions.jei.get(), "cloth_config_version": libs.versions.clothconfig.get(), "modmenu_version": libs.versions.modmenu.get())
     }
 }
 
