@@ -44,6 +44,7 @@ public class RegistrarSoulShards {
     public static List<RegistrySupplier<? extends Item>> CREATIVE_TAB_ITEMS = new ArrayList<>();
 
     public static void init() {
+        registerRecipes();
         registerBlocks();
         registerItems();
         registerEnchantments();
