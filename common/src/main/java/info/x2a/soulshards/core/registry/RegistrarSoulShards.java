@@ -75,14 +75,8 @@ public class RegistrarSoulShards {
     public static RegistrySupplier<RecipeType<CursingRecipe>> CURSING_RECIPE;
 
     public static void registerBlocks() {
-        CURSED_FIRE = Registries.BLOCKS.register(SoulShards.makeResource("cursed_fire"), BlockCursedFire::new);
-        HALLOWED_FIRE = Registries.BLOCKS.register(SoulShards.makeResource("hallowed_fire"), BlockHallowedFire::new);
-        SOUL_CAGE = Registries.BLOCKS.register(new ResourceLocation(SoulShards.MODID, "soul_cage"), BlockSoulCage::new);
-        SOUL_CAGE_TE = Registries.BLOCK_ENTITIES.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
-                () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get())
-                        .build(null));
-        Registries.BLOCKS.register();
-        Registries.BLOCK_ENTITIES.register();
+        CURSED_FIRE = SoulRegistries.BLOCKS.register(SoulShards.makeResource("cursed_fire"), BlockCursedFire::new);
+        HALLOWED_FIRE = SoulRegistries.BLOCKS.register(SoulShards.makeResource("hallowed_fire"), BlockHallowedFire::new);
         SOUL_CAGE = SoulRegistries.BLOCKS.register(new ResourceLocation(SoulShards.MODID, "soul_cage"), BlockSoulCage::new);
         SOUL_CAGE_TE = SoulRegistries.BLOCK_ENTITIES.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
                 () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get())
@@ -96,15 +90,15 @@ public class RegistrarSoulShards {
     }
 
     public static void registerRecipes() {
-        CURSING_RECIPE = Registries.RECIPES.register(CursingRecipe.ID, () -> new RecipeType<>() {
+        CURSING_RECIPE = SoulRegistries.RECIPES.register(CursingRecipe.ID, () -> new RecipeType<>() {
             @Override
             public String toString() {
                 return "cursing";
             }
         });
-        Registries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
-        Registries.RECIPES.register();
-        Registries.RECIPE_SERIALIZERS.register();
+        SoulRegistries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
+        SoulRegistries.RECIPES.register();
+        SoulRegistries.RECIPE_SERIALIZERS.register();
         SoulShards.Log.info("Recipes registered");
     }
 
