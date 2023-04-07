@@ -2,7 +2,6 @@ package info.x2a.soulshards.compat.jei.categories;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
@@ -23,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -146,7 +146,7 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
         for (var y = 0; y != shape.length; ++y) {
             for (var x = 0; x != shape[y].length(); ++x) {
                 poses.pushPose();
-                poses.mulPose(Vector3f.XP.rotationDegrees(90));
+                poses.mulPose(Vec3.XP.rotationDegrees(90));
                 poses.translate(x, 0, y);
                 var states = recipe.pattern.getSlot(x, y)
                                            .getStates();

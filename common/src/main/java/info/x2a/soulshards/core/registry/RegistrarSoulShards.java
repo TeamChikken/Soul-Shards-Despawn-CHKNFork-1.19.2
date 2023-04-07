@@ -1,10 +1,12 @@
 package info.x2a.soulshards.core.registry;
 
+import com.google.gson.reflect.TypeToken;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.api.IShardTier;
+import info.x2a.soulshards.block.BlockHallowedFire;
 import info.x2a.soulshards.block.BlockSoulCage;
 import info.x2a.soulshards.block.BlockCursedFire;
 import info.x2a.soulshards.block.TileEntitySoulCage;
@@ -12,6 +14,7 @@ import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.core.data.Tier;
 import info.x2a.soulshards.core.recipe.CursingRecipe;
 import info.x2a.soulshards.core.util.EnchantmentSoulStealer;
+import info.x2a.soulshards.core.util.GsonRecipeSerializer;
 import info.x2a.soulshards.item.ItemQuartzAndSteel;
 import info.x2a.soulshards.item.ItemSoulShard;
 import info.x2a.soulshards.item.ItemVileSword;

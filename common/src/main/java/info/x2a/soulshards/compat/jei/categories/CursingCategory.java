@@ -2,7 +2,6 @@ package info.x2a.soulshards.compat.jei.categories;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import info.x2a.soulshards.SoulShards;
 import info.x2a.soulshards.compat.jei.RecipeBackground;
 import info.x2a.soulshards.compat.jei.SoulShardsJei;
