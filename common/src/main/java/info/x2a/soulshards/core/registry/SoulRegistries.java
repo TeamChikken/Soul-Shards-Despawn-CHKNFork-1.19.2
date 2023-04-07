@@ -10,7 +10,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-public class Registries {
+public class SoulRegistries {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(SoulShards.MODID,
             Registry.ITEM_REGISTRY);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(SoulShards.MODID,

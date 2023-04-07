@@ -40,31 +40,31 @@ public class RegistrarSoulShards {
     public static RegistrySupplier<RecipeType<CursingRecipe>> CURSING_RECIPE;
 
     public static void registerBlocks() {
-        CURSED_FIRE = Registries.BLOCKS.register(SoulShards.makeResource("cursed_fire"), BlockCursedFire::new);
-        HALLOWED_FIRE = Registries.BLOCKS.register(SoulShards.makeResource("hallowed_fire"), BlockHallowedFire::new);
-        SOUL_CAGE = Registries.BLOCKS.register(new ResourceLocation(SoulShards.MODID, "soul_cage"), BlockSoulCage::new);
-        SOUL_CAGE_TE = Registries.BLOCK_ENTITIES.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
+        CURSED_FIRE = SoulRegistries.BLOCKS.register(SoulShards.makeResource("cursed_fire"), BlockCursedFire::new);
+        HALLOWED_FIRE = SoulRegistries.BLOCKS.register(SoulShards.makeResource("hallowed_fire"), BlockHallowedFire::new);
+        SOUL_CAGE = SoulRegistries.BLOCKS.register(new ResourceLocation(SoulShards.MODID, "soul_cage"), BlockSoulCage::new);
+        SOUL_CAGE_TE = SoulRegistries.BLOCK_ENTITIES.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
                 () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get())
                         .build(null));
-        Registries.BLOCKS.register();
-        Registries.BLOCK_ENTITIES.register();
+        SoulRegistries.BLOCKS.register();
+        SoulRegistries.BLOCK_ENTITIES.register();
     }
 
     public static void registerRecipes() {
-        CURSING_RECIPE = Registries.RECIPES.register(CursingRecipe.ID, () -> new RecipeType<>() {
+        CURSING_RECIPE = SoulRegistries.RECIPES.register(CursingRecipe.ID, () -> new RecipeType<>() {
             @Override
             public String toString() {
                 return "cursing";
             }
         });
-        Registries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
-        Registries.RECIPES.register();
-        Registries.RECIPE_SERIALIZERS.register();
+        SoulRegistries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
+        SoulRegistries.RECIPES.register();
+        SoulRegistries.RECIPE_SERIALIZERS.register();
         SoulShards.Log.info("Recipes registered");
     }
 
     public static void registerItems() {
-        var registry = Registries.ITEMS;
+        var registry = SoulRegistries.ITEMS;
         registry.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
                 () -> new BlockItem(SOUL_CAGE.get(),
                         new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
@@ -78,12 +78,12 @@ public class RegistrarSoulShards {
         registry.register(SoulShards.makeResource("vile_sword_base"), () -> new Item(new Item.Properties().stacksTo(1)
                                                                                                           .tab(CreativeModeTab.TAB_MISC)));
         registry.register(new ResourceLocation(SoulShards.MODID, "vile_dust"), () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
-        Registries.ITEMS.register();
+        SoulRegistries.ITEMS.register();
     }
 
     public static void registerEnchantments() {
-        SOUL_STEALER = Registries.ENCHANTMENTS.register(new ResourceLocation(SoulShards.MODID, "soul_stealer"),
+        SOUL_STEALER = SoulRegistries.ENCHANTMENTS.register(new ResourceLocation(SoulShards.MODID, "soul_stealer"),
                 EnchantmentSoulStealer::new);
-        Registries.ENCHANTMENTS.register();
+        SoulRegistries.ENCHANTMENTS.register();
     }
 }

@@ -10,6 +10,7 @@ import info.x2a.soulshards.core.network.Channels;
 import info.x2a.soulshards.core.network.message.ConfigUpdate;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.data.Tier;
+import info.x2a.soulshards.core.registry.SoulRegistries;
 import info.x2a.soulshards.core.util.JsonResource;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
@@ -80,7 +81,7 @@ public class SoulShards {
         RegistrarSoulShards.registerBlocks();
         RegistrarSoulShards.registerItems();
         RegistrarSoulShards.registerEnchantments();
-        info.x2a.soulshards.core.registry.Registries.init();
+        SoulRegistries.init();
         EventHandler.init();
         initNetwork();
     }
