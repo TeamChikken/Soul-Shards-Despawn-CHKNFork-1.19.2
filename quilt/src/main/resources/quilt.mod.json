@@ -63,9 +63,5 @@
       }
     ]
   },
-  "mixin": "soulshards.mixins.json",
-  "waila:plugins": {
-    "id": "soulshards",
-    "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin"
-  }
+  "mixin": "soulshards.mixins.json"
 }

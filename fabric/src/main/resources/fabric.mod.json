@@ -40,11 +40,5 @@
     "modmenu": ">=${modmenu_version}",
     "cloth-config": ">=${cloth_config_version}",
     "jei": ">=${jei_version}"
-  },
-  "custom": {
-    "waila:plugins": {
-      "id": "soulshards",
-      "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin"
-    }
   }
 }

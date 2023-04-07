@@ -1,0 +1,6 @@
+{
+  "soulshards:waila_plugin": {
+    "initializer": "info.x2a.soulshards.compat.waila.SoulShardsWailaPlugin",
+    "side": "*"
+  }
+}
