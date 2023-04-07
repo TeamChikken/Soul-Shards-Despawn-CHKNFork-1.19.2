@@ -6,6 +6,7 @@ import info.x2a.soulshards.core.data.Binding;
 import mcp.mobius.waila.api.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
@@ -43,7 +44,7 @@ public class SoulShardsWailaPlugin implements IWailaPlugin {
                 Binding binding = new Binding(accessor.getServerData().getCompound("binding"));
 
                 if (binding.getBoundEntity() != null) {
-                    var opt = Registry.ENTITY_TYPE.getOptional(binding.getBoundEntity());
+                    var opt = BuiltinRegistries.ENTITY_TYPE.getOptional(binding.getBoundEntity());
                     if (opt.isPresent()) {
                         tooltip.addLine(Component.translatable("tooltip.soulshards.bound",
                                 opt.get().getDescription()));

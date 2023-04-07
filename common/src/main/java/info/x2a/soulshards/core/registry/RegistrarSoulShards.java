@@ -10,12 +10,14 @@ import info.x2a.soulshards.block.BlockCursedFire;
 import info.x2a.soulshards.block.TileEntitySoulCage;
 import info.x2a.soulshards.core.data.Binding;
 import info.x2a.soulshards.core.data.Tier;
+import info.x2a.soulshards.core.recipe.CursingRecipe;
 import info.x2a.soulshards.core.util.EnchantmentSoulStealer;
 import info.x2a.soulshards.item.ItemQuartzAndSteel;
 import info.x2a.soulshards.item.ItemSoulShard;
 import info.x2a.soulshards.item.ItemVileSword;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -47,16 +49,19 @@ public class RegistrarSoulShards {
         registerEnchantments();
         CreativeTabRegistry.create(new ResourceLocation(SoulShards.MODID
                         , "creative_tab"),
-                (CreativeModeTab.Builder builder) -> builder.icon(() -> new ItemStack(SOUL_SHARD.get())).displayItems((params, output) -> {
-                    var shard = SOUL_SHARD.get();
-                    for (IShardTier tier : Tier.INDEXED) {
-                        ItemStack stack = new ItemStack(shard);
-                        Binding binding = new Binding(null, tier.getKillRequirement());
-                        shard.updateBinding(stack, binding);
-                        output.accept(stack);
-                    }
-                    output.acceptAll(CREATIVE_TAB_ITEMS.stream().map(s -> new ItemStack(s.get())).collect(Collectors.toList()));
-                }));
+                (CreativeModeTab.Builder builder) -> builder.icon(() -> new ItemStack(SOUL_SHARD.get()))
+                                                            .displayItems((params, output) -> {
+                                                                var shard = SOUL_SHARD.get();
+                                                                for (IShardTier tier : Tier.INDEXED) {
+                                                                    ItemStack stack = new ItemStack(shard);
+                                                                    Binding binding = new Binding(null, tier.getKillRequirement());
+                                                                    shard.updateBinding(stack, binding);
+                                                                    output.accept(stack);
+                                                                }
+                                                                output.acceptAll(CREATIVE_TAB_ITEMS.stream()
+                                                                                                   .map(s -> new ItemStack(s.get()))
+                                                                                                   .collect(Collectors.toList()));
+                                                            }));
     }
 
     public static <T extends Item> RegistrySupplier<T> registerAndAddCreative(DeferredRegister<Item> reg,
@@ -80,7 +85,8 @@ public class RegistrarSoulShards {
         Registries.BLOCK_ENTITIES.register();
         SOUL_CAGE = SoulRegistries.BLOCKS.register(new ResourceLocation(SoulShards.MODID, "soul_cage"), BlockSoulCage::new);
         SOUL_CAGE_TE = SoulRegistries.BLOCK_ENTITIES.register(new ResourceLocation(SoulShards.MODID, "soul_cage"),
-                () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get()).build(null));
+                () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get())
+                        .build(null));
         SoulRegistries.BLOCKS.register();
         SoulRegistries.BLOCK_ENTITIES.register();
     }
