@@ -75,6 +75,8 @@ public class RegistrarSoulShards {
         CORRUPTED_ESSENCE = registry.register(new ResourceLocation(SoulShards.MODID, "corrupted_essence"), () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
         CORRUPTED_INGOT = registry.register(new ResourceLocation(SoulShards.MODID, "corrupted_ingot"),
                 () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+        registry.register(SoulShards.makeResource("vile_sword_base"), () -> new Item(new Item.Properties().stacksTo(1)
+                                                                                                          .tab(CreativeModeTab.TAB_MISC)));
         registry.register(new ResourceLocation(SoulShards.MODID, "vile_dust"), () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
         Registries.ITEMS.register();
     }
