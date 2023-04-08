@@ -6,6 +6,7 @@ import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -37,7 +38,7 @@ public class MultiblockHelper implements IIngredientHelper<MultiblockIngredient>
 
     @Override
     public @NotNull ResourceLocation getResourceLocation(@NotNull MultiblockIngredient ingredient) {
-        return Objects.requireNonNull(Registry.BLOCK_ENTITY_TYPE.getKey(ingredient.entity.getType()));
+        return Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(ingredient.entity.getType()));
     }
 
     @Override

@@ -91,9 +91,9 @@ public class ItemSoulShard extends Item implements ISoulShard {
             try {
                 ResourceLocation entityId =
                         EntityType.getKey(spawner.getSpawner()
-                                                                     .getOrCreateDisplayEntity(context.getLevel(),
-                                context.getLevel().random, context.getClickedPos())
-                                                                     .getType());
+                                                 .getOrCreateDisplayEntity(context.getLevel(),
+                                                         context.getLevel().random, context.getClickedPos())
+                                                 .getType());
                 if (!SoulShards.CONFIG_SERVER.getEntityList().isEnabled(entityId)) {
                     SoulShards.Log.debug("Tried to consume entity which is disallowed in the " +
                                     "config: {}",
@@ -147,7 +147,7 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
         var greyColor = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GRAY);
         if (binding.getBoundEntity() != null) {
-            var opt = Registry.ENTITY_TYPE.getOptional(binding.getBoundEntity());
+            var opt = BuiltInRegistries.ENTITY_TYPE.getOptional(binding.getBoundEntity());
             if (opt.isPresent()) {
                 tooltip.add(Component.translatable("tooltip.soulshards.bound",
                         opt.get().getDescription()).withStyle(greyColor));
@@ -166,23 +166,6 @@ public class ItemSoulShard extends Item implements ISoulShard {
                 tooltip.add(Component.translatable("tooltip.soulshards.owner",
                         binding.getOwner().toString()).withStyle(ChatFormatting.AQUA));
             }
-        }
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (!allowedIn(group))
-            return;
-
-        items.add(new ItemStack(this));
-        for (IShardTier tier : Tier.INDEXED) {
-            if (tier.getKillRequirement() == 0) {
-                continue;
-            }
-            ItemStack stack = new ItemStack(this);
-            Binding binding = new Binding(null, tier.getKillRequirement());
-            updateBinding(stack, binding);
-            items.add(stack);
         }
     }
 

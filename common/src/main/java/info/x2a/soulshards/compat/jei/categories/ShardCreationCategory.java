@@ -22,8 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +147,7 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
         for (var y = 0; y != shape.length; ++y) {
             for (var x = 0; x != shape[y].length(); ++x) {
                 poses.pushPose();
-                poses.mulPose(Vec3.XP.rotationDegrees(90));
+                poses.mulPose(new Quaternionf().rotationX((float) (Math.PI / 2F)));
                 poses.translate(x, 0, y);
                 var states = recipe.pattern.getSlot(x, y)
                                            .getStates();

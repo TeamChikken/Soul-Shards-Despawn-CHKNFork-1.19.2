@@ -18,7 +18,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -76,7 +75,7 @@ public class CursingCategory implements IRecipeCategory<CursingRecipe> {
         builder.addSlot(RecipeIngredientRole.INPUT, (int) UI.inputPositions[0].x, (int) UI.inputPositions[0].y)
                .addIngredients(recipe.getIngredients().get(0));
         builder.addSlot(RecipeIngredientRole.OUTPUT, (int) UI.outputPositions[0].x, (int) UI.outputPositions[0].y)
-               .addIngredients(Ingredient.of(recipe.getResultItem()));
+               .addIngredients(Ingredient.of(recipe.getResult()));
     }
 
     @Override

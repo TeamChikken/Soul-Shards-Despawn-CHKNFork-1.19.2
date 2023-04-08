@@ -22,9 +22,9 @@ public class SoulRegistries {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(SoulShards.MODID,
             Registries.BLOCK_ENTITY_TYPE);
 
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(SoulShards.MODID, Registry.RECIPE_SERIALIZER_REGISTRY);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(SoulShards.MODID, Registries.RECIPE_SERIALIZER);
     public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(SoulShards.MODID,
-            Registry.RECIPE_TYPE_REGISTRY);
+            Registries.RECIPE_TYPE);
 
     public static void init() {
     }

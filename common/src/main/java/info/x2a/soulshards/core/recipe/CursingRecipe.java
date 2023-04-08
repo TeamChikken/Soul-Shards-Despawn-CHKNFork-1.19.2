@@ -10,31 +10,30 @@ import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import info.x2a.soulshards.core.util.JsonUtil;
 import info.x2a.soulshards.core.util.RecipeSerde;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.beans.Transient;
 import java.lang.reflect.Type;
 
 class IdByCodecAdaptor implements JsonSerializer<Item>, JsonDeserializer<Item> {
 
     @Override
     public Item deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        return Registry.ITEM.get(ResourceLocation.tryParse(jsonElement.getAsString()));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(jsonElement.getAsString()));
     }
 
     @Override
     public JsonElement serialize(Item item, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(Registry.ITEM.getKey(item).toString());
+        return new JsonPrimitive(BuiltInRegistries.ITEM.getKey(item).toString());
     }
 }
 
@@ -60,7 +59,7 @@ public class CursingRecipe implements RecipeSerde<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(Container container, RegistryAccess access) {
         return ItemStack.EMPTY;
     }
 
@@ -70,7 +69,11 @@ public class CursingRecipe implements RecipeSerde<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public @NotNull ItemStack getResultItem(RegistryAccess registryAccess) {
+        return getResult();
+    }
+
+    public ItemStack getResult() {
         var stack = new ItemStack(result);
         stack.setCount(resultQty);
         return stack;

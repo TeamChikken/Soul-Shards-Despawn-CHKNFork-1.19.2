@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemQuartzAndSteel extends FlintAndSteelItem {
     public ItemQuartzAndSteel() {
-        super(new Properties().durability(64).tab(CreativeModeTab.TAB_TOOLS));
+        super(new Properties().durability(64));
     }
 
     @Override

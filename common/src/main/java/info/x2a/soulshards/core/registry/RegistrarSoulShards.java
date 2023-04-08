@@ -57,6 +57,9 @@ public class RegistrarSoulShards {
                                                             .displayItems((params, output) -> {
                                                                 var shard = SOUL_SHARD.get();
                                                                 for (IShardTier tier : Tier.INDEXED) {
+                                                                    if (tier.getKillRequirement() == 0) {
+                                                                        continue;
+                                                                    }
                                                                     ItemStack stack = new ItemStack(shard);
                                                                     Binding binding = new Binding(null, tier.getKillRequirement());
                                                                     shard.updateBinding(stack, binding);
