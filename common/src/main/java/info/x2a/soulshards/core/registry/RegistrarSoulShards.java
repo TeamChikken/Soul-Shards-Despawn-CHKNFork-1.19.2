@@ -15,6 +15,7 @@ import info.x2a.soulshards.item.ItemSoulShard;
 import info.x2a.soulshards.item.ItemVileSword;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -38,6 +39,7 @@ public class RegistrarSoulShards {
     public static RegistrySupplier<Enchantment> SOUL_STEALER;
 
     public static RegistrySupplier<RecipeType<CursingRecipe>> CURSING_RECIPE;
+    public static RegistrySupplier<RecipeSerializer<CursingRecipe>> CURSING_RECIPE_SERIALIZER;
 
     public static void registerBlocks() {
         CURSED_FIRE = SoulRegistries.BLOCKS.register(SoulShards.makeResource("cursed_fire"), BlockCursedFire::new);
@@ -57,7 +59,7 @@ public class RegistrarSoulShards {
                 return "cursing";
             }
         });
-        SoulRegistries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
+        CURSING_RECIPE_SERIALIZER = SoulRegistries.RECIPE_SERIALIZERS.register(CursingRecipe.ID, () -> new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class)));
         SoulRegistries.RECIPES.register();
         SoulRegistries.RECIPE_SERIALIZERS.register();
         SoulShards.Log.info("Recipes registered");

@@ -88,7 +88,7 @@ public class CursingRecipe implements RecipeSerde<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return new GsonRecipeSerializer<>(TypeToken.get(CursingRecipe.class));
+        return RegistrarSoulShards.CURSING_RECIPE_SERIALIZER.get();
     }
 
     @Override
