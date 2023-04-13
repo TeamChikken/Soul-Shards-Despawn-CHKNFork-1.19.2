@@ -60,7 +60,7 @@ mod [Soul Shards](http://www.minecraftforum.net/forums/mapping-and-modding/minec
 I forked Respawn because it was not updated past 1.15 and the repository has been archived. I ported the 1.15 fabric
 version to the mojang mappings and 1.19 (also adding back in features from 1.12.2 that were removed in the 1.15 version)
 
-### Differences from Respawn
+### Differences from Respawn (since 1.x.4)
 
 - Vile dust crafting
 - Vile sword crafting

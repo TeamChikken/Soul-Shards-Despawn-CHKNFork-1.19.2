@@ -13,6 +13,7 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         loader: [ quilt, forge, fabric ]
     runs-on: ubuntu-latest

@@ -1,3 +1,9 @@
+# 1.x.5
+
+## Fixes
+
+- Unable to join servers [#2](https://github.com/0x00002a/Soul-Shards-Despawn/issues/2)
+
 # 1.x.4
 
 ## Features
