@@ -51,18 +51,39 @@ public class RegistrarSoulShards {
     public static RegistrySupplier<CreativeModeTab> SOUL_SHARDS_TAB;
 
     public static void init() {
+
+        SOUL_SHARDS_TAB = SoulRegistries.CREATIVE_TABS.register(SoulShards.MODID,
+                () -> CreativeTabRegistry.create(Component.literal("Soul Shards"),
+                        () -> new ItemStack(SOUL_SHARD.get()))
+        );
+
+
         registerRecipes();
         registerBlocks();
         registerItems();
         registerEnchantments();
 
+        for (IShardTier tier : Tier.INDEXED) {
+            if (tier.getKillRequirement() == 0) {
+                continue;
+            }
+            CreativeTabRegistry.appendStack(SOUL_SHARDS_TAB, () -> {
+                var shard = SOUL_SHARD.get();
+                ItemStack stack = new ItemStack(shard);
+                Binding binding = new Binding(null, tier.getKillRequirement());
+                shard.updateBinding(stack, binding);
+                return stack;
+            });
+        }
+
+        SoulRegistries.CREATIVE_TABS.register();
     }
 
     public static <T extends Item> RegistrySupplier<T> registerAndAddCreative(DeferredRegister<Item> reg,
                                                                               ResourceLocation id,
                                                                               Supplier<T> prov) {
         var supplier = reg.register(id, prov);
-        CREATIVE_TAB_ITEMS.add(supplier);
+        CreativeTabRegistry.append(SOUL_SHARDS_TAB, supplier);
         return supplier;
     }
 
@@ -111,13 +132,8 @@ public class RegistrarSoulShards {
     }
 
     public static void registerEnchantments() {
-        SOUL_SHARDS_TAB = SoulRegistries.CREATIVE_TABS.register(SoulShards.MODID,
-                () -> CreativeTabRegistry.create(Component.literal("Soul Shards"),
-                        () -> new ItemStack(SOUL_SHARD.get()))
-                );
         SOUL_STEALER = SoulRegistries.ENCHANTMENTS.register(new ResourceLocation(SoulShards.MODID, "soul_stealer"),
                 EnchantmentSoulStealer::new);
         SoulRegistries.ENCHANTMENTS.register();
-        SoulRegistries.CREATIVE_TABS.register();
     }
 }

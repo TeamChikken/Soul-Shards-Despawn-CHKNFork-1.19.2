@@ -39,10 +39,8 @@ public class EventHandler {
             MultiblockPattern pattern = ConfigServer.getMultiblock();
 
             ItemStack held = player.getMainHandItem();
-            SoulShards.Log.info("right click");
             if (!ItemStack.isSameItem(pattern.getCatalyst(), held))
                 return EventResult.pass();
-            SoulShards.Log.info("pass");
 
             var world = player.level();
             BlockState worldState = world.getBlockState(pos);
