@@ -8,11 +8,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoulFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 
 public class BlockCursedFire extends SoulFireBlock {
     public BlockCursedFire() {
-        super(Properties.copy(Blocks.SOUL_FIRE).color(MaterialColor.COLOR_LIGHT_GRAY));
+        super(Properties.copy(Blocks.SOUL_FIRE).mapColor(MapColor.COLOR_LIGHT_GRAY));
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class SoulShardsWailaPlugin implements IWailaPlugin {
 
@@ -28,19 +29,22 @@ public class SoulShardsWailaPlugin implements IWailaPlugin {
             }
         }, TooltipPosition.BODY, LivingEntity.class);
 
-        registrar.addBlockData((data, block, config) -> {
-            var binding = ((TileEntitySoulCage) block.getTarget()).getBinding();
-            if (binding != null)
-                data.put("binding", binding.serializeNBT());
+        registrar.addBlockData(new IDataProvider<BlockEntity>() {
+            @Override
+            public void appendData(IDataWriter block, IServerAccessor<BlockEntity> server, IPluginConfig config) {
+                var binding = ((TileEntitySoulCage) server.getTarget()).getBinding();
+                if (binding != null)
+                    block.raw().put("binding", binding.serializeNBT());
+            }
         }, TileEntitySoulCage.class);
 
         registrar.addComponent(new IBlockComponentProvider() {
             @Override
             public void appendBody(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
-                if (!accessor.getServerData().contains("binding"))
+                if (!accessor.getData().raw().contains("binding"))
                     return;
 
-                Binding binding = new Binding(accessor.getServerData().getCompound("binding"));
+                Binding binding = new Binding(accessor.getData().raw().getCompound("binding"));
 
                 if (binding.getBoundEntity() != null) {
                     var opt = BuiltInRegistries.ENTITY_TYPE.getOptional(binding.getBoundEntity());

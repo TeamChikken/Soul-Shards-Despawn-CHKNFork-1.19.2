@@ -18,6 +18,7 @@ import info.x2a.soulshards.core.util.GsonRecipeSerializer;
 import info.x2a.soulshards.item.ItemQuartzAndSteel;
 import info.x2a.soulshards.item.ItemSoulShard;
 import info.x2a.soulshards.item.ItemVileSword;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -52,24 +53,8 @@ public class RegistrarSoulShards {
         registerBlocks();
         registerItems();
         registerEnchantments();
-        CreativeTabRegistry.create(new ResourceLocation(SoulShards.MODID
-                        , "creative_tab"),
-                (CreativeModeTab.Builder builder) -> builder.icon(() -> new ItemStack(SOUL_SHARD.get()))
-                                                            .displayItems((params, output) -> {
-                                                                var shard = SOUL_SHARD.get();
-                                                                for (IShardTier tier : Tier.INDEXED) {
-                                                                    if (tier.getKillRequirement() == 0) {
-                                                                        continue;
-                                                                    }
-                                                                    ItemStack stack = new ItemStack(shard);
-                                                                    Binding binding = new Binding(null, tier.getKillRequirement());
-                                                                    shard.updateBinding(stack, binding);
-                                                                    output.accept(stack);
-                                                                }
-                                                                output.acceptAll(CREATIVE_TAB_ITEMS.stream()
-                                                                                                   .map(s -> new ItemStack(s.get()))
-                                                                                                   .collect(Collectors.toList()));
-                                                            }));
+        CreativeTabRegistry.create(Component.literal("Soul Shards"),
+                () -> new ItemStack(SOUL_SHARD.get()));
     }
 
     public static <T extends Item> RegistrySupplier<T> registerAndAddCreative(DeferredRegister<Item> reg,

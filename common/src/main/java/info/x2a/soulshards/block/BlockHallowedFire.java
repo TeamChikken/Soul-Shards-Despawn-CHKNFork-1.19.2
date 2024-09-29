@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,7 @@ public class BlockHallowedFire extends FireBlock {
     private final Method canBurnRefl;
 
     public BlockHallowedFire() {
-        super(Properties.copy(Blocks.FIRE).color(MaterialColor.GOLD));
+        super(Properties.copy(Blocks.FIRE).mapColor(MapColor.GOLD));
         Method canBurn = null;
         try {
             canBurn = ((FireBlock) Blocks.FIRE).getClass().getDeclaredMethod("canBurn", BlockState.class);

@@ -9,6 +9,7 @@ import info.x2a.soulshards.core.recipe.CursingRecipe;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -18,6 +19,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -79,7 +81,8 @@ public class CursingCategory implements IRecipeCategory<CursingRecipe> {
     }
 
     @Override
-    public void draw(CursingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(CursingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
+        var stack = gui.pose();
 
         stack.pushPose();
         stack.translate(UI.craftXOffset + UI.craftWidth / 2.0F - (UI.craftHeight / 4F), UI.craftYOffset, 100);
@@ -102,13 +105,11 @@ public class CursingCategory implements IRecipeCategory<CursingRecipe> {
     }
 
     @Override
-    public @NotNull List<Component> getTooltipStrings(CursingRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        var comps = new ArrayList<Component>();
-        comps.add(Component.translatable("desc.soulshards.cursing").withStyle(ChatFormatting.DARK_AQUA));
+    public void getTooltip(ITooltipBuilder builder, CursingRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+        builder.add(Component.translatable("desc.soulshards.cursing").withStyle(ChatFormatting.DARK_AQUA));
         if (UI.inCraftArea((int) mouseX, (int) mouseY)) {
-            comps.add(RegistrarSoulShards.CURSED_FIRE.get().getName());
-            comps.add(Blocks.SOUL_SAND.getName());
+            builder.add(RegistrarSoulShards.CURSED_FIRE.get().getName());
+            builder.add(Blocks.SOUL_SAND.getName());
         }
-        return comps;
     }
 }

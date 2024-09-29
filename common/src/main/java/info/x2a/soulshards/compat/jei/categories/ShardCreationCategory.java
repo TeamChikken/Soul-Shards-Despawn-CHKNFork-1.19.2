@@ -7,6 +7,7 @@ import info.x2a.soulshards.core.data.MultiblockPattern;
 import info.x2a.soulshards.core.registry.RegistrarSoulShards;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -16,6 +17,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -92,8 +94,7 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
     }
 
     @Override
-    public @NotNull List<Component> getTooltipStrings(MultiblockWrapper recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
-        var comps = new ArrayList<Component>();
+    public void getTooltip(ITooltipBuilder comps, MultiblockWrapper recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
         comps.add(Component.translatable("desc.soulshards.soulshard_crafting").withStyle(ChatFormatting.DARK_AQUA));
         comps.add(Component.translatable("misc.soulshards.catalyst")
                            .append(": ")
@@ -118,11 +119,11 @@ public class ShardCreationCategory implements IRecipeCategory<ShardCreationCateg
         comps.add(Component.translatable("jei.soulshards.consumes_warning")
                            .withStyle(ChatFormatting.RED)
                            .withStyle(ChatFormatting.BOLD));
-        return comps;
     }
 
     @Override
-    public void draw(@NotNull MultiblockWrapper recipe, IRecipeSlotsView slots, PoseStack poses, double mouseX, double mouseY) {
+    public void draw(@NotNull MultiblockWrapper recipe, IRecipeSlotsView slots, GuiGraphics gui, double mouseX, double mouseY) {
+        var poses = gui.pose();
         var time = System.currentTimeMillis();
         if (lastDrawMs == 0) {
             lastDrawMs = time;

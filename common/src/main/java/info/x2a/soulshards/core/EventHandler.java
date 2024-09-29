@@ -39,10 +39,10 @@ public class EventHandler {
             MultiblockPattern pattern = ConfigServer.getMultiblock();
 
             ItemStack held = player.getMainHandItem();
-            if (!ItemStack.isSame(pattern.getCatalyst(), held))
+            if (!ItemStack.isSameItem(pattern.getCatalyst(), held))
                 return EventResult.pass();
 
-            var world = player.getLevel();
+            var world = player.level();
             BlockState worldState = world.getBlockState(pos);
             if (!pattern.isOriginBlock(worldState))
                 return EventResult.pass();
