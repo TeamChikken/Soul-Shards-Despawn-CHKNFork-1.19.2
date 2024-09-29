@@ -1,9 +1,11 @@
 package info.x2a.soulshards.core.registry;
 
+import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import info.x2a.soulshards.SoulShards;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -25,6 +27,9 @@ public class SoulRegistries {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(SoulShards.MODID, Registries.RECIPE_SERIALIZER);
     public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(SoulShards.MODID,
             Registries.RECIPE_TYPE);
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(SoulShards.MODID,
+            Registries.CREATIVE_MODE_TAB);
 
     public static void init() {
     }

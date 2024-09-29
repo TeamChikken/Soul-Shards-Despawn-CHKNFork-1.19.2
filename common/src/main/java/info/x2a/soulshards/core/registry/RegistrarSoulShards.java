@@ -18,6 +18,7 @@ import info.x2a.soulshards.core.util.GsonRecipeSerializer;
 import info.x2a.soulshards.item.ItemQuartzAndSteel;
 import info.x2a.soulshards.item.ItemSoulShard;
 import info.x2a.soulshards.item.ItemVileSword;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -47,14 +48,14 @@ public class RegistrarSoulShards {
     public static RegistrySupplier<Item> CORRUPTED_ESSENCE;
     public static RegistrySupplier<Enchantment> SOUL_STEALER;
     public static List<RegistrySupplier<? extends Item>> CREATIVE_TAB_ITEMS = new ArrayList<>();
+    public static RegistrySupplier<CreativeModeTab> SOUL_SHARDS_TAB;
 
     public static void init() {
         registerRecipes();
         registerBlocks();
         registerItems();
         registerEnchantments();
-        CreativeTabRegistry.create(Component.literal("Soul Shards"),
-                () -> new ItemStack(SOUL_SHARD.get()));
+
     }
 
     public static <T extends Item> RegistrySupplier<T> registerAndAddCreative(DeferredRegister<Item> reg,
@@ -110,8 +111,13 @@ public class RegistrarSoulShards {
     }
 
     public static void registerEnchantments() {
+        SOUL_SHARDS_TAB = SoulRegistries.CREATIVE_TABS.register(SoulShards.MODID,
+                () -> CreativeTabRegistry.create(Component.literal("Soul Shards"),
+                        () -> new ItemStack(SOUL_SHARD.get()))
+                );
         SOUL_STEALER = SoulRegistries.ENCHANTMENTS.register(new ResourceLocation(SoulShards.MODID, "soul_stealer"),
                 EnchantmentSoulStealer::new);
         SoulRegistries.ENCHANTMENTS.register();
+        SoulRegistries.CREATIVE_TABS.register();
     }
 }
