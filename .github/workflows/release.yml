@@ -35,7 +35,7 @@ jobs:
       - name: Build
         run: cd ${{ matrix.loader }} && ../gradlew clean build
       - name: Publish
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: 843552
           curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
