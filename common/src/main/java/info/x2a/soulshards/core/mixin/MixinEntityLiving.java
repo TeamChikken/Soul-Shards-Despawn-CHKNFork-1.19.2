@@ -50,14 +50,4 @@ public class MixinEntityLiving {
         EventHandler.onEntityDeath(entity, damageSource);
     }
 
-    @Inject(method = "shouldDropExperience", at = @At("RETURN"))
-    private void shouldDropXp(CallbackInfoReturnable<Boolean> cir) {
-        var me = (LivingEntity) (Object) this;
-        if (!cir.getReturnValue()) {
-            return;
-        }
-        if (!EventHandler.shouldDropXp(me)) {
-            cir.setReturnValue(false);
-        }
-    }
 }
